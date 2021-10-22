@@ -20,8 +20,17 @@ fn main() {
         length = args[2].trim().parse().expect("type a number");
     }
 
+    let latinchars = "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy";
     let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ";
-    let charski: Vec<char> = kachars.chars().collect();
+
+    let mut charski: Vec<char> = kachars.chars().collect();
+
+    if args.len() > 3 {
+        let mode: u32 = args[3].trim().parse().expect("type a number");
+        if mode == 2 {
+            charski = latinchars.chars().collect();
+        }
+    }
 
     let mut sg = StringGenerator::new(charski);
 
