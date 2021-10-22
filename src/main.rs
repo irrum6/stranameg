@@ -3,6 +3,7 @@ use std::env;
 mod rng;
 use rng::rng::RNGWheel;
 mod strgen;
+mod tests;
 
 use strgen::strgen::StringGenerator;
 
