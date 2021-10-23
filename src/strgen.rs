@@ -1,18 +1,23 @@
 pub mod strgen {
     use crate::RNGWheel;
-    pub struct StringGenerator {
+    pub trait StringGenerator {
+        fn get(&mut self, l: usize) -> String;
+    }
+    pub struct AlphaBetStringGenerator {
         alphabet: Vec<char>,
         held_string: String,
     }
-    impl StringGenerator {
-        pub fn new(alpha: Vec<char>) -> StringGenerator {
+    impl AlphaBetStringGenerator {
+        pub fn new(alpha: Vec<char>) -> AlphaBetStringGenerator {
             let x = String::new();
-            return StringGenerator {
+            return AlphaBetStringGenerator {
                 held_string: x,
                 alphabet: alpha,
             };
         }
-        pub fn get(&mut self, l: usize) -> String {
+    }
+    impl StringGenerator for AlphaBetStringGenerator {
+        fn get(&mut self, l: usize) -> String {
             let rng = RNGWheel::new(l);
             let len = self.alphabet.len();
             self.held_string = String::new();
