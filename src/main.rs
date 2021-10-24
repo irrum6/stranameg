@@ -1,4 +1,5 @@
 use std::env;
+use std::fs::read_to_string as fs_read;
 
 mod rng;
 use rng::rng::RNGWheel;
@@ -34,6 +35,11 @@ fn main() {
         }
         if mode == 11 && args.len() > 4 {
             charski = args[4].trim().chars().collect();
+        }
+        if mode == 12 && args.len() > 4 {
+            let contents =
+                fs_read(args[4].clone().trim()).expect("Something went wrong reading the file");
+            charski = contents.chars().collect();
         }
     }
 

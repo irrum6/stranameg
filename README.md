@@ -9,7 +9,7 @@ $3 - mode [optional]
 $4 - next argument [optional] depends on mode
 
 mode
-10 random leter string
+10 random leter string (aka randstr)
 
 $4 -language [optional] defaults to latin alphabet
 values
@@ -17,7 +17,8 @@ values
 11 Georgian
 
 mode
-11 random letter string - alphabet as command line argument
+11 randstr - alphabet as command line argument
 $4 string acts as alphabet
 
-
+12 randstr - alphabet.file  as command line argument
+$4 alphabet.file name
