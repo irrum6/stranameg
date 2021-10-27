@@ -1,12 +1,19 @@
 pub mod rng {
-    struct RNG {
+    fn nanos() -> u32 {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        return SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .subsec_nanos();
+    }
+    pub struct RNG {
         w: u32,
         x: u32,
         y: u32,
         z: u32,
     }
     impl RNG {
-        fn new() -> RNG {
+        pub fn new() -> RNG {
             RNG {
                 w: 0,
                 x: 0,
@@ -15,27 +22,14 @@ pub mod rng {
             }
         }
 
-        fn seed(&mut self) {
-            use std::time::{SystemTime, UNIX_EPOCH};
-            self.w = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .subsec_nanos();
-            self.x = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .subsec_nanos();
-            self.y = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .subsec_nanos();
-            self.z = SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .subsec_nanos();
+        pub fn seed(&mut self) {
+            self.w = nanos();
+            self.x = nanos();
+            self.y = nanos();
+            self.z = nanos();
         }
 
-        fn get(&mut self) -> u32 {
+        pub fn get(&mut self) -> u32 {
             let tmp: u32 = self.x ^ (self.x << 15);
             self.x = self.y;
             self.y = self.z;
@@ -51,14 +45,10 @@ pub mod rng {
         index: usize,
     }
     impl RNGWheel {
-        pub fn new(l: usize) -> RNGWheel {
-            let mut r = RNG::new();
-            r.seed();
-            return RNGWheel {
-                rng: r,
-                len: l,
-                index: 0,
-            };
+        pub fn new(len: usize) -> RNGWheel {
+            let mut rng = RNG::new();
+            rng.seed();
+            return RNGWheel { rng, len, index: 0 };
         }
     }
     impl Iterator for RNGWheel {

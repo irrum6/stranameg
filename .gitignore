@@ -12,3 +12,4 @@ Cargo.lock
 .notesmd
 .temprs
 ira.abc
+*.list
