@@ -14,6 +14,59 @@ use strgen::strgen::{
 };
 
 use parse::parse::{fill as fill_list, fill2 as fill_list2};
+fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
+    if mode / 10 == 1 {
+        mode1x(len, amount, mode, next);
+        return;
+    }
+    if mode / 10 == 2 {
+        mode2x(len, amount, mode, next);
+        return;
+    }
+}
+
+fn mode1x(len: u32, amount: u32, mode: u32, next: String) {
+    let latinchars = "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy";
+    let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ";
+    let mut charski: Vec<char> = latinchars.chars().collect();
+    if mode == 10 && next == "11" {
+        charski = kachars.chars().collect();
+    }
+    if mode == 11 {
+        charski = next.trim().chars().collect();
+    }
+    if mode == 12 {
+        let contents = fs_read(next.clone().trim()).expect("Something went wrong reading the file");
+        charski = contents.chars().collect();
+    }
+    let mut sg = ABCGenerator::new(charski);
+
+    for _i in 0..amount {
+        let strang = sg.get(len as usize);
+        print!("{}:{}\n", strang, _i);
+    }
+}
+fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
+    let lst = ListType::Nouns;
+    let lan = match next.as_ref() {
+        "11" => Languages::Georgian,
+        "12" => Languages::English,
+        _ => Languages::English,
+    };
+    let mut lsg = ListGenerator::new(lst, lan);
+
+    if mode == 21 {
+        fill_list(&mut lsg);
+    }
+    if mode == 22 {
+        fill_list2(&mut lsg, next.clone());
+    }
+    for _i in 0..amount {
+        let strang = lsg.get(len as usize);
+        print!("{}:{}\n", strang, _i);
+    }
+    return;
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -24,61 +77,18 @@ fn main() {
     let amount: u32 = args[1].trim().parse().expect("type a number");
 
     let mut length: u32 = 12;
+    let mut mode: u32 = 10;
+    let mut next: String = String::new();
 
     if args.len() > 2 {
         length = args[2].trim().parse().expect("type a number");
     }
 
-    let latinchars = "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy";
-    let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ";
-
-    let mut charski: Vec<char> = latinchars.chars().collect();
-
     if args.len() > 3 {
-        let mode: u32 = args[3].trim().parse().expect("type a number");
-        //mode 1x randome letter string generator
-        if mode == 10 && args.len() > 4 && args[4] == "11" {
-            charski = kachars.chars().collect();
-        }
-        if mode == 11 && args.len() > 4 {
-            charski = args[4].trim().chars().collect();
-        }
-        if mode == 12 && args.len() > 4 {
-            let contents =
-                fs_read(args[4].clone().trim()).expect("Something went wrong reading the file");
-            charski = contents.chars().collect();
-        }
-
-        //mode 2x list string generator
-        if mode == 21 && args.len() > 4 && args[4] == "12" {
-            let lst = ListType::Nouns;
-            let lan = Languages::English;
-            let mut lsg = ListGenerator::new(lst, lan);
-            fill_list(&mut lsg);
-
-            for _i in 0..amount {
-                let strang = lsg.get(length as usize);
-                print!("{}:{}\n", strang, _i);
-            }
-            return;
-        }
-        if mode == 22 && args.len() > 4 {
-            let lst = ListType::Nouns;
-            let lan = Languages::English;
-            let mut lsg = ListGenerator::new(lst, lan);
-            fill_list2(&mut lsg, args[4].clone());
-            for _i in 0..amount {
-                let strang = lsg.get(length as usize);
-                print!("{}:{}\n", strang, _i);
-            }
-            return;
-        }
+        mode = args[3].trim().parse().expect("type a number");
     }
-
-    let mut sg = ABCGenerator::new(charski);
-
-    for _i in 0..amount {
-        let strang = sg.get(length as usize);
-        print!("{}:{}\n", strang, _i);
+    if args.len() > 4 {
+        next = args[4].clone();
     }
+    run_generator(length, amount, mode, next);
 }
