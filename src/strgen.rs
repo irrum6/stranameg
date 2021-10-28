@@ -66,6 +66,13 @@ pub mod strgen {
         pub fn get_list_type(&self) -> ListType {
             return self.lstype.clone();
         }
+        pub fn get_single_word(&self) -> String {
+            let mut rng = RNG::new();
+            rng.seed();
+            let diclen = self.list.len();
+            let index = rng.get() as usize % diclen;
+            return self.list[index].clone();
+        }
     }
     impl StringGenerator for ListStringGenerator {
         fn get(&mut self, len: usize) -> String {
@@ -79,52 +86,6 @@ pub mod strgen {
                 let strong = self.list[index].clone();
                 stringlen += strong.len();
                 string_list.push(strong);
-            }
-            return string_list.join(" ");
-        }
-    }
-
-    pub struct CoupledWordsGenerator {
-        list: Vec<String>,
-        list2: Vec<String>,
-        language: Languages,
-    }
-    impl CoupledWordsGenerator {
-        pub fn new(language: Languages) -> CoupledWordsGenerator {
-            let mut list: Vec<String> = Vec::new();
-            let mut list2: Vec<String> = Vec::new();
-            return CoupledWordsGenerator {
-                list,
-                list2,
-                language,
-            };
-        }
-        pub fn add_list(&mut self, v: Vec<String>, index: u32) {
-            if index == 2 {
-                self.list2 = v;
-                return;
-            }
-            self.list = v;
-        }
-        pub fn get_language(&self) -> Languages {
-            return self.language.clone();
-        }
-    }
-
-    impl StringGenerator for CoupledWordsGenerator {
-        fn get(&mut self, len: usize) -> String {
-            let mut rng = RNG::new();
-            rng.seed();
-            let diclen = self.list.len();
-            let mut stringlen = 0;
-            let mut string_list: Vec<String> = Vec::new();
-            while len > stringlen {
-                let index = rng.get() as usize % diclen;
-                let strong = self.list[index].clone();
-                let strong2 = self.list2[index].clone();
-                let coupled = format!("{}_{}", strong, strong2);
-                stringlen += coupled.len();
-                string_list.push(coupled);
             }
             return string_list.join(" ");
         }

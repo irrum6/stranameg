@@ -9,11 +9,11 @@ mod tests;
 use rng::rng::{RNGWheel, RNG};
 
 use strgen::strgen::{
-    AlphaBetStringGenerator as ABCGenerator, CoupledWordsGenerator as Coupler, Languages,
-    ListStringGenerator as ListGenerator, ListType, StringGenerator,
+    AlphaBetStringGenerator as ABCGenerator, Languages, ListStringGenerator as ListGenerator,
+    ListType, StringGenerator,
 };
 
-use parse::parse::{fill as fill_list, fill2 as fill_list2, fill_coupled, fill_coupled2};
+use parse::parse::{fill as fill_list, fill2 as fill_list2};
 fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
     if mode / 10 == 1 {
         mode1x(len, amount, mode, next);
@@ -24,7 +24,7 @@ fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
         return;
     }
     if mode / 10 == 3 {
-        mode3x(len, amount, mode, next);
+        mode3x(amount, mode, next);
         return;
     }
 }
@@ -72,26 +72,38 @@ fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
     return;
 }
 
-fn mode3x(len: u32, amount: u32, mode: u32, next: String) {
+fn mode3x(amount: u32, mode: u32, next: String) {
     let lan = match next.as_ref() {
         "11" => Languages::Georgian,
         "12" => Languages::English,
         _ => Languages::English,
     };
-    let mut cw = Coupler::new(lan);
 
-    if mode == 31 {
-        fill_coupled(&mut cw);
-    }
+    let list_typ1 = ListType::Adjectives;
+    let mut list_typ2 = ListType::Nouns;
+
     if mode == 32 {
+        list_typ2 = ListType::Names;
+    }
+    let mut lsg1 = ListGenerator::new(list_typ1, lan.clone());
+    let mut lsg2 = ListGenerator::new(list_typ2, lan);
+
+    if mode == 31 || mode == 32 {
+        fill_list(&mut lsg1);
+        fill_list(&mut lsg2);
+    }
+    if mode == 33 {
         let names: Vec<&str> = next.split(":").collect();
         let name0 = String::from(names[0]);
         let name1 = String::from(names[1]);
-        fill_coupled2(&mut cw, name0, name1);
+        fill_list2(&mut lsg1, name0);
+        fill_list2(&mut lsg2, name1);
     }
     for _i in 0..amount {
-        let strang = cw.get(len as usize);
-        print!("{}:{}\n", strang, _i);
+        let strang = lsg1.get_single_word();
+        let strang2 = lsg2.get_single_word();
+        let strong = format!("{}_{}", strang, strang2);
+        print!("{}:{}\n", strong, _i);
     }
     return;
 }

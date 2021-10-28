@@ -47,7 +47,8 @@ benevolent,violent,active,passive,repressed,fearful,brave,heroic,punishable,desp
 Benjamin,Brooklyn,Brooks,Bennett,Bella,Beau,Brayden,Bryson,Blake,Braxton
 
 3x coupled words generator
-31 coupled words -> app-list
+31 coupled words -> app-list adjective_noun
+32 coupled words -> app-list adjective_name
 app will look for list in lists directory for following file name patters
 [listtype].[language].list
 types:nouns,adjectives,names
@@ -58,6 +59,7 @@ values
 12 english
 
 
-coupled words -> from list files
+33 coupled words -> from list files
 $4 list file names  -> single string names separated with ":"
-example program 16 64 22 sample.list:sample2.list
+example program 16 64 33 sample.list:sample2.list \n
+notice:: $2 does not have effect here
