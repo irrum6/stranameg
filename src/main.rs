@@ -9,11 +9,11 @@ mod tests;
 use rng::rng::{RNGWheel, RNG};
 
 use strgen::strgen::{
-    AlphaBetStringGenerator as ABCGenerator, Languages, ListStringGenerator as ListGenerator,
-    ListType, StringGenerator,
+    AlphaBetStringGenerator as ABCGenerator, CoupledWordsGenerator as Coupler, Languages,
+    ListStringGenerator as ListGenerator, ListType, StringGenerator,
 };
 
-use parse::parse::{fill as fill_list, fill2 as fill_list2};
+use parse::parse::{fill as fill_list, fill2 as fill_list2, fill_coupled, fill_coupled2};
 fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
     if mode / 10 == 1 {
         mode1x(len, amount, mode, next);
@@ -21,6 +21,10 @@ fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
     }
     if mode / 10 == 2 {
         mode2x(len, amount, mode, next);
+        return;
+    }
+    if mode / 10 == 3 {
+        mode3x(len, amount, mode, next);
         return;
     }
 }
@@ -63,6 +67,30 @@ fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
     }
     for _i in 0..amount {
         let strang = lsg.get(len as usize);
+        print!("{}:{}\n", strang, _i);
+    }
+    return;
+}
+
+fn mode3x(len: u32, amount: u32, mode: u32, next: String) {
+    let lan = match next.as_ref() {
+        "11" => Languages::Georgian,
+        "12" => Languages::English,
+        _ => Languages::English,
+    };
+    let mut cw = Coupler::new(lan);
+
+    if mode == 31 {
+        fill_coupled(&mut cw);
+    }
+    if mode == 32 {
+        let names: Vec<&str> = next.split(":").collect();
+        let name0 = String::from(names[0]);
+        let name1 = String::from(names[1]);
+        fill_coupled2(&mut cw, name0, name1);
+    }
+    for _i in 0..amount {
+        let strang = cw.get(len as usize);
         print!("{}:{}\n", strang, _i);
     }
     return;

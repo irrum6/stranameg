@@ -27,14 +27,16 @@ $4 alphabet.file name
 2x list string generator
 
 mode
-21 string by word  -> app-dictionary
+21 string by word  -> app-list
 app will look for list in lists directory for following file name patters
 [listtype].[language].list
+types:nouns,adjectives,names
 
 $4 -language [optional] defaults to latin alphabet
 values
-11 english
-12 georgian
+11 georgian
+12 english
+
 
 22 string by word  -> list file
 $4 list file name
@@ -43,3 +45,19 @@ example program 16 64 22 sample.list
 sample.list
 benevolent,violent,active,passive,repressed,fearful,brave,heroic,punishable,desperate
 Benjamin,Brooklyn,Brooks,Bennett,Bella,Beau,Brayden,Bryson,Blake,Braxton
+
+3x coupled words generator
+31 coupled words -> app-list
+app will look for list in lists directory for following file name patters
+[listtype].[language].list
+types:nouns,adjectives,names
+
+$4 -language [optional] defaults to latin alphabet
+values
+11 georgian
+12 english
+
+
+coupled words -> from list files
+$4 list file names  -> single string names separated with ":"
+example program 16 64 22 sample.list:sample2.list
