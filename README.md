@@ -58,6 +58,9 @@ values \
 11 georgian \
 12 english \
 
+notice : $2 refers to minimal length
+
+
 33 coupled words -> from list files \
 $4 list file names  -> single string names separated with ":" \
 example program 16 64 33 sample.list:sample2.list \
