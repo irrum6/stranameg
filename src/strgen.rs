@@ -57,8 +57,8 @@ pub mod strgen {
                 language,
             };
         }
-        pub fn add_list(&mut self, v: Vec<String>) {
-            self.list = v;
+        pub fn add_word(&mut self, s: String) {
+            self.list.push(s);
         }
         pub fn get_language(&self) -> Languages {
             return self.language.clone();

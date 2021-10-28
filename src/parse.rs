@@ -27,32 +27,28 @@ pub mod parse {
     }
 
     pub fn fill(list: &mut ListGenerator) {
-        let mut ls: Vec<String> = Vec::new();
         let filename = get_file_name(list.get_list_type(), list.get_language());
         if let Ok(lines) = read_lines(filename) {
             for line in lines {
                 if let Ok(ip) = line {
                     let chazar = ip.split(",");
                     for chaz in chazar {
-                        ls.push(String::from(chaz));
+                        list.add_word(String::from(chaz))
                     }
                 }
             }
         }
-        list.add_list(ls);
     }
     pub fn fill2(list: &mut ListGenerator, filename: String) {
-        let mut ls: Vec<String> = Vec::new();
         if let Ok(lines) = read_lines(filename) {
             for line in lines {
                 if let Ok(ip) = line {
                     let chazar = ip.split(",");
                     for chaz in chazar {
-                        ls.push(String::from(chaz));
+                        list.add_word(String::from(chaz))
                     }
                 }
             }
         }
-        list.add_list(ls);
     }
 }
