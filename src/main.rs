@@ -14,6 +14,16 @@ use strgen::strgen::{
 };
 
 use parse::parse::{fill as fill_list, fill2 as fill_list2};
+
+pub fn lang_mapper(s: &String) -> Languages {
+    let result = match s.as_ref() {
+        "11" => Languages::Georgian,
+        "12" => Languages::English,
+        _ => Languages::English,
+    };
+    return result;
+}
+
 fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
     if mode / 10 == 1 {
         mode1x(len, amount, mode, next);
@@ -52,11 +62,7 @@ fn mode1x(len: u32, amount: u32, mode: u32, next: String) {
 }
 fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
     let lst = ListType::Nouns;
-    let lan = match next.as_ref() {
-        "11" => Languages::Georgian,
-        "12" => Languages::English,
-        _ => Languages::English,
-    };
+    let lan = lang_mapper(&next);
     let mut lsg = ListGenerator::new(lst, lan);
 
     if mode == 21 {
@@ -73,11 +79,7 @@ fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
 }
 
 fn mode3x(amount: u32, mode: u32, next: String) {
-    let lan = match next.as_ref() {
-        "11" => Languages::Georgian,
-        "12" => Languages::English,
-        _ => Languages::English,
-    };
+    let lan = lang_mapper(&next);
 
     let list_typ1 = ListType::Adjectives;
     let mut list_typ2 = ListType::Nouns;

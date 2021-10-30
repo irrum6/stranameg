@@ -49,8 +49,7 @@ pub mod strgen {
 
     impl ListStringGenerator {
         pub fn new(lstype: ListType, language: Languages) -> ListStringGenerator {
-            let mut list: Vec<String> = Vec::new();
-            list.push(String::from("gela"));
+            let list: Vec<String> = Vec::new();
             return ListStringGenerator {
                 list,
                 lstype,
