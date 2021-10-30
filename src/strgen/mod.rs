@@ -21,12 +21,17 @@ pub mod strgen {
     }
 
     impl AlphaBetStringGenerator {
-        pub fn new(alpha: Vec<char>) -> AlphaBetStringGenerator {
-            let x = String::new();
+        pub fn new(s: &str) -> AlphaBetStringGenerator {
+            let held_string = String::new();
+            let alphabet: Vec<char> = s.chars().collect();
             return AlphaBetStringGenerator {
-                held_string: x,
-                alphabet: alpha,
+                held_string,
+                alphabet,
             };
+        }
+        pub fn set_alphabet(&mut self, s: &str) {
+            let abc: Vec<char> = s.chars().collect();
+            self.alphabet = abc;
         }
     }
     impl StringGenerator for AlphaBetStringGenerator {
