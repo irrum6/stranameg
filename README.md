@@ -46,6 +46,8 @@ sample.list \
 benevolent,violent,active,passive,repressed,fearful,brave,heroic,punishable,desperate \
 Benjamin,Brooklyn,Brooks,Bennett,Bella,Beau,Brayden,Bryson,Blake,Braxton \
 
+notice : $2 here refers to minimal length
+
 3x coupled words generator \
 31 coupled words -> app-list adjective_noun \
 32 coupled words -> app-list adjective_name \
@@ -58,10 +60,10 @@ values \
 11 georgian \
 12 english \
 
-notice : $2 refers to minimal length
-
-
 33 coupled words -> from list files \
 $4 list file names  -> single string names separated with ":" \
 example program 16 64 33 sample.list:sample2.list \
-notice:: $2 does not have effect here \
+notice:: $2(length) does not have effect here \
+
+add zero(0) to mode to make program write to file
+example: program 8 12 310 12

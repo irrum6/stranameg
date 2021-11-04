@@ -1,5 +1,7 @@
 pub mod modes {
     use std::fs::read_to_string as fs_read;
+    use std::fs::File;
+    use std::io::{Error, Write};
 
     use crate::{
         fill_list, fill_list2, ABCGenerator, Languages, ListGenerator, ListType, StringGenerator,
@@ -14,7 +16,13 @@ pub mod modes {
         return result;
     }
 
-    pub fn mode1x(len: u32, amount: u32, mode: u32, next: String) {
+    pub fn mode1x(len: u32, amount: u32, _mode: u32, next: String) -> Result<(), Error> {
+        let mut mode = _mode;
+        let mut wtf = false;
+        if mode > 99 {
+            mode = mode / 10;
+            wtf = true;
+        }
         let latinchars = "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy";
         let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ";
 
@@ -31,12 +39,25 @@ pub mod modes {
                 fs_read(next.clone().trim()).expect("Something went wrong reading the file");
             sg.set_alphabet(contents.as_ref());
         }
+        let path = "strings.textout";
+        let mut output = File::create(path)?;
         for _i in 0..amount {
             let strang = sg.get(len as usize);
-            print!("{}:{}\n", strang, _i);
+            if wtf {
+                writeln!(output, "{}", strang)?;
+            } else {
+                print!("{}:{}\n", strang, _i);
+            }
         }
+        return Ok(());
     }
-    pub fn mode2x(len: u32, amount: u32, mode: u32, next: String) {
+    pub fn mode2x(len: u32, amount: u32, _mode: u32, next: String) -> Result<(), Error> {
+        let mut mode = _mode;
+        let mut wtf = false;
+        if mode > 99 {
+            mode = mode / 10;
+            wtf = true;
+        }
         let lst = ListType::Nouns;
         let lan = lang_mapper(&next);
         let mut lsg = ListGenerator::new(lst, lan);
@@ -46,13 +67,25 @@ pub mod modes {
         if mode == 22 {
             fill_list2(&mut lsg, next.clone());
         }
+        let path = "strings.textout";
+        let mut output = File::create(path)?;
         for _i in 0..amount {
             let strang = lsg.get(len as usize);
-            print!("{}:{}\n", strang, _i);
+            if wtf {
+                writeln!(output, "{}", strang)?;
+            } else {
+                print!("{}:{}\n", strang, _i);
+            }
         }
-        return;
+        return Ok(());
     }
-    pub fn mode3x(amount: u32, mode: u32, next: String) {
+    pub fn mode3x(amount: u32, _mode: u32, next: String) -> Result<(), Error> {
+        let mut mode = _mode;
+        let mut wtf = false;
+        if mode > 99 {
+            mode = mode / 10;
+            wtf = true;
+        }
         let lan = lang_mapper(&next);
         let list_typ1 = ListType::Adjectives;
         let mut list_typ2 = ListType::Nouns;
@@ -72,12 +105,18 @@ pub mod modes {
             fill_list2(&mut lsg1, name0);
             fill_list2(&mut lsg2, name1);
         }
+        let path = "strings.textout";
+        let mut output = File::create(path)?;
         for _i in 0..amount {
             let strang = lsg1.get_single_word();
             let strang2 = lsg2.get_single_word();
             let strong = format!("{}_{}", strang, strang2);
-            print!("{}:{}\n", strong, _i);
+            if wtf {
+                writeln!(output, "{}", strong)?;
+            } else {
+                print!("{}:{}\n", strong, _i);
+            }
         }
-        return;
+        return Ok(());
     }
 }

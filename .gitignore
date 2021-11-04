@@ -13,3 +13,4 @@ Cargo.lock
 .temprs
 ira.abc
 *.list
+*.textout

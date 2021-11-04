@@ -1,10 +1,11 @@
 use std::env;
+use std::io::Error;
 
+mod modes;
 mod parse;
 mod rng;
 mod strgen;
 mod tests;
-mod modes;
 
 use modes::modes::*;
 
@@ -17,26 +18,24 @@ use strgen::strgen::{
 
 use parse::parse::{fill as fill_list, fill2 as fill_list2};
 
-fn run_generator(len: u32, amount: u32, mode: u32, next: String) {
-    if mode / 10 == 1 {
-        mode1x(len, amount, mode, next);
-        return;
+fn run_generator(len: u32, amount: u32, mode: u32, next: String) -> Result<(), Error> {
+    if mode / 10 == 1 || (mode > 99 && mode / 100 == 1) {
+        return mode1x(len, amount, mode, next);
     }
-    if mode / 10 == 2 {
-        mode2x(len, amount, mode, next);
-        return;
+    if mode / 10 == 2 || (mode > 99 && mode / 100 == 2) {
+        return mode2x(len, amount, mode, next);
     }
-    if mode / 10 == 3 {
-        mode3x(amount, mode, next);
-        return;
+    if mode / 10 == 3 || (mode > 99 && mode / 100 == 3) {
+        return mode3x(amount, mode, next);
     }
+    return Ok(());
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
-        return;
+        return Ok(());
     }
     let amount: u32 = args[1].trim().parse().expect("type a number");
 
@@ -54,5 +53,5 @@ fn main() {
     if args.len() > 4 {
         next = args[4].clone();
     }
-    run_generator(length, amount, mode, next);
+    return run_generator(length, amount, mode, next);
 }
