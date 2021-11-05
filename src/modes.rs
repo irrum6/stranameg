@@ -3,6 +3,8 @@ pub mod modes {
     use std::fs::File;
     use std::io::{Error, Write};
 
+    const OUTPUT_NAME: &str = "strings.textout";
+
     use crate::{
         fill_list, fill_list2, ABCGenerator, Languages, ListGenerator, ListType, StringGenerator,
     };
@@ -39,8 +41,7 @@ pub mod modes {
                 fs_read(next.clone().trim()).expect("Something went wrong reading the file");
             sg.set_alphabet(contents.as_ref());
         }
-        let path = "strings.textout";
-        let mut output = File::create(path)?;
+        let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..amount {
             let strang = sg.get(len as usize);
             if wtf {
@@ -67,8 +68,7 @@ pub mod modes {
         if mode == 22 {
             fill_list2(&mut lsg, next.clone());
         }
-        let path = "strings.textout";
-        let mut output = File::create(path)?;
+        let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..amount {
             let strang = lsg.get(len as usize);
             if wtf {
@@ -105,8 +105,8 @@ pub mod modes {
             fill_list2(&mut lsg1, name0);
             fill_list2(&mut lsg2, name1);
         }
-        let path = "strings.textout";
-        let mut output = File::create(path)?;
+
+        let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..amount {
             let strang = lsg1.get_single_word();
             let strang2 = lsg2.get_single_word();

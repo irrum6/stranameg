@@ -33,6 +33,9 @@ pub mod parse {
                 if let Ok(ip) = line {
                     let chazar = ip.split(",");
                     for chaz in chazar {
+                        if chaz == "" {
+                            continue;
+                        }
                         list.add_word(String::from(chaz))
                     }
                 }
@@ -45,6 +48,9 @@ pub mod parse {
                 if let Ok(ip) = line {
                     let chazar = ip.split(",");
                     for chaz in chazar {
+                        if chaz == "" {
+                            continue;
+                        }
                         list.add_word(String::from(chaz))
                     }
                 }
