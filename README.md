@@ -14,8 +14,10 @@ mode \
 10 random leter string \
 $4 -language [optional] defaults to latin alphabet \
 values \
-10 latin \
-11 Georgian \
+11 georgian \
+ka georgian \
+12 english \
+en english \
 
 mode \
 11 randstr - alphabet as command line argument \

@@ -17,8 +17,10 @@ pub mod help {
         10 random leter string \n
         $4 -language [optional] defaults to latin alphabet \n
         values \n
-        10 latin \n
-        11 Georgian \n
+        11 georgian \n
+        ka georgian \n
+        12 english \n
+        en english \n
         
         mode \n
         11 randstr - alphabet as command line argument \n

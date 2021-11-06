@@ -19,6 +19,13 @@ pub mod modes {
         };
         return result;
     }
+    fn get_alphabet(lang: Languages) -> String {
+        let result = match lang {
+            Languages::Georgian => "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ",
+            Languages::English => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
+        };
+        return String::from(result);
+    }
 
     pub fn mode1x(len: u32, amount: u32, _mode: u32, next: String) -> Result<(), Error> {
         let mut mode = _mode;
@@ -27,13 +34,13 @@ pub mod modes {
             mode = mode / 10;
             wtf = true;
         }
-        let latinchars = "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy";
-        let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ";
 
-        let mut sg = ABCGenerator::new(latinchars);
+        let mut sg = ABCGenerator::new("abc");
 
-        if mode == 10 && next == "11" {
-            sg.set_alphabet(kachars);
+        if mode == 10{
+            let lang = lang_mapper(&next);
+            let alphabet = get_alphabet(lang);
+            sg.set_alphabet(alphabet.as_ref());
         }
         if mode == 11 {
             sg.set_alphabet(next.as_ref());
