@@ -1,12 +1,14 @@
 use std::env;
 use std::io::Error;
 
+mod help;
 mod modes;
 mod parse;
 mod rng;
 mod strgen;
 mod tests;
 
+use help::help::print_help;
 use modes::modes::*;
 
 use rng::rng::{RNGWheel, RNG};
@@ -35,8 +37,14 @@ fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
+        print_help();
         return Ok(());
     }
+    if args[1] == "-h" {
+        print_help();
+        return Ok(());
+    }
+
     let amount: u32 = args[1].trim().parse().expect("type a number");
 
     let mut length: u32 = 12;
