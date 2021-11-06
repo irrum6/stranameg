@@ -35,8 +35,9 @@ types:nouns,adjectives,names \
 $4 -language [optional] defaults to latin alphabet \
 values \
 11 georgian \
+ka georgian \
 12 english \
-
+en english \
 
 22 string by word  -> list file \
 $4 list file name \
@@ -58,7 +59,9 @@ types:nouns,adjectives,names \
 $4 -language [optional] defaults to latin alphabet \
 values \
 11 georgian \
+ka georgian \
 12 english \
+en english \
 
 33 coupled words -> from list files \
 $4 list file names  -> single string names separated with ":" \

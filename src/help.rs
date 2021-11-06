@@ -38,7 +38,9 @@ pub mod help {
         $4 -language [optional] defaults to latin alphabet \n
         values \n
         11 georgian \n
+        ka georgian \n
         12 english \n
+        en english \n
         
         
         22 string by word  -> list file \n
@@ -61,7 +63,9 @@ pub mod help {
         $4 -language [optional] defaults to latin alphabet \n
         values \n
         11 georgian \n
+        ka georgian \n
         12 english \n
+        en english \n
         
         33 coupled words -> from list files \n
         $4 list file names  -> single string names separated with : \n

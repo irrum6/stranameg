@@ -45,7 +45,7 @@ fn main() -> Result<(), Error> {
         return Ok(());
     }
 
-    let amount: u32 = args[1].trim().parse().expect("type a number");
+    let amount = args[1].trim().parse().expect("type a number");
 
     let mut length: u32 = 12;
     let mut mode: u32 = 10;

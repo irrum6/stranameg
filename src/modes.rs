@@ -12,7 +12,9 @@ pub mod modes {
     fn lang_mapper(s: &String) -> Languages {
         let result = match s.as_ref() {
             "11" => Languages::Georgian,
+            "ka" => Languages::Georgian,
             "12" => Languages::English,
+            "en" => Languages::English,
             _ => Languages::English,
         };
         return result;
