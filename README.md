@@ -65,5 +65,7 @@ $4 list file names  -> single string names separated with ":" \
 example program 16 64 33 sample.list:sample2.list \
 notice:: $2(length) does not have effect here \
 
-add zero(0) to mode to make program write to file
-example: program 8 12 310 12
+add zero(0) to mode to make program write to file \
+example: program 8 12 310 12 \
+As of now program writes to file named strings.textout which will be created \
+in the same directory , from where it was run. \
