@@ -40,6 +40,8 @@ values \
 ka georgian \
 12 english \
 en english \
+13 german \
+de german \
 
 22 string by word  -> list file \
 $4 list file name \
@@ -64,6 +66,8 @@ values \
 ka georgian \
 12 english \
 en english \
+13 german \
+de german \
 
 33 coupled words -> from list files \
 $4 list file names  -> single string names separated with ":" \

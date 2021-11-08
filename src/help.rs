@@ -43,6 +43,8 @@ pub mod help {
         ka georgian \n
         12 english \n
         en english \n
+        13 german \n
+        de german \n
         
         
         22 string by word  -> list file \n
@@ -68,6 +70,8 @@ pub mod help {
         ka georgian \n
         12 english \n
         en english \n
+        13 german \n
+        de german \n
         
         33 coupled words -> from list files \n
         $4 list file names  -> single string names separated with : \n

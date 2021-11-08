@@ -13,12 +13,13 @@ use modes::modes::*;
 
 use rng::rng::{RNGWheel, RNG};
 
+use strgen::grammar::*;
 use strgen::strgen::{
     AlphaBetStringGenerator as ABCGenerator, Languages, ListStringGenerator as ListGenerator,
     ListType, StringGenerator,
 };
 
-use parse::parse::{fill as fill_list, fill2 as fill_list2};
+use parse::parse::{fill as fill_list, fill2 as fill_list2,fill_german_nounlist};
 
 fn run_generator(len: u32, amount: u32, mode: u32, next: String) -> Result<(), Error> {
     if mode / 10 == 1 || (mode > 99 && mode / 100 == 1) {

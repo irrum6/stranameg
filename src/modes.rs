@@ -5,8 +5,10 @@ pub mod modes {
 
     const OUTPUT_NAME: &str = "strings.textout";
 
+    use crate::grammar::GermanNounList;
     use crate::{
-        fill_list, fill_list2, ABCGenerator, Languages, ListGenerator, ListType, StringGenerator,
+        fill_german_nounlist, fill_list, fill_list2, ABCGenerator, Languages, ListGenerator,
+        ListType, StringGenerator,
     };
 
     fn lang_mapper(s: &String) -> Languages {
@@ -15,6 +17,8 @@ pub mod modes {
             "ka" => Languages::Georgian,
             "12" => Languages::English,
             "en" => Languages::English,
+            "13" => Languages::German,
+            "de" => Languages::German,
             _ => Languages::English,
         };
         return result;
@@ -23,6 +27,7 @@ pub mod modes {
         let result = match lang {
             Languages::Georgian => "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ",
             Languages::English => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
+            _ => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
         };
         return String::from(result);
     }
@@ -37,7 +42,7 @@ pub mod modes {
 
         let mut sg = ABCGenerator::new("abc");
 
-        if mode == 10{
+        if mode == 10 {
             let lang = lang_mapper(&next);
             let alphabet = get_alphabet(lang);
             sg.set_alphabet(alphabet.as_ref());
@@ -102,7 +107,7 @@ pub mod modes {
             list_typ2 = ListType::Names;
         }
         let mut lsg1 = ListGenerator::new(list_typ1, lan.clone());
-        let mut lsg2 = ListGenerator::new(list_typ2, lan);
+        let mut lsg2 = ListGenerator::new(list_typ2, lan.clone());
         if mode == 31 || mode == 32 {
             fill_list(&mut lsg1);
             fill_list(&mut lsg2);
@@ -114,12 +119,23 @@ pub mod modes {
             fill_list2(&mut lsg1, name0);
             fill_list2(&mut lsg2, name1);
         }
+        let mut nounlist: GermanNounList = GermanNounList::new();
+        if lan.is_german() {
+            fill_german_nounlist(&mut nounlist);
+        }
 
         let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..amount {
             let strang = lsg1.get_single_word();
             let strang2 = lsg2.get_single_word();
-            let strong = format!("{}_{}", strang, strang2);
+
+            let mut strong = format!("{}_{}", strang, strang2);
+
+            if lan.is_german() && mode == 31 {
+                //noun adjective
+                strong = nounlist.get_adapted(strang2, strang);
+            }
+
             if wtf {
                 writeln!(output, "{}", strong)?;
             } else {

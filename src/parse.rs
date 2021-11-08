@@ -3,7 +3,8 @@ pub mod parse {
     use std::io::{self, BufRead};
     use std::path::Path;
 
-    use crate::{Languages, ListGenerator, ListType};
+    use crate::{Languages, ListGenerator, ListType,grammar::GermanNounList as GermanNounList,
+    grammar::GermanNoun as GermanNoun, grammar::GermanGenders as GermanGenders};
 
     //copied from rust site, if you don't undestand this don't worry , so did I.
     fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
@@ -19,11 +20,28 @@ pub mod parse {
             ListType::Adjectives => "adjectives",
             ListType::Names => "names",
         };
-        let lang = match lang {
-            Languages::English => "en",
-            Languages::Georgian => "ge",
-        };
+        let lang = lang.abbr();
         return format!("./lists/{}.{}.list", head, lang);
+    }
+    pub fn fill_german_nounlist(list:&mut GermanNounList){
+        let filename ="./lists/genders.de.dic";
+        if let Ok(lines) = read_lines(filename) {
+            for line in lines {
+                if let Ok(ip) = line {
+                    let chazar = ip.split(",");
+                    for chaz in chazar {
+                        if chaz == "" {
+                            continue;
+                        }
+                        let spl:Vec<&str> = chaz.trim().split(" ").collect();
+                        let gender = GermanGenders::from(spl[0]);
+                        let noun = String::from(spl[1]);
+                        let gnoun = GermanNoun::new(noun,gender);
+                        list.add(gnoun);
+                    }
+                }
+            }
+        }
     }
 
     pub fn fill(list: &mut ListGenerator) {
@@ -36,7 +54,7 @@ pub mod parse {
                         if chaz == "" {
                             continue;
                         }
-                        list.add_word(String::from(chaz))
+                        list.add_word(String::from(chaz.trim()))
                     }
                 }
             }
@@ -51,7 +69,7 @@ pub mod parse {
                         if chaz == "" {
                             continue;
                         }
-                        list.add_word(String::from(chaz))
+                        list.add_word(String::from(chaz.trim()))
                     }
                 }
             }

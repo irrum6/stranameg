@@ -1,3 +1,5 @@
+pub mod grammar;
+
 pub mod strgen {
     use crate::RNGWheel;
     use crate::RNG;
@@ -11,6 +13,33 @@ pub mod strgen {
     pub enum Languages {
         English,
         Georgian,
+        German,
+    }
+    impl Languages {
+        pub fn are_same(a: Languages, b: Languages) -> bool {
+            let x = match a {
+                Languages::English => 1,
+                Languages::Georgian => 2,
+                Languages::German => 3,
+            };
+            let y = match b {
+                Languages::English => 1,
+                Languages::Georgian => 2,
+                Languages::German => 3,
+            };
+            return x == y;
+        }
+        pub fn abbr(&self) -> String {
+            let result = match *self {
+                Languages::English => "en",
+                Languages::Georgian => "ge",
+                Languages::German => "de",
+            };
+            return String::from(result);
+        }
+        pub fn is_german(&self)->bool{
+            return matches!(*self ,Languages::German);
+        }
     }
     pub trait StringGenerator {
         fn get(&mut self, l: usize) -> String;
