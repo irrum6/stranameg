@@ -11,18 +11,6 @@ pub mod modes {
         ListType, StringGenerator,
     };
 
-    fn lang_mapper(s: &String) -> Languages {
-        let result = match s.as_ref() {
-            "11" => Languages::Georgian,
-            "ka" => Languages::Georgian,
-            "12" => Languages::English,
-            "en" => Languages::English,
-            "13" => Languages::German,
-            "de" => Languages::German,
-            _ => Languages::English,
-        };
-        return result;
-    }
     fn get_alphabet(lang: Languages) -> String {
         let result = match lang {
             Languages::Georgian => "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ",
@@ -43,7 +31,7 @@ pub mod modes {
         let mut sg = ABCGenerator::new("abc");
 
         if mode == 10 {
-            let lang = lang_mapper(&next);
+            let lang = Languages::from(&next);
             let alphabet = get_alphabet(lang);
             sg.set_alphabet(alphabet.as_ref());
         }
@@ -74,7 +62,7 @@ pub mod modes {
             wtf = true;
         }
         let lst = ListType::Nouns;
-        let lan = lang_mapper(&next);
+        let lan = Languages::from(&next);
         let mut lsg = ListGenerator::new(lst, lan);
         if mode == 21 {
             fill_list(&mut lsg);
@@ -100,7 +88,7 @@ pub mod modes {
             mode = mode / 10;
             wtf = true;
         }
-        let lan = lang_mapper(&next);
+        let lan = Languages::from(&next);
         let list_typ1 = ListType::Adjectives;
         let mut list_typ2 = ListType::Nouns;
         if mode == 32 {

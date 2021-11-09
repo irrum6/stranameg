@@ -17,9 +17,7 @@ pub mod help {
         10 random leter string \n
         $4 -language [optional] defaults to latin alphabet \n
         values \n
-        11 georgian \n
         ka georgian \n
-        12 english \n
         en english \n
         
         mode \n
@@ -39,11 +37,8 @@ pub mod help {
         
         $4 -language [optional] defaults to latin alphabet \n
         values \n
-        11 georgian \n
         ka georgian \n
-        12 english \n
         en english \n
-        13 german \n
         de german \n
         
         
@@ -66,11 +61,8 @@ pub mod help {
         
         $4 -language [optional] defaults to latin alphabet \n
         values \n
-        11 georgian \n
-        ka georgian \n
-        12 english \n
+        ka georgian \n        
         en english \n
-        13 german \n
         de german \n
         
         33 coupled words -> from list files \n

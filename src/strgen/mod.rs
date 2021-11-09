@@ -16,29 +16,24 @@ pub mod strgen {
         German,
     }
     impl Languages {
-        pub fn are_same(a: Languages, b: Languages) -> bool {
-            let x = match a {
-                Languages::English => 1,
-                Languages::Georgian => 2,
-                Languages::German => 3,
-            };
-            let y = match b {
-                Languages::English => 1,
-                Languages::Georgian => 2,
-                Languages::German => 3,
-            };
-            return x == y;
-        }
         pub fn abbr(&self) -> String {
             let result = match *self {
                 Languages::English => "en",
-                Languages::Georgian => "ge",
+                Languages::Georgian => "ka",
                 Languages::German => "de",
             };
             return String::from(result);
         }
-        pub fn is_german(&self)->bool{
-            return matches!(*self ,Languages::German);
+        pub fn is_german(&self) -> bool {
+            return matches!(*self, Languages::German);
+        }
+        pub fn from(s: &str) -> Languages {
+            return match s {
+                "en" => Languages::English,
+                "ka" => Languages::Georgian,
+                "de" => Languages::German,
+                _ => Languages::English,
+            };
         }
     }
     pub trait StringGenerator {
@@ -117,7 +112,7 @@ pub mod strgen {
             while len > stringlen {
                 let index = rng.get() as usize % diclen;
                 let strong = self.list[index].clone();
-                stringlen += strong.len();
+                stringlen += strong.chars().count();
                 string_list.push(strong);
             }
             return string_list.join(" ");

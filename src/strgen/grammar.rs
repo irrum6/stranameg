@@ -36,6 +36,14 @@ pub mod grammar {
             };
             return String::from(gender);
         }
+        pub fn get_suffix(&self) -> String {
+            let s = match self.gender {
+                GermanGenders::Masculine => "e",
+                GermanGenders::Feminine => "e",
+                GermanGenders::Neuter => "e",
+            };
+            return String::from(s);
+        }
     }
     pub struct GermanNounList {
         list: Vec<GermanNoun>,
@@ -49,17 +57,13 @@ pub mod grammar {
             self.list.push(noun);
         }
         pub fn get_adapted(&mut self, noun: String, adjective: String) -> String {
-            //first find word in list
             if 0 == self.list.len() {
                 return String::from("empty");
             }
+            //first find word in list
             for word in self.list.iter() {
                 if word.noun == noun {
-                    let suffix = match word.gender {
-                        GermanGenders::Masculine => "e",
-                        GermanGenders::Feminine => "e",
-                        GermanGenders::Neuter => "e",
-                    };
+                    let suffix = word.get_suffix();
                     let prefix = word.get_prefix();
                     let strong = format!("{} {}{} {}", prefix, adjective, suffix, noun);
                     return strong;

@@ -45,6 +45,7 @@ pub mod parse {
     }
 
     pub fn fill(list: &mut ListGenerator) {
+        
         let filename = get_file_name(list.get_list_type(), list.get_language());
         if let Ok(lines) = read_lines(filename) {
             for line in lines {

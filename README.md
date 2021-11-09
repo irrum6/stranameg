@@ -14,9 +14,7 @@ mode \
 10 random leter string \
 $4 -language [optional] defaults to latin alphabet \
 values \
-11 georgian \
 ka georgian \
-12 english \
 en english \
 
 mode \
@@ -36,11 +34,8 @@ types:nouns,adjectives,names \
 
 $4 -language [optional] defaults to latin alphabet \
 values \
-11 georgian \
 ka georgian \
-12 english \
 en english \
-13 german \
 de german \
 
 22 string by word  -> list file \
@@ -62,11 +57,8 @@ types:nouns,adjectives,names \
 
 $4 -language [optional] defaults to latin alphabet \
 values \
-11 georgian \
 ka georgian \
-12 english \
 en english \
-13 german \
 de german \
 
 33 coupled words -> from list files \

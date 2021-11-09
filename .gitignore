@@ -16,3 +16,4 @@ ira.abc
 *.list
 *.dic
 *.textout
+.vscode
