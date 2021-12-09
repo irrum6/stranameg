@@ -19,7 +19,7 @@ use strgen::strgen::{
     ListType, StringGenerator,
 };
 
-use parse::parse::{fill as fill_list, fill2 as fill_list2,fill_german_nounlist};
+use parse::parse::{fill as fill_list, fill2 as fill_list2, fill_german_nounlist};
 
 fn run_generator(len: u32, amount: u32, mode: u32, next: String) -> Result<(), Error> {
     if mode / 10 == 1 || (mode > 99 && mode / 100 == 1) {
@@ -34,16 +34,16 @@ fn run_generator(len: u32, amount: u32, mode: u32, next: String) -> Result<(), E
     return Ok(());
 }
 
-fn main() -> Result<(), Error> {
+fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
         print_help();
-        return Ok(());
+        return;
     }
     if args[1] == "-h" {
         print_help();
-        return Ok(());
+        return;
     }
 
     let amount = args[1].trim().parse().expect("type a number");
@@ -62,5 +62,15 @@ fn main() -> Result<(), Error> {
     if args.len() > 4 {
         next = args[4].clone();
     }
-    return run_generator(length, amount, mode, next);
+
+    let result = run_generator(length, amount, mode, next);
+    match result {
+        Ok(()) => {
+            println!("program did run correctly.");
+        }
+        Err(e) => {
+            println!("An ERROR occured !");
+        }
+    }
+    return;
 }
