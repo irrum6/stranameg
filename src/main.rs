@@ -1,38 +1,17 @@
 use std::env;
-use std::io::Error;
 
 mod help;
-mod modes;
 mod parse;
 mod rng;
 mod strgen;
 mod tests;
 
 use help::help::print_help;
-use modes::modes::*;
 
 use rng::rng::{RNGWheel, RNG};
 
-use strgen::grammar::*;
-use strgen::strgen::{
-    AlphaBetStringGenerator as ABCGenerator, Languages, ListStringGenerator as ListGenerator,
-    ListType, StringGenerator,
-};
-
-use parse::parse::{fill as fill_list, fill2 as fill_list2, fill_german_nounlist};
-
-fn run_generator(len: u32, amount: u32, mode: u32, next: String) -> Result<(), Error> {
-    if mode / 10 == 1 || (mode > 99 && mode / 100 == 1) {
-        return mode1x(len, amount, mode, next);
-    }
-    if mode / 10 == 2 || (mode > 99 && mode / 100 == 2) {
-        return mode2x(len, amount, mode, next);
-    }
-    if mode / 10 == 3 || (mode > 99 && mode / 100 == 3) {
-        return mode3x(amount, mode, next);
-    }
-    return Ok(());
-}
+use strgen::strgen::run_generator;
+use strgen::strgen::Config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -45,32 +24,26 @@ fn main() {
         print_help();
         return;
     }
+    let config = Config::new(&args);
+    run_generator(config);
 
-    let amount = args[1].trim().parse().expect("type a number");
-
-    let mut length: u32 = 12;
-    let mut mode: u32 = 10;
-    let mut next: String = String::new();
-
-    if args.len() > 2 {
-        length = args[2].trim().parse().expect("type a number");
-    }
-
-    if args.len() > 3 {
-        mode = args[3].trim().parse().expect("type a number");
-    }
-    if args.len() > 4 {
-        next = args[4].clone();
-    }
-
-    let result = run_generator(length, amount, mode, next);
-    match result {
-        Ok(()) => {
-            println!("program did run correctly.");
-        }
-        Err(e) => {
-            println!("An ERROR occured !");
-        }
-    }
     return;
+}
+
+use std::fs::File;
+use std::io::{self, BufRead, ErrorKind};
+use std::path::Path;
+
+//copied from rust site and modified
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    match File::open(filename) {
+        Ok(file) => return Ok(io::BufReader::new(file).lines()),
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => panic!("File not found"),
+            _ => panic!("Error when opening file"),
+        },
+    };
 }

@@ -8,6 +8,10 @@ $2 - string length [optional] defaults to 12 \
 $3 - mode [optional] defaults to random letter string \
 $4 - next argument [optional] depends on mode \
 
+mode
+rls random letter string
+rw  random word
+cw coupled words
 
 1x random leter string \
 mode \
