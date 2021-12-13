@@ -362,6 +362,7 @@ pub mod strgen {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
             Modes::RandomWord => Box::new(RandomWord::new(ListType::Nouns, Languages::from(conf.next.as_ref()))),
+            Modes::RandomWordFromListFile => Box::new(RandomWord::new(ListType::Nouns, Languages::from(conf.next.as_ref()))),
             Modes::CoupledWordsNouns => {
                 Box::new(CoupledWords::new(ListType::Nouns,  Languages::from(conf.next.as_ref())))
             }
