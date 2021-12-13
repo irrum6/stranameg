@@ -11,7 +11,7 @@ $5 - write to file [strings.textout]  1 true , 0 or ommited false
 
 modes
 
-rls,10  RandomLetters,
+rls or 10  RandomLetters,
 rla,11  RandomLettersFromCustomAlphabet,
 rlaf,12  RandomLettersFromAlphabetFile,
 raw,21  RandomWord,
