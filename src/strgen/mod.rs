@@ -182,7 +182,6 @@ pub mod strgen {
     }
     pub trait StringGenerator {
         fn get(&mut self) -> String;
-        fn file_input(&mut self, s: &str);
         fn setup(&mut self, conf: Config);
     }
     pub struct LettterSequence {
@@ -216,11 +215,6 @@ pub mod strgen {
                 self.held_string.push(self.alphabet[index]);
             }
             return self.held_string.clone();
-        }
-        fn file_input(&mut self, s: &str) {
-            let filename = String::from(s);
-            let contents = fs_read(filename).expect("Something went wrong reading the file");
-            self.set_alphabet(contents.as_ref());
         }
         fn setup(&mut self, conf: Config) {
             match conf.mode {
@@ -276,16 +270,7 @@ pub mod strgen {
             let lang = lang.abbr();
             return format!("./lists/{}.{}.list", head, lang);
         }
-    }
-    impl StringGenerator for RandomWord {
-        fn get(&mut self) -> String {
-            let mut rng = RNG::new();
-            rng.seed();
-            let diclen = self.list.len();
-            let index = rng.get() as usize % diclen;
-            return self.list[index].clone();
-        }
-        fn file_input(&mut self, s: &str) {
+        pub fn fill(&mut self, s: &str) {
             let filename = if s == "" {
                 self.get_file_name()
             } else {
@@ -305,10 +290,19 @@ pub mod strgen {
                 }
             }
         }
+    }
+    impl StringGenerator for RandomWord {
+        fn get(&mut self) -> String {
+            let mut rng = RNG::new();
+            rng.seed();
+            let diclen = self.list.len();
+            let index = rng.get() as usize % diclen;
+            return self.list[index].clone();
+        }
         fn setup(&mut self, conf: Config) {
             match conf.mode {
-                Modes::RandomWord => {}
-                Modes::RandomWordFromListFile => {}
+                Modes::RandomWord => self.fill(""),
+                Modes::RandomWordFromListFile => self.fill(conf.next.as_ref()),
                 _ => {}
             }
         }
@@ -348,20 +342,17 @@ pub mod strgen {
             }
             return strong;
         }
-        fn file_input(&mut self, s: &str) {
-            let names: Vec<&str> = if s == "" {
-                vec!["", ""]
-            } else {
-                s.split(":").collect()
-            };
-            self.adjectives.file_input(names[0]);
-            self.type_list.file_input(names[1]);
-        }
         fn setup(&mut self, conf: Config) {
             match conf.mode {
-                Modes::CoupledWordsNouns => {}
-                Modes::CoupledWordsNames => {}
-                Modes::CoupledWordsListFiles => {}
+                Modes::CoupledWordsNouns | Modes::CoupledWordsNames => {
+                    self.adjectives.fill("");
+                    self.type_list.fill("");
+                }
+                Modes::CoupledWordsListFiles => {
+                    let names: Vec<&str> = conf.next.split(":").collect();
+                    self.adjectives.fill(names[0]);
+                    self.type_list.fill(names[1]);
+                }
                 _ => {}
             }
         }
@@ -406,7 +397,6 @@ pub mod strgen {
         pub fn new(args: &[String]) -> Config {
             let mut amount = 16;
             let lang = Languages::English;
-            let filename = String::new();
             let mut mode = Modes::RandomLetters;
             let mut write_to_file = false;
 
