@@ -381,6 +381,7 @@ pub mod strgen {
     pub fn run_generator(conf: Config) -> Result<(), Error> {
         const OUTPUT_NAME: &str = "strings.textout";
         let mut sg = stringer(conf.clone());
+        sg.setup(conf.clone());
         let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..conf.amount {
             let strang = sg.get();
