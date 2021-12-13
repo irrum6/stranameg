@@ -361,9 +361,15 @@ pub mod strgen {
     fn stringer(conf: Config) -> Box<dyn StringGenerator> {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
-            Modes::RandomWord => Box::new(RandomWord::new(ListType::Nouns, conf.lang.clone())),
+            Modes::RandomWord => Box::new(RandomWord::new(ListType::Nouns, Languages::from(conf.next.as_ref()))),
             Modes::CoupledWordsNouns => {
-                Box::new(CoupledWords::new(ListType::Nouns, conf.lang.clone()))
+                Box::new(CoupledWords::new(ListType::Nouns,  Languages::from(conf.next.as_ref())))
+            }
+            Modes::CoupledWordsNames => {
+                Box::new(CoupledWords::new(ListType::Names,  Languages::from(conf.next.as_ref())))
+            }
+            Modes::CoupledWordsListFiles => {
+                Box::new(CoupledWords::new(ListType::Names,  Languages::from(conf.next.as_ref())))
             }
             _ => Box::new(LettterSequence::new("abc", 16)),
         };
@@ -387,7 +393,6 @@ pub mod strgen {
     #[derive(Clone)]
     pub struct Config {
         mode: Modes,
-        lang: Languages,
         length: u32,
         amount: u32,
         write_to_file: bool,
@@ -396,7 +401,6 @@ pub mod strgen {
     impl Config {
         pub fn new(args: &[String]) -> Config {
             let mut amount = 16;
-            let lang = Languages::English;
             let mut mode = Modes::RandomLetters;
             let mut write_to_file = false;
 
@@ -423,7 +427,6 @@ pub mod strgen {
             }
             return Config {
                 mode,
-                lang,
                 length,
                 amount,
                 write_to_file,
