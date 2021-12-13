@@ -229,7 +229,7 @@ pub mod strgen {
                 }
                 Modes::RandomLettersFromAlphabetFile => {
                     let contents =
-                        fs_read(conf.filename).expect("Something went wrong reading the file");
+                        fs_read(conf.next).expect("Something went wrong reading the file");
                     self.set_alphabet(contents.as_ref());
                 }
                 Modes::RandomLetters => {
@@ -399,7 +399,6 @@ pub mod strgen {
         lang: Languages,
         length: u32,
         amount: u32,
-        filename: String,
         write_to_file: bool,
         next: String,
     }
@@ -437,7 +436,6 @@ pub mod strgen {
                 lang,
                 length,
                 amount,
-                filename,
                 write_to_file,
                 next,
             };
