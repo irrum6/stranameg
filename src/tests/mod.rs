@@ -1,13 +1,20 @@
 #[cfg(test)]
 pub mod tests {
-    // use crate::{fill_list, ABCGenerator, Languages, ListGenerator, ListType, StringGenerator};
-    // #[test]
-    // pub fn check_len() {
-    //     let len: usize = 16;
-    //     let mut sg = ABCGenerator::new("abc");
-    //     let strong = sg.get(len);
-    //     assert_eq!(strong.len(), len);
-    // }
+    use crate::{run_generator, Config, LettterSequence, StringGenerator};
+    #[test]
+    pub fn check_len() {
+        let length = 12;
+        let len = String::from("12");
+        let ammount = String::from("16");
+        let mode = String::from("rls");
+        let lang = String::from("en");
+        let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
+        let conf = Config::new(&sarraya);
+
+        let mut sg = LettterSequence::new("abc", length);
+        sg.setup(conf);
+        assert_eq!(sg.get().len(), length);
+    }
     // #[test]
     // pub fn is_georgian() {
     //     //check if generated string is actually georgian alphabet
