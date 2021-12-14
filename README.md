@@ -1,5 +1,5 @@
-# strgen
-String Generator in rust \
+# stranameg
+String and Name Generator in rust \
 
 usage \
 pass parameters (command line arguments) to get strings ($1, $2,...... $n ) \

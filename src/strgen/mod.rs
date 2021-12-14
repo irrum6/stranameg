@@ -270,6 +270,9 @@ pub mod strgen {
             let lang = lang.abbr();
             return format!("./lists/{}.{}.list", head, lang);
         }
+        pub fn get_list_len(&self) -> usize {
+            return self.list.len();
+        }
         pub fn fill(&mut self, s: &str) {
             let filename = if s == "" {
                 self.get_file_name()
@@ -303,7 +306,7 @@ pub mod strgen {
             match conf.mode {
                 Modes::RandomWord => self.fill(""),
                 Modes::RandomWordFromListFile => self.fill(conf.next.as_ref()),
-                _ => {}
+                _ => self.fill(""),
             }
         }
     }
@@ -358,20 +361,29 @@ pub mod strgen {
         }
     }
 
-    fn stringer(conf: Config) -> Box<dyn StringGenerator> {
+    pub fn stringer(conf: Config) -> Box<dyn StringGenerator> {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
-            Modes::RandomWord => Box::new(RandomWord::new(ListType::Nouns, Languages::from(conf.next.as_ref()))),
-            Modes::RandomWordFromListFile => Box::new(RandomWord::new(ListType::Nouns, Languages::from(conf.next.as_ref()))),
-            Modes::CoupledWordsNouns => {
-                Box::new(CoupledWords::new(ListType::Nouns,  Languages::from(conf.next.as_ref())))
-            }
-            Modes::CoupledWordsNames => {
-                Box::new(CoupledWords::new(ListType::Names,  Languages::from(conf.next.as_ref())))
-            }
-            Modes::CoupledWordsListFiles => {
-                Box::new(CoupledWords::new(ListType::Names,  Languages::from(conf.next.as_ref())))
-            }
+            Modes::RandomWord => Box::new(RandomWord::new(
+                ListType::Nouns,
+                Languages::from(conf.next.as_ref()),
+            )),
+            Modes::RandomWordFromListFile => Box::new(RandomWord::new(
+                ListType::Nouns,
+                Languages::from(conf.next.as_ref()),
+            )),
+            Modes::CoupledWordsNouns => Box::new(CoupledWords::new(
+                ListType::Nouns,
+                Languages::from(conf.next.as_ref()),
+            )),
+            Modes::CoupledWordsNames => Box::new(CoupledWords::new(
+                ListType::Names,
+                Languages::from(conf.next.as_ref()),
+            )),
+            Modes::CoupledWordsListFiles => Box::new(CoupledWords::new(
+                ListType::Names,
+                Languages::from(conf.next.as_ref()),
+            )),
             _ => Box::new(LettterSequence::new("abc", 16)),
         };
         return result_box;

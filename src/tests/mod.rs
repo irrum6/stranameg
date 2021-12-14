@@ -1,7 +1,8 @@
 #[cfg(test)]
 pub mod tests {
     use crate::{
-        run_generator, Config, Languages, LettterSequence, ListType, RandomWord, StringGenerator,
+        run_generator, stringer, Config, Languages, LettterSequence, ListType, RandomWord,
+        StringGenerator,
     };
     #[test]
     pub fn check_len() {
@@ -38,5 +39,18 @@ pub mod tests {
             let check = kachars.contains(c) || c == ' ';
             assert_eq!(check, true);
         }
+    }
+    #[test]
+    pub fn full_list() {
+        let ammount = String::from("16");
+        let sarraya: [String; 2] = [String::new(), ammount];
+        let conf = Config::new(&sarraya);
+        let english = Languages::English;
+        let nouns = ListType::Nouns;
+        let mut sg = RandomWord::new(nouns, english);
+        // stringer
+        sg.setup(conf);
+        //get_list_len
+        assert_ne!(sg.get_list_len(),0);
     }
 }

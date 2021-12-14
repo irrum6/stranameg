@@ -11,7 +11,7 @@ use help::help::print_help;
 use rng::rng::{RNGWheel, RNG};
 
 use strgen::strgen::run_generator;
-use strgen::strgen::{Config, LettterSequence, StringGenerator,RandomWord,ListType,Languages};
+use strgen::strgen::{Config, LettterSequence, StringGenerator,RandomWord,ListType,Languages,stringer};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
