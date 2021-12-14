@@ -1,100 +1,9 @@
-pub mod grammar {
-    use crate::read_lines;
-
-    #[derive(Clone)]
-    pub enum GermanGenders {
-        Masculine,
-        Feminine,
-        Neuter,
-    }
-    impl GermanGenders {
-        pub fn from(s: &str) -> GermanGenders {
-            let gg = match s {
-                "Die" => GermanGenders::Feminine,
-                "die" => GermanGenders::Feminine,
-                "Der" => GermanGenders::Masculine,
-                "der" => GermanGenders::Masculine,
-                "Das" => GermanGenders::Neuter,
-                "das" => GermanGenders::Neuter,
-                _ => GermanGenders::Neuter,
-            };
-            return gg;
-        }
-    }
-    #[derive(Clone)]
-    pub struct GermanNoun {
-        noun: String,
-        gender: GermanGenders,
-    }
-    impl GermanNoun {
-        pub fn new(noun: String, gender: GermanGenders) -> GermanNoun {
-            return GermanNoun { noun, gender };
-        }
-        pub fn get_prefix(&self) -> String {
-            let gender = match self.gender {
-                GermanGenders::Masculine => "Der",
-                GermanGenders::Feminine => "Die",
-                GermanGenders::Neuter => "Das",
-            };
-            return String::from(gender);
-        }
-        pub fn get_suffix(&self) -> String {
-            let s = match self.gender {
-                GermanGenders::Masculine => "e",
-                GermanGenders::Feminine => "e",
-                GermanGenders::Neuter => "e",
-            };
-            return String::from(s);
-        }
-    }
-    pub struct GermanNounList {
-        list: Vec<GermanNoun>,
-    }
-    impl GermanNounList {
-        pub fn new() -> GermanNounList {
-            let list: Vec<GermanNoun> = Vec::new();
-            return GermanNounList { list };
-        }
-        pub fn add(&mut self, noun: GermanNoun) {
-            self.list.push(noun);
-        }
-        pub fn get_adapted(&mut self, noun: String, adjective: String) -> String {
-            if 0 == self.list.len() {
-                return String::from("empty");
-            }
-            //first find word in list
-            for word in self.list.iter() {
-                if word.noun == noun {
-                    let suffix = word.get_suffix();
-                    let prefix = word.get_prefix();
-                    let strong = format!("{} {}{} {}", prefix, adjective, suffix, noun);
-                    return strong;
-                }
-            }
-            return String::new();
-        }
-        pub fn fill(&mut self) {
-            let filename = "./lists/genders.de.dic";
-            if let Ok(lines) = read_lines(filename) {
-                for line in lines {
-                    if let Ok(ip) = line {
-                        let chazar = ip.split(",");
-                        for chaz in chazar {
-                            if chaz == "" {
-                                continue;
-                            }
-                            let spl: Vec<&str> = chaz.trim().split(" ").collect();
-                            let gender = GermanGenders::from(spl[0]);
-                            let noun = String::from(spl[1]);
-                            let gnoun = GermanNoun::new(noun, gender);
-                            self.add(gnoun);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+pub mod grammar;
+use grammar::grammar::GermanNounList;
+pub mod modes;
+use modes::modes::Modes;
+pub mod languages;
+use languages::languages::Languages;
 
 pub mod strgen {
     use std::fs::read_to_string as fs_read;
@@ -105,34 +14,9 @@ pub mod strgen {
     use crate::RNGWheel;
     use crate::RNG;
 
-    #[derive(Clone)]
-    enum Modes {
-        RandomLetters,
-        RandomLettersFromCustomAlphabet,
-        RandomLettersFromAlphabetFile,
-        RandomWord,
-        RandomWordFromListFile,
-        CoupledWordsNouns,
-        CoupledWordsNames,
-        CoupledWordsListFiles,
-    }
-    impl Modes {
-        pub fn from(s: &str) -> Modes {
-            return match s {
-                "rls" | "10" => Modes::RandomLetters,
-                "rla" | "11" => Modes::RandomLettersFromCustomAlphabet,
-                "rlaf" | "12" => Modes::RandomLettersFromAlphabetFile,
-                "raw" | "21" => Modes::RandomWord,
-                "rawl" | "22" => Modes::RandomWordFromListFile,
-                "cow" | "31" => Modes::CoupledWordsNouns,
-                "cowe" | "32" => Modes::CoupledWordsNames,
-                "cowf" | "33" => Modes::CoupledWordsListFiles,
-                _ => Modes::RandomLetters,
-            };
-        }
-    }
-
-    use super::grammar::GermanNounList;
+    use super::GermanNounList;
+    use super::Languages;
+    use super::Modes;
 
     #[derive(Clone)]
     pub enum ListType {
@@ -143,41 +27,6 @@ pub mod strgen {
     impl ListType {
         pub fn is_noun(&self) -> bool {
             return matches!(*self, ListType::Nouns);
-        }
-    }
-    #[derive(Clone)]
-    pub enum Languages {
-        English,
-        Georgian,
-        German,
-    }
-    impl Languages {
-        pub fn abbr(&self) -> String {
-            let result = match *self {
-                Languages::English => "en",
-                Languages::Georgian => "ka",
-                Languages::German => "de",
-            };
-            return String::from(result);
-        }
-        pub fn is_german(&self) -> bool {
-            return matches!(*self, Languages::German);
-        }
-        pub fn from(s: &str) -> Languages {
-            return match s {
-                "en" => Languages::English,
-                "ka" => Languages::Georgian,
-                "de" => Languages::German,
-                _ => Languages::English,
-            };
-        }
-        pub fn get_alphabet(&self) -> String {
-            let result = match *self {
-                Languages::Georgian => "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ",
-                Languages::English => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
-                _ => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
-            };
-            return String::from(result);
         }
     }
     pub trait StringGenerator {

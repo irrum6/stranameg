@@ -10,8 +10,7 @@ use help::help::print_help;
 
 use rng::rng::{RNGWheel, RNG};
 
-use strgen::strgen::run_generator;
-use strgen::strgen::{Config, LettterSequence, StringGenerator,RandomWord,ListType,Languages,stringer};
+use strgen::strgen::{run_generator, Config};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -25,7 +24,12 @@ fn main() {
         return;
     }
     let config = Config::new(&args);
-    run_generator(config);
+    match run_generator(config){
+        Ok(_result)=>{},
+        Err(e) =>{
+            println!("Error:{}",e);
+        }
+    }
 
     return;
 }

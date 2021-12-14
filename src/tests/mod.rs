@@ -1,9 +1,7 @@
 #[cfg(test)]
 pub mod tests {
-    use crate::{
-        run_generator, stringer, Config, Languages, LettterSequence, ListType, RandomWord,
-        StringGenerator,
-    };
+    use crate::strgen::languages::languages::Languages;
+    use crate::strgen::strgen::*;
     #[test]
     pub fn check_len() {
         let length = 12;
@@ -51,6 +49,6 @@ pub mod tests {
         // stringer
         sg.setup(conf);
         //get_list_len
-        assert_ne!(sg.get_list_len(),0);
+        assert_ne!(sg.get_list_len(), 0);
     }
 }
