@@ -75,3 +75,22 @@ notice:: $2(length) does not have effect here
 
 example: program 8 12 cow en 
 example: program 8 12 cow en 1 if you want to write to file 
+
+
+# alternative modes \
+you can pass parameter in different order using "alt" or "-a" switcher as first argument 
+following arguments are valid 
+num= 
+len= 
+mode=
+next=
+wtf= 
+//wtf is write to file 
+example 
+program alt mode=rla next=abc 
+
+you can pass arguments as file using "pf" or "paramsfile" switcher 
+arguemnts same as in alt mode 
+
+example 
+program pf params.file 
