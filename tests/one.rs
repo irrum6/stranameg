@@ -57,4 +57,18 @@ pub mod tests {
         //get_list_len
         assert_ne!(sg.get_list_len(), 0);
     }
+    #[test]
+    fn command_parser() {
+        let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
+        let confetti = get_config_from_commands(vargs);
+        let mut sg = LettterSequence::new("abc", 12);
+        sg.setup(confetti);
+        let strong = sg.get();
+        let alphabet = "alphabet";
+        println!("{}", &strong);
+        for s in strong.chars() {
+            assert_eq!(alphabet.contains(s), true);
+        }
+        // assert_eq!(sg.get().len(), 12);
+    }
 }

@@ -10,6 +10,7 @@ Cargo.lock
 **/*.rs.bk
 
 .notesmd
+notes.md
 .temprs
 ira.abc
 

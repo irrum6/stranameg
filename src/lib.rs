@@ -6,20 +6,20 @@ pub mod grammar;
 pub mod languages;
 pub mod modes;
 
+pub mod command_parser;
+
 pub mod stringer {
     use std::fs::read_to_string as fs_read;
     use std::fs::File;
     use std::io::{Error, Write};
 
-    pub use super::help::help::print_help2 as print_help;
-    // pub use super::strgen::strgen::*;
-    pub use super::reader::reader::read_lines;
-    pub use super::rng::rng::{RNGWheel, RNG};
-
+    pub use super::command_parser::command_parser::get_config_from_commands;
     pub use super::grammar::grammar::GermanNounList;
-
+    pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::Languages;
     pub use super::modes::modes::Modes;
+    pub use super::reader::reader::read_lines;
+    pub use super::rng::rng::{RNGWheel, RNG};
 
     #[derive(Clone)]
     pub enum ListType {
@@ -265,6 +265,9 @@ pub mod stringer {
     }
     impl Config {
         pub fn new(args: &[String]) -> Config {
+            return Config::from(args);
+        }
+        pub fn from(args: &[String]) -> Config {
             let mut amount = 16;
             let mut mode = Modes::RandomLetters;
             let mut write_to_file = false;
@@ -274,6 +277,7 @@ pub mod stringer {
             let mut length: u32 = 12;
 
             if args.len() > 1 {
+                //println!("{}",&args[1]);
                 amount = args[1].parse().expect("Number must be");
             }
 
@@ -297,6 +301,21 @@ pub mod stringer {
                 write_to_file,
                 next,
             };
+        }
+        pub fn set_mode(&mut self, mode: Modes) {
+            self.mode = mode;
+        }
+        pub fn set_length(&mut self, length: u32) {
+            self.length = length;
+        }
+        pub fn set_amount(&mut self, amount: u32) {
+            self.amount = amount;
+        }
+        pub fn set_write_to_file(&mut self, wtf: bool) {
+            self.write_to_file = wtf;
+        }
+        pub fn set_next(&mut self, next: String) {
+            self.next = next;
         }
     }
 }
