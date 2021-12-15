@@ -9,7 +9,7 @@ fn main() {
         print_help();
         return;
     }
-    if args[1] == "-h" {
+    if "-h"== args[1] || "printh" == args[1]  {
         print_help();
         return;
     }

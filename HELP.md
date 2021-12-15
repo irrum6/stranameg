@@ -1,7 +1,7 @@
 # stranameg
-String and Name Generator in rust \
+String and Name Generator in rust 
 
-usage \
+usage
 pass parameters (command line arguments) to get strings ($1, $2,...... $n ) 
 $1 - first paramter -number of strings [required] 
 $2 - string length [optional] defaults to 12 
@@ -57,7 +57,7 @@ sample.list
 benevolent,violent,active,passive,repressed,fearful,brave,heroic,punishable,desperate 
 Benjamin,Brooklyn,Brooks,Bennett,Bella,Beau,Brayden,Bryson,Blake,Braxton 
 
-notice : $2 here refers to minimal length
+notice : $2 length is ignored
 
 3x coupled words generator 
 cow,31 coupled words -> app-list adjective_noun 
@@ -68,7 +68,7 @@ types:nouns,adjectives,names
 
 $4 -language values same as in raw,2x
 
-33 coupled words -> from list files 
+cowf,33 coupled words -> from list files 
 $4 list file names  -> single string names separated with ":" 
 example program 16 64 33 sample.list:sample2.list 
 notice:: $2(length) does not have effect here 

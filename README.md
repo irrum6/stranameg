@@ -56,10 +56,9 @@ example program 16 64 raw sample.list \
 sample.list \
 benevolent,violent,active,passive,repressed,fearful,brave,heroic,punishable,desperate \
 Benjamin,Brooklyn,Brooks,Bennett,Bella,Beau,Brayden,Bryson,Blake,Braxton \
+notice : $2 length is ignored \
 
-notice : $2 here refers to minimal length
-
-3x coupled words generator \
+cow,3x coupled words generator \
 cow,31 coupled words -> app-list adjective_noun \
 cowe,32 coupled words -> app-list adjective_name \
 app will look for list in lists directory for following file name patters \
@@ -68,7 +67,7 @@ types:nouns,adjectives,names \
 
 $4 -language values same as in raw,2x
 
-33 coupled words -> from list files \
+cowf,33 coupled words -> from list files \
 $4 list file names  -> single string names separated with ":" \
 example program 16 64 33 sample.list:sample2.list \
 notice:: $2(length) does not have effect here \
