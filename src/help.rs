@@ -1,5 +1,8 @@
 pub mod help {
     pub fn print_help() {
+        println!("help");
+    }
+    pub fn print_help2() {
         let help_string = "# strgen
         String Generator in rust 
         
