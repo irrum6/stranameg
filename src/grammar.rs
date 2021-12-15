@@ -1,5 +1,5 @@
 pub mod grammar {
-    use crate::read_lines;
+    use crate::stringer::read_lines;
 
     #[derive(Clone)]
     pub enum GermanGenders {

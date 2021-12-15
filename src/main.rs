@@ -1,16 +1,6 @@
 use std::env;
 
-// mod reader;
-mod rng;
-mod strgen;
-mod tests;
-
-use rng::rng::{RNGWheel, RNG};
-
-use strgen::strgen::{run_generator, Config};
-
-use stranameg::stringer::print_help;
-use stranameg::stringer::read_lines;
+use stranameg::stringer::{print_help, run_generator, Config};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
