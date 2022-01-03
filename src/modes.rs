@@ -13,14 +13,14 @@ pub mod modes {
     impl Modes {
         pub fn from(s: &str) -> Modes {
             return match s {
-                "rls" | "10" => Modes::RandomLetters,
-                "rla" | "11" => Modes::RandomLettersFromCustomAlphabet,
-                "rlaf" | "12" => Modes::RandomLettersFromAlphabetFile,
-                "raw" | "21" => Modes::RandomWord,
-                "rawl" | "22" => Modes::RandomWordFromListFile,
-                "cow" | "31" => Modes::CoupledWordsNouns,
-                "cowe" | "32" => Modes::CoupledWordsNames,
-                "cowf" | "33" => Modes::CoupledWordsListFiles,
+                "rls"  => Modes::RandomLetters,
+                "rla"  => Modes::RandomLettersFromCustomAlphabet,
+                "rlaf" => Modes::RandomLettersFromAlphabetFile,
+                "raw"  => Modes::RandomWord,
+                "rawl"  => Modes::RandomWordFromListFile,
+                "cow" | "cw" => Modes::CoupledWordsNouns,
+                "cowe" | "cwe" => Modes::CoupledWordsNames,
+                "cowf" | "cwf" => Modes::CoupledWordsListFiles,
                 _ => Modes::RandomLetters,
             };
         }

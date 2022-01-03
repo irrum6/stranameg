@@ -25,7 +25,7 @@ fn main() {
         let mut v = Vec::new();
         let fileargs = match read_to_string(&args[2]) {
             Ok(content) => content,
-            Err(e) => String::from(""),
+            Err(e) => panic!("{}",e),
         };
         for line in fileargs.lines() {
             v.push(line.trim());
