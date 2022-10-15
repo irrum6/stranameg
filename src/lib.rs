@@ -56,6 +56,9 @@ pub mod stringer {
             let abc: Vec<char> = s.chars().collect();
             self.alphabet = abc;
         }
+        pub fn set_length(&mut self, n: usize) {
+            self.length = n;
+        }
     }
     impl StringGenerator for LettterSequence {
         fn get(&mut self) -> String {
@@ -85,6 +88,7 @@ pub mod stringer {
                 }
                 _ => {}
             }
+            self.set_length(conf.length as usize);
         }
     }
     pub struct RandomWord {
@@ -282,6 +286,7 @@ pub mod stringer {
             }
 
             if args.len() > 2 {
+                println!("{}", &args[2]);
                 length = args[2].parse().expect("Number must be");
             }
             if args.len() > 3 {

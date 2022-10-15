@@ -89,3 +89,5 @@ arguemnts same as in alt mode
 
 example 
 program pf params.file 
+or
+program pf (name defaults to ".params")

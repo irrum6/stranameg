@@ -23,10 +23,13 @@ fn main() {
         get_config_from_commands(v)
     } else if "pf" == args[1] || "paramsfile" == args[1] {
         let mut v = Vec::new();
-        let fileargs = match read_to_string(&args[2]) {
-            Ok(content) => content,
-            Err(e) => panic!("{}",e),
-        };
+        let mut fileargs = String::from(".params");
+        if args.len() > 2 {
+            fileargs = match read_to_string(&args[2]) {
+                Ok(content) => content,
+                Err(e) => panic!("{}", e),
+            };
+        }
         for line in fileargs.lines() {
             v.push(line.trim());
         }
@@ -34,12 +37,12 @@ fn main() {
     } else {
         Config::new(&args)
     };
+
     match run_generator(config) {
         Ok(_result) => {}
         Err(e) => {
             println!("Error:{}", e);
         }
     }
-
     return;
 }
