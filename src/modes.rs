@@ -9,18 +9,20 @@ pub mod modes {
         CoupledWordsNouns,
         CoupledWordsNames,
         CoupledWordsListFiles,
+        SimpleSentences,
     }
     impl Modes {
         pub fn from(s: &str) -> Modes {
             return match s {
-                "rls"  => Modes::RandomLetters,
-                "rla"  => Modes::RandomLettersFromCustomAlphabet,
+                "rls" => Modes::RandomLetters,
+                "rla" => Modes::RandomLettersFromCustomAlphabet,
                 "rlaf" => Modes::RandomLettersFromAlphabetFile,
-                "raw"  => Modes::RandomWord,
-                "rawl"  => Modes::RandomWordFromListFile,
-                "cow" | "cw" => Modes::CoupledWordsNouns,
+                "raw" => Modes::RandomWord,
+                "rawl" => Modes::RandomWordFromListFile,
+                "cow" | "cwo" => Modes::CoupledWordsNouns,
                 "cowe" | "cwe" => Modes::CoupledWordsNames,
                 "cowf" | "cwf" => Modes::CoupledWordsListFiles,
+                "sen" => Modes::SimpleSentences,
                 _ => Modes::RandomLetters,
             };
         }

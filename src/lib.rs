@@ -25,6 +25,7 @@ pub mod stringer {
     pub enum ListType {
         Nouns,
         Adjectives,
+        Verbs,
         Names,
     }
     impl ListType {
@@ -121,6 +122,7 @@ pub mod stringer {
             let head = match list_type {
                 ListType::Nouns => "nouns",
                 ListType::Adjectives => "adjectives",
+                ListType::Verbs => "verbs",
                 ListType::Names => "names",
             };
             let lang = lang.abbr();
@@ -217,6 +219,48 @@ pub mod stringer {
         }
     }
 
+    pub struct SimpleSentences {
+        adjectives: RandomWord,
+        nouns: RandomWord,
+        verbs: RandomWord,
+        language: Languages,
+    }
+
+    impl SimpleSentences {
+        pub fn new(language: Languages) -> SimpleSentences {
+            let adjectives = RandomWord::new(ListType::Adjectives, language.clone());
+            let nouns = RandomWord::new(ListType::Nouns, language.clone());
+            let verbs = RandomWord::new(ListType::Verbs, language.clone());
+            return SimpleSentences {
+                adjectives,
+                nouns,
+                verbs,
+                language,
+            };
+        }
+    }
+
+    impl StringGenerator for SimpleSentences {
+        fn get(&mut self) -> String {
+            let adj1 = self.adjectives.get();
+            let adj2 = self.adjectives.get();
+
+            let noun1 = self.nouns.get();
+            let noun2 = self.nouns.get();
+            
+            let verb = self.verbs.get();
+
+            let strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2 , noun2);
+
+            return strong;
+        }
+        fn setup(&mut self, conf: Config) {
+            self.adjectives.fill("");
+            self.nouns.fill("");
+            self.verbs.fill("");
+        }
+    }
+
     pub fn stringer(conf: Config) -> Box<dyn StringGenerator> {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
@@ -240,6 +284,8 @@ pub mod stringer {
                 ListType::Names,
                 Languages::from(conf.next.as_ref()),
             )),
+            //for now english only
+            Modes::SimpleSentences => Box::new(SimpleSentences::new(Languages::English)),
             _ => Box::new(LettterSequence::new("abc", 16)),
         };
         return result_box;
