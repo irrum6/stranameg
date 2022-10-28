@@ -247,10 +247,9 @@ pub mod stringer {
 
             let noun1 = self.nouns.get();
             let noun2 = self.nouns.get();
-            
             let verb = self.verbs.get();
 
-            let strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2 , noun2);
+            let strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2, noun2);
 
             return strong;
         }
@@ -300,7 +299,11 @@ pub mod stringer {
             if conf.write_to_file {
                 writeln!(output, "{}", strang)?;
             } else {
-                print!("{}:{}\n", strang, _i);
+                let mut strong = format!("{}:{}\n", strang, _i);
+                if conf.dont_write_indices {
+                    strong = format!("{}\n", strang);
+                }
+                print!("{}\n", strong);
             }
         }
         return Ok(());
@@ -311,6 +314,7 @@ pub mod stringer {
         length: u32,
         amount: u32,
         write_to_file: bool,
+        dont_write_indices: bool,
         next: String,
     }
     impl Config {
@@ -321,6 +325,7 @@ pub mod stringer {
             let mut amount = 16;
             let mut mode = Modes::RandomLetters;
             let mut write_to_file = false;
+            let mut dont_write_indices = false;
 
             let mut next = String::new();
 
@@ -345,12 +350,17 @@ pub mod stringer {
             if args.len() > 5 {
                 write_to_file = args[5] == "1";
             }
+
+            if args.len() > 6 {
+                dont_write_indices = args[6] == "1";
+            }
             return Config {
                 mode,
                 length,
                 amount,
                 write_to_file,
                 next,
+                dont_write_indices,
             };
         }
         pub fn set_mode(&mut self, mode: Modes) {
@@ -364,6 +374,9 @@ pub mod stringer {
         }
         pub fn set_write_to_file(&mut self, wtf: bool) {
             self.write_to_file = wtf;
+        }
+        pub fn set_write_indices(&mut self, wtf: bool) {
+            self.dont_write_indices = wtf;
         }
         pub fn set_next(&mut self, next: String) {
             self.next = next;

@@ -30,6 +30,10 @@ pub mod command_parser {
                 let strong = str.to_string();
                 conf.set_write_to_file(get_value(strong, "=") == "1");
             }
+            if str.contains("dwi") {
+                let strong = str.to_string();
+                conf.set_write_indices(get_value(strong, "=") == "1");
+            }
         }
         return conf;
     }
