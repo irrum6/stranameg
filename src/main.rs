@@ -6,6 +6,7 @@ use stranameg::stringer::{
 
 fn main() {
     use std::fs::read_to_string;
+    let version = "0.9.2";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -15,6 +16,10 @@ fn main() {
     // -h -H H Helpt help
     if "-h" == args[1] || "printh" == args[1] || "help" == args[1] {
         print_help();
+        return;
+    }
+    if "--version" == args[1] || "-V" == args[1] {
+        println!("{}", version);
         return;
     }
 
@@ -73,7 +78,6 @@ fn main() {
         } else {
             // do nothing
         }
-        // println!("{}", split[1]);
         conf
     } else {
         Config::new(&args)
