@@ -321,6 +321,24 @@ pub mod stringer {
         pub fn new(args: &[String]) -> Config {
             return Config::from(args);
         }
+        pub fn default() -> Config {
+            let amount = 16;
+            let mode = Modes::RandomLetters;
+            let write_to_file = false;
+            let dont_write_indices = false;
+
+            let next = String::new();
+
+            let length: u32 = 12;
+            return Config {
+                mode,
+                length,
+                amount,
+                write_to_file,
+                next,
+                dont_write_indices,
+            };
+        }
         pub fn from(args: &[String]) -> Config {
             let mut amount = 16;
             let mut mode = Modes::RandomLetters;

@@ -44,9 +44,7 @@ fn main() {
         get_config_from_commands(v)
     } else if args[1].contains("-f") {
         // fastswitch
-        // todo
-        let argumants = [String::from("16")];
-        let mut conf = Config::new(&argumants);
+        let mut conf = Config::default();
         let split: Vec<&str> = args[1].split("-f").collect();
         // println!("{}",split[0]);
         let s: String = String::from(split[1]);
