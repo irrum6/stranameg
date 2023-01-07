@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::{Config, Languages, ListType, get_config_from_commands};
+    use stranameg::stringer::{Config, Languages, ListType, command_parser};
 
     use stranameg::strgen::string_generator_module::*;
     #[test]
@@ -62,7 +62,7 @@ pub mod tests {
     #[test]
     fn command_parser() {
         let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
-        let confetti = get_config_from_commands(vargs);
+        let confetti = command_parser::get_config(vargs);
         let mut sg = LettterSequence::new("abc", 12);
         sg.setup(&confetti);
         let strong = sg.get();

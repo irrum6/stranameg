@@ -17,7 +17,7 @@ pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
 
-    pub use super::command_parser::command_parser::get_config_from_commands;
+    pub use super::command_parser::command_parser as command_parser;
     pub use super::grammar::grammar::GermanNounList;
     pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::Languages;

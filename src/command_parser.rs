@@ -1,7 +1,7 @@
 pub mod command_parser {
     use crate::stringer::Config;
     use crate::stringer::Modes;
-    pub fn get_config_from_commands(vargs: Vec<&str>) -> Config {
+    pub fn get_config(vargs: Vec<&str>) -> Config {
         let a = [String::new(), String::from("02")];
         //confetti
         let mut conf = Config::new(&a);

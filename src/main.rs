@@ -1,12 +1,12 @@
 use std::env;
 
 use stranameg::stringer::{
-    fast_switch, get_config_from_commands, print_help, run_generator, run_repl, Config, Modes,
+    fast_switch, command_parser, print_help, run_generator, run_repl, Config, Modes,
 };
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.6";
+    let version = "0.10.7";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -35,7 +35,7 @@ fn main() {
         for x in 2..args.len() {
             v.push(args[x].as_ref());
         }
-        get_config_from_commands(v)
+        command_parser::get_config(v)
     } else if "pf" == flag || "paramsfile" == flag {
         let mut v = Vec::new();
         let mut fileargs = String::from(".params");
@@ -48,7 +48,7 @@ fn main() {
         for line in fileargs.lines() {
             v.push(line.trim());
         }
-        get_config_from_commands(v)
+        command_parser::get_config(v)
     } else if args[1].contains("-f") {
         // fastswitch
         let stronk = args[1].clone();
