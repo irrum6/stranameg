@@ -6,7 +6,7 @@ use stranameg::stringer::{
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.1";
+    let version = "0.10.2";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -50,8 +50,26 @@ fn main() {
             // mode
             if line.trim().contains("mode") {
                 let split: Vec<&str> = line.trim().split(" ").collect();
+
                 let mode = Modes::from(split[1]);
+                let required_length = match mode {
+                    Modes::RandomLettersFromCustomAlphabet => 3,
+                    Modes::RandomLettersFromAlphabetFile => 3,
+                    Modes::RandomWordFromListFile => 3,
+                    Modes::CoupledWordsListFiles => 3,
+                    _ => 2,
+                };
+                if split.len() < required_length {
+                    println!("pass other parameters for this mode");
+                    line.truncate(0);
+                    continue;
+                }
                 conf.set_mode(mode);
+
+                if required_length > 2 {
+                    let next = String::from(split[2]);
+                    conf.set_next(next);
+                }
                 line.truncate(0);
                 continue;
             }
