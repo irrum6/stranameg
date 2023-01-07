@@ -10,6 +10,8 @@ pub mod command_parser;
 
 pub mod strgen;
 
+pub mod repl;
+
 pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
@@ -23,6 +25,8 @@ pub mod stringer {
     pub use super::rng::rng::{RNGWheel, RNG};
 
     use super::strgen::string_generator_module::*;
+
+    pub use super::repl::repl::run_repl;
 
     #[derive(Clone)]
     pub enum ListType {

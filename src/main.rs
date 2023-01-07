@@ -1,12 +1,12 @@
 use std::env;
 
 use stranameg::stringer::{
-    get_config_from_commands, print_help, run_generator, Config, Modes,
+    get_config_from_commands, print_help, run_generator, run_repl, Config, Modes,
 };
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.3";
+    let version = "0.10.4";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -24,81 +24,7 @@ fn main() {
     }
 
     if "repl" == args[1] || "-R" == args[1] {
-        use std::io::stdin;
-        //repl mode
-        println!("Welcome to REPL mode");
-        let mut conf = Config::default();
-        let mut exit = false;
-        let mut line = String::new();
-        // evaluate statements
-        loop {
-            if exit {
-                break;
-            }
-            stdin().read_line(&mut line).unwrap();
-            if ".exit" == line.trim() {
-                exit = true;
-                line.truncate(0);
-                continue;
-            }
-
-            if "run" == line.trim() {
-                run_generator(&conf);
-                line.truncate(0);
-                continue;
-            }
-            // mode
-            if line.trim().contains("mode") {
-                let split: Vec<&str> = line.trim().split(" ").collect();
-
-                let mode = Modes::from(split[1]);
-                let required_length = match mode {
-                    Modes::RandomLettersFromCustomAlphabet => 3,
-                    Modes::RandomLettersFromAlphabetFile => 3,
-                    Modes::RandomWordFromListFile => 3,
-                    Modes::CoupledWordsListFiles => 3,
-                    _ => 2,
-                };
-                if split.len() < required_length {
-                    println!("pass other parameters for this mode");
-                    line.truncate(0);
-                    continue;
-                }
-                conf.set_mode(mode);
-
-                if required_length > 2 {
-                    let next = String::from(split[2]);
-                    conf.set_next(next);
-                }
-                line.truncate(0);
-                continue;
-            }
-            // language
-            if line.trim().contains("lang") {
-                let split: Vec<&str> = line.trim().split(" ").collect();
-                let la = String::from(split[1]);
-                conf.set_next(la);
-                line.truncate(0);
-                continue;
-            }
-            // number
-            if line.trim().contains("num") {
-                let split: Vec<&str> = line.trim().split(" ").collect();
-                let num: u32 = split[1].parse().expect("number isnot?!");
-                conf.set_amount(num);
-                line.truncate(0);
-                continue;
-            }
-            // length
-            if line.trim().contains("len") {
-                let split: Vec<&str> = line.trim().split(" ").collect();
-                let num: u32 = split[1].parse().expect("number isnot?!");
-                conf.set_length(num);
-                line.truncate(0);
-                continue;
-            }
-            //run generator
-        }
+        run_repl();
         return;
     }
 
