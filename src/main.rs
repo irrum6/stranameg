@@ -1,12 +1,12 @@
 use std::env;
 
 use stranameg::stringer::{
-    get_config_from_commands, print_help, run_generator, run_repl, Config, Modes,
+    fast_switch, get_config_from_commands, print_help, run_generator, run_repl, Config, Modes,
 };
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.4";
+    let version = "0.10.5";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -49,39 +49,8 @@ fn main() {
         get_config_from_commands(v)
     } else if args[1].contains("-f") {
         // fastswitch
-        let mut conf = Config::default();
-        let split: Vec<&str> = args[1].split("-f").collect();
-        // println!("{}",split[0]);
-        let s: String = String::from(split[1]);
-        let zero = s.chars().nth(0).unwrap();
-        if 'n' == zero {
-            // number
-            // -fn16
-            let split: Vec<&str> = s.split("n").collect();
-            let num: u32 = split[1].parse().expect("number isnot?!");
-            conf.set_amount(num);
-        } else if 's' == zero {
-            // length/size
-            // -fs32
-            let split: Vec<&str> = s.split("s").collect();
-            let num: u32 = split[1].parse().expect("number isnot?!");
-            conf.set_length(num);
-        } else if 'm' == zero {
-            // mode
-            // -fmrla
-            let split: Vec<&str> = s.split("m").collect();
-            let mode = Modes::from(split[1]);
-            conf.set_mode(mode);
-        } else if 'l' == zero {
-            // language
-            // -flka
-            let split: Vec<&str> = s.split("l").collect();
-            let la = String::from(split[1]);
-            conf.set_next(la);
-        } else {
-            // do nothing
-        }
-        conf
+        let stronk = args[1].clone();
+        fast_switch::get_fswitch_conf(stronk)
     } else {
         Config::new(&args)
     };

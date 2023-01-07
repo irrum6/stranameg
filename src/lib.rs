@@ -11,6 +11,7 @@ pub mod command_parser;
 pub mod strgen;
 
 pub mod repl;
+pub mod fast_switch;
 
 pub mod stringer {
     use std::fs::File;
@@ -27,6 +28,7 @@ pub mod stringer {
     use super::strgen::string_generator_module::*;
 
     pub use super::repl::repl::run_repl;
+    pub use super::fast_switch::fast_switch as fast_switch;
 
     #[derive(Clone)]
     pub enum ListType {
