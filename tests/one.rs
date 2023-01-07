@@ -1,7 +1,9 @@
 #[cfg(test)]
 pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::*;
+    use stranameg::stringer::{Config, Languages, ListType, get_config_from_commands};
+
+    use stranameg::strgen::string_generator_module::*;
     #[test]
     fn unnamed() {
         use stranameg::stringer::print_help;
@@ -19,7 +21,7 @@ pub mod tests {
         let conf = Config::new(&sarraya);
 
         let mut sg = LettterSequence::new("abc", length);
-        sg.setup(conf);
+        sg.setup(&conf);
         assert_eq!(sg.get().len(), length);
     }
     #[test]
@@ -35,7 +37,7 @@ pub mod tests {
         let lst = ListType::Nouns;
         let lan = Languages::Georgian;
         let mut sg = RandomWord::new(lst, lan);
-        sg.setup(conf);
+        sg.setup(&conf);
         let strong = sg.get();
 
         let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ";
@@ -53,7 +55,7 @@ pub mod tests {
         let nouns = ListType::Nouns;
         let mut sg = RandomWord::new(nouns, english);
         // stringer
-        sg.setup(conf);
+        sg.setup(&conf);
         //get_list_len
         assert_ne!(sg.get_list_len(), 0);
     }
@@ -62,7 +64,7 @@ pub mod tests {
         let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
         let confetti = get_config_from_commands(vargs);
         let mut sg = LettterSequence::new("abc", 12);
-        sg.setup(confetti);
+        sg.setup(&confetti);
         let strong = sg.get();
         let alphabet = "alphabet";
         println!("{}", &strong);

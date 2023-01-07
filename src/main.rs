@@ -1,12 +1,12 @@
 use std::env;
 
 use stranameg::stringer::{
-    get_config_from_commands, print_help, run_generator, Config, Languages, Modes,
+    get_config_from_commands, print_help, run_generator, Config, Modes,
 };
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.2";
+    let version = "0.10.3";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -26,7 +26,7 @@ fn main() {
     if "repl" == args[1] || "-R" == args[1] {
         use std::io::stdin;
         //repl mode
-        println!("Welcome to repl mode");
+        println!("Welcome to REPL mode");
         let mut conf = Config::default();
         let mut exit = false;
         let mut line = String::new();
@@ -43,7 +43,7 @@ fn main() {
             }
 
             if "run" == line.trim() {
-                run_generator(conf.clone());
+                run_generator(&conf);
                 line.truncate(0);
                 continue;
             }
@@ -160,7 +160,7 @@ fn main() {
         Config::new(&args)
     };
 
-    match run_generator(config) {
+    match run_generator(&config) {
         Ok(_result) => {}
         Err(e) => {
             println!("Error:{}", e);
