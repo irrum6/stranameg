@@ -6,7 +6,7 @@ use stranameg::stringer::{
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.7";
+    let version = "0.10.8";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -53,7 +53,16 @@ fn main() {
         // fastswitch
         let stronk = args[1].clone();
         fast_switch::get_fsconf(stronk)
-    } else {
+    } else if fast_switch::is_alias(flag){
+        let next = String::new();
+        let fast = if args.len() >2      {
+            fast_switch::alias_config(args[1].clone(), args[2].clone())
+        } else {
+            fast_switch::alias_config(args[1].clone(), next)
+        };
+        fast
+    }
+     else {
         Config::new(&args)
     };
 
