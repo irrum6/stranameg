@@ -6,35 +6,37 @@ use stranameg::stringer::{
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.5";
+    let version = "0.10.6";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
         print_help();
         return;
     }
+    // trimmed
+    let flag =  args[1].trim();
     // -h -H H Helpt help
-    if "-h" == args[1] || "printh" == args[1] || "help" == args[1] {
+    if "-h" == flag || "printh" == flag || "help" == flag {
         print_help();
         return;
     }
-    if "--version" == args[1] || "-V" == args[1] {
+    if "--version" == flag || "-V" == flag {
         println!("{}", version);
         return;
     }
 
-    if "repl" == args[1] || "-R" == args[1] {
+    if "repl" == flag || "-R" == flag {
         run_repl();
         return;
     }
 
-    let config = if "-a" == args[1] || "alt" == args[1] {
+    let config = if "-a" == flag || "alt" == flag {
         let mut v = Vec::new();
         for x in 2..args.len() {
             v.push(args[x].as_ref());
         }
         get_config_from_commands(v)
-    } else if "pf" == args[1] || "paramsfile" == args[1] {
+    } else if "pf" == flag || "paramsfile" == flag {
         let mut v = Vec::new();
         let mut fileargs = String::from(".params");
         if args.len() > 2 {
@@ -50,7 +52,7 @@ fn main() {
     } else if args[1].contains("-f") {
         // fastswitch
         let stronk = args[1].clone();
-        fast_switch::get_fswitch_conf(stronk)
+        fast_switch::get_fsconf(stronk)
     } else {
         Config::new(&args)
     };

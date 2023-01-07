@@ -1,7 +1,7 @@
 pub mod fast_switch{
     use crate::stringer::Config;
     use crate::stringer::Modes;
-    pub fn get_fswitch_conf(onkstr:String)->Config{
+    pub fn get_fsconf(onkstr:String)->Config{
         let mut conf = Config::default();
         let split: Vec<&str> = onkstr.split("-f").collect();
         // println!("{}",split[0]);
