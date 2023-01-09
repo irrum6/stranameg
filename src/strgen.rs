@@ -1,4 +1,5 @@
 pub mod string_generator_module {
+    
     use std::fs::read_to_string as fs_read;
 
     use crate::stringer::read_lines;
@@ -55,8 +56,17 @@ pub mod string_generator_module {
                         Ok(abc) => {
                             self.set_alphabet(abc.as_ref());
                         }
-                        Err(E) => {
-                            println!("Error reading file: reverting to latin");
+                        Err(error) => {
+                            use std::io::ErrorKind;
+                            match error.kind() {
+                                ErrorKind::NotFound => {
+                                    println!("File not found: reverting to latin");
+                                }
+                                _ => {
+                                    println!("Error reading file: reverting to latin");
+                                }
+                            }
+
                             self.set_alphabet("abcdefghijklmnopqrstuvwxyz");
                         }
                     };
