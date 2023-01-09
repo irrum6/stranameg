@@ -1,14 +1,7 @@
 pub mod string_generator_module {
     use std::fs::read_to_string as fs_read;
 
-    use crate::stringer::Config;
-    use crate::stringer::GermanNounList;
-    use crate::stringer::Languages;
-    use crate::stringer::ListType;
-    use crate::stringer::Modes;
-    use crate::stringer::RNGWheel;
-    use crate::stringer::RNG;
-
+    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
     use crate::stringer::read_lines;
 
     pub trait StringGenerator {
