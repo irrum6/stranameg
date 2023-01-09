@@ -1,8 +1,8 @@
 pub mod string_generator_module {
     use std::fs::read_to_string as fs_read;
 
-    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
     use crate::stringer::read_lines;
+    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
 
     pub trait StringGenerator {
         fn get(&mut self) -> String;
@@ -50,9 +50,16 @@ pub mod string_generator_module {
                     self.set_alphabet(conf.get_next().as_ref());
                 }
                 Modes::RandomLettersFromAlphabetFile => {
-                    let contents =
-                        fs_read(conf.get_next()).expect("Something went wrong reading the file");
-                    self.set_alphabet(contents.as_ref());
+                    let contents = fs_read(conf.get_next());
+                    match contents {
+                        Ok(abc) => {
+                            self.set_alphabet(abc.as_ref());
+                        }
+                        Err(E) => {
+                            println!("Error reading file: reverting to latin");
+                            self.set_alphabet("abcdefghijklmnopqrstuvwxyz");
+                        }
+                    };
                 }
                 Modes::RandomLetters => {
                     let lang = Languages::from(conf.get_next().as_ref());
