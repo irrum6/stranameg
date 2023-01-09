@@ -27,7 +27,7 @@ pub mod string_generator_module {
             };
         }
         pub fn set_alphabet(&mut self, s: &str) {
-            let abc: Vec<char> = s.chars().collect();
+            let abc: Vec<char> = s.trim().chars().collect();
             self.alphabet = abc;
         }
         pub fn set_length(&mut self, n: usize) {
