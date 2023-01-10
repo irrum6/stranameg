@@ -1,6 +1,10 @@
 # Stranameg
 (A stupid) String and Name Generator in rust \
 
++ 1 Basic usage
++ 2 Alternative order of arguments
++ 3 Passing arguments from file
++ 4 REPL (Interactive) mode
 ## 1 Basic usage
 Stranameg is a command line application.
 You can launch binary (compiled for linux) or compile it yoiurself with one or more parameters.
