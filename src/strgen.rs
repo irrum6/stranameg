@@ -1,5 +1,5 @@
 pub mod string_generator_module {
-    
+
     use std::fs::read_to_string as fs_read;
 
     use crate::stringer::read_lines;
@@ -48,7 +48,12 @@ pub mod string_generator_module {
         fn setup(&mut self, conf: &Config) {
             match conf.get_mode() {
                 Modes::RandomLettersFromCustomAlphabet => {
-                    self.set_alphabet(conf.get_next().as_ref());
+                    if conf.get_next().is_empty() {
+                        println!("Alphabet paremeter empty, defaulting to latin");
+                        self.set_alphabet("abcdefghijklmnopqrstuvwxyz");
+                    } else {
+                        self.set_alphabet(conf.get_next().as_ref());
+                    }
                 }
                 Modes::RandomLettersFromAlphabetFile => {
                     let contents = fs_read(conf.get_next());
