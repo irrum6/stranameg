@@ -3,5 +3,5 @@ build:
 release:
 	cargo build --release
 movebin:
-	cp ./target/release/stranameg ./binary_linux
+	cp ./target/release/stranameg ./binary
 remo: release movebin
