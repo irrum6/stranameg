@@ -1,6 +1,6 @@
 pub mod command_parser {
-    use crate::stringer::Config;
-    use crate::stringer::Modes;
+    use crate::stringer::{safe_u32,Config,Modes};
+
     pub fn get_config(vargs: Vec<&str>) -> Config {
         let a = [String::new(), String::from("02")];
         //confetti
@@ -19,7 +19,7 @@ pub mod command_parser {
             }
             if str.contains("len") {
                 let strong = str.to_string();
-                let length: u32 = get_value(strong, "=").parse().expect("number");
+                let length: u32 = safe_u32(get_value(strong, "="), 4);
                 conf.set_length(length);
             }
             if str.contains("next") {

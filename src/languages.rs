@@ -19,9 +19,9 @@ pub mod languages {
         }
         pub fn from(s: &str) -> Languages {
             return match s {
-                "en" => Languages::English,
-                "ka" => Languages::Georgian,
-                "de" => Languages::German,
+                "en" | "En" | "eN" | "EN" => Languages::English,
+                "ka" | "KA" | "Ka" | "kA" => Languages::Georgian,
+                "de" | "dE" | "De" | "DE" => Languages::German,
                 _ => Languages::English,
             };
         }

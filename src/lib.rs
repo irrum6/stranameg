@@ -75,7 +75,7 @@ pub mod stringer {
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
         const OUTPUT_NAME: &str = "strings.textout";
         let mut sg = stringer(conf.clone());
-        sg.setup(&conf);
+        sg.setup(&conf)?;
         let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..conf.amount {
             let strang = sg.get();
@@ -90,6 +90,13 @@ pub mod stringer {
             }
         }
         return Ok(());
+    }
+
+    pub fn safe_u32(strong: String, default: u32) -> u32 {
+        return match strong.parse() {
+            Ok(value) => value,
+            Err(e) => default,
+        };
     }
     #[derive(Clone)]
     pub struct Config {
@@ -139,7 +146,7 @@ pub mod stringer {
 
             if args.len() > 2 {
                 println!("{}", &args[2]);
-                length = args[2].parse().expect("Number must be");
+                length = safe_u32(args[2].clone(),4);
             }
             if args.len() > 3 {
                 mode = Modes::from(args[3].as_ref());

@@ -1,13 +1,14 @@
 pub mod string_generator_module {
 
-    use std::fs::read_to_string as fs_read;
+    use std::fs::read_to_string;
+    use std::io::{Error};
 
     use crate::stringer::read_lines;
     use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
 
     pub trait StringGenerator {
         fn get(&mut self) -> String;
-        fn setup(&mut self, conf: &Config);
+        fn setup(&mut self, conf: &Config) -> Result<(), Error>;
     }
 
     pub struct LettterSequence {
@@ -33,6 +34,11 @@ pub mod string_generator_module {
         pub fn set_length(&mut self, n: usize) {
             self.length = n;
         }
+        fn setup_rlaf(&mut self, conf: &Config) -> Result<(), Error> {
+            let contents = read_to_string(conf.get_next())?;
+            self.set_alphabet(contents.as_ref());
+            return Ok(());
+        }
     }
     impl StringGenerator for LettterSequence {
         fn get(&mut self) -> String {
@@ -45,7 +51,7 @@ pub mod string_generator_module {
             }
             return self.held_string.clone();
         }
-        fn setup(&mut self, conf: &Config) {
+        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
             match conf.get_mode() {
                 Modes::RandomLettersFromCustomAlphabet => {
                     if conf.get_next().is_empty() {
@@ -56,25 +62,7 @@ pub mod string_generator_module {
                     }
                 }
                 Modes::RandomLettersFromAlphabetFile => {
-                    let contents = fs_read(conf.get_next());
-                    match contents {
-                        Ok(abc) => {
-                            self.set_alphabet(abc.as_ref());
-                        }
-                        Err(error) => {
-                            use std::io::ErrorKind;
-                            match error.kind() {
-                                ErrorKind::NotFound => {
-                                    println!("File not found: reverting to latin");
-                                }
-                                _ => {
-                                    println!("Error reading file: reverting to latin");
-                                }
-                            }
-
-                            self.set_alphabet("abcdefghijklmnopqrstuvwxyz");
-                        }
-                    };
+                    self.setup_rlaf(conf)?;
                 }
                 Modes::RandomLetters => {
                     let lang = Languages::from(conf.get_next().as_ref());
@@ -84,6 +72,7 @@ pub mod string_generator_module {
                 _ => {}
             }
             self.set_length(conf.get_length() as usize);
+            return Ok(());
         }
     }
 
@@ -126,25 +115,24 @@ pub mod string_generator_module {
         pub fn get_list_len(&self) -> usize {
             return self.list.len();
         }
-        pub fn fill(&mut self, s: &str) {
+        pub fn fill(&mut self, s: &str) -> Result<(), Error> {
             let filename = if s == "" {
                 self.get_file_name()
             } else {
                 String::from(s)
             };
-            if let Ok(lines) = read_lines(filename) {
-                for line in lines {
-                    if let Ok(ip) = line {
-                        let chazar = ip.split(",");
-                        for chaz in chazar {
-                            if chaz == "" {
-                                continue;
-                            }
-                            self.add_word(String::from(chaz.trim()))
-                        }
+            let lines = read_lines(filename)?;
+            for line in lines {
+                let ip = line?;
+                let chazar = ip.split(",");
+                for chaz in chazar {
+                    if chaz == "" {
+                        continue;
                     }
+                    self.add_word(String::from(chaz.trim()))
                 }
             }
+            return Ok(());
         }
     }
     impl StringGenerator for RandomWord {
@@ -155,7 +143,7 @@ pub mod string_generator_module {
             let index = rng.get() as usize % diclen;
             return self.list[index].clone();
         }
-        fn setup(&mut self, conf: &Config) {
+        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
             match conf.get_mode() {
                 Modes::RandomWord => self.fill(""),
                 Modes::RandomWordFromListFile => self.fill(conf.get_next().as_ref()),
@@ -199,19 +187,21 @@ pub mod string_generator_module {
             }
             return strong;
         }
-        fn setup(&mut self, conf: &Config) {
+        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
             match conf.get_mode() {
                 Modes::CoupledWordsNouns | Modes::CoupledWordsNames => {
-                    self.adjectives.fill("");
-                    self.type_list.fill("");
+                    self.adjectives.fill("")?;
+                    self.type_list.fill("")?;
+                    Ok(())
                 }
                 Modes::CoupledWordsListFiles => {
                     let nxt = conf.get_next();
                     let names: Vec<&str> = nxt.split(":").collect();
-                    self.adjectives.fill(names[0]);
-                    self.type_list.fill(names[1]);
+                    self.adjectives.fill(names[0])?;
+                    self.type_list.fill(names[1])?;
+                    Ok(())
                 }
-                _ => {}
+                _ => {Ok(())}
             }
         }
     }
@@ -250,10 +240,12 @@ pub mod string_generator_module {
 
             return strong;
         }
-        fn setup(&mut self, conf: &Config) {
-            self.adjectives.fill("");
-            self.nouns.fill("");
-            self.verbs.fill("");
+        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
+            //propagates error
+            self.adjectives.fill("")?;
+            self.nouns.fill("")?;
+            self.verbs.fill("")?;
+            Ok(())
         }
     }
 }
