@@ -53,7 +53,7 @@ pub mod string_generator_module {
         fn get(&mut self) -> String {
             let len = self.alphabet.len();
             self.held_string = String::new();
-            for _i in 0..self.length  {
+            for _i in 0..self.length {
                 let num = self.rng.get();
                 let index = num as usize % len;
                 self.held_string.push(self.alphabet[index]);
@@ -89,15 +89,19 @@ pub mod string_generator_module {
         list: Vec<String>,
         list_type: ListType,
         language: Languages,
+        rng: RNG,
     }
 
     impl RandomWord {
         pub fn new(list_type: ListType, language: Languages) -> RandomWord {
             let list: Vec<String> = Vec::new();
+            let mut rng = RNG::new();
+            rng.seed();
             return RandomWord {
                 list,
                 list_type,
                 language,
+                rng,
             };
         }
         pub fn add_word(&mut self, s: String) {
@@ -146,10 +150,8 @@ pub mod string_generator_module {
     }
     impl StringGenerator for RandomWord {
         fn get(&mut self) -> String {
-            let mut rng = RNG::new();
-            rng.seed();
             let diclen = self.list.len();
-            let index = rng.get() as usize % diclen;
+            let index = self.rng.get() as usize % diclen;
             return self.list[index].clone();
         }
         fn setup(&mut self, conf: &Config) -> Result<(), Error> {
