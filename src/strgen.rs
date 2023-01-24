@@ -35,7 +35,12 @@ pub mod string_generator_module {
             self.length = n;
         }
         fn setup_rlaf(&mut self, conf: &Config) -> Result<(), Error> {
-            let contents = read_to_string(conf.get_next())?;
+            // let contents = read_to_string(conf.get_next())?;
+            // we sorta need to handle error there
+            let contents: String = read_to_string(conf.get_next()).unwrap_or_else(|e|{
+                println!("Error reading, reverting to latin");
+                Languages::English.get_alphabet()
+            });
             self.set_alphabet(contents.as_ref());
             return Ok(());
         }

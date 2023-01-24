@@ -5,6 +5,7 @@ pub mod languages {
         Georgian,
         German,
     }
+
     impl Languages {
         pub fn abbr(&self) -> String {
             let result = match *self {

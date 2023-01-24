@@ -1,12 +1,12 @@
 use std::env;
 
 use stranameg::stringer::{
-    fast_switch, command_parser, print_help, run_generator, run_repl, Config, Modes,
+    command_parser, fast_switch, print_help, run_generator, run_repl, Config,
 };
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.10.14";
+    let version = "0.10.15";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("pass enough parameters to calculate");
@@ -14,7 +14,7 @@ fn main() {
         return;
     }
     // trimmed
-    let flag =  args[1].trim();
+    let flag = args[1].trim();
     // -h -H H Helpt help
     if "-h" == flag || "printh" == flag || "help" == flag {
         print_help();
@@ -53,16 +53,15 @@ fn main() {
         // fastswitch
         let stronk = args[1].clone();
         fast_switch::get_fsconf(stronk)
-    } else if fast_switch::is_alias(flag){
+    } else if fast_switch::is_alias(flag) {
         let next = String::new();
-        let fast = if args.len() >2      {
+        let fast = if args.len() > 2 {
             fast_switch::alias_config(args[1].clone(), args[2].clone())
         } else {
             fast_switch::alias_config(args[1].clone(), next)
         };
         fast
-    }
-     else {
+    } else {
         Config::new(&args)
     };
 
