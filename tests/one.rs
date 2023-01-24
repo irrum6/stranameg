@@ -37,7 +37,12 @@ pub mod tests {
         let lst = ListType::Nouns;
         let lan = Languages::Georgian;
         let mut sg = RandomWord::new(lst, lan);
-        sg.setup(&conf);
+
+        sg.setup(&conf).ok();
+        // match sg.setup(&conf){
+        //     Ok() =>{},
+        //     Err(e)=>
+        // }
         let strong = sg.get();
 
         let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ";

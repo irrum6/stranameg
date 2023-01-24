@@ -1,7 +1,7 @@
 pub mod string_generator_module {
 
     use std::fs::read_to_string;
-    use std::io::{Error};
+    use std::io::Error;
 
     use crate::stringer::read_lines;
     use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
@@ -15,16 +15,20 @@ pub mod string_generator_module {
         alphabet: Vec<char>,
         held_string: String,
         length: usize,
+        rng: RNG,
     }
 
     impl LettterSequence {
         pub fn new(s: &str, length: usize) -> LettterSequence {
             let held_string = String::new();
             let alphabet: Vec<char> = s.chars().collect();
+            let mut rng = RNG::new();
+            rng.seed();
             return LettterSequence {
                 held_string,
                 alphabet,
                 length,
+                rng,
             };
         }
         pub fn set_alphabet(&mut self, s: &str) {
@@ -37,7 +41,7 @@ pub mod string_generator_module {
         fn setup_rlaf(&mut self, conf: &Config) -> Result<(), Error> {
             // let contents = read_to_string(conf.get_next())?;
             // we sorta need to handle error there
-            let contents: String = read_to_string(conf.get_next()).unwrap_or_else(|e|{
+            let contents: String = read_to_string(conf.get_next()).unwrap_or_else(|e| {
                 println!("Error reading, reverting to latin");
                 Languages::English.get_alphabet()
             });
@@ -47,10 +51,10 @@ pub mod string_generator_module {
     }
     impl StringGenerator for LettterSequence {
         fn get(&mut self) -> String {
-            let rng = RNGWheel::new(self.length);
             let len = self.alphabet.len();
             self.held_string = String::new();
-            for num in rng {
+            for _i in 0..self.length  {
+                let num = self.rng.get();
                 let index = num as usize % len;
                 self.held_string.push(self.alphabet[index]);
             }
@@ -206,7 +210,7 @@ pub mod string_generator_module {
                     self.type_list.fill(names[1])?;
                     Ok(())
                 }
-                _ => {Ok(())}
+                _ => Ok(()),
             }
         }
     }
