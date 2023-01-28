@@ -39,7 +39,8 @@ pub mod command_parser {
     }
     fn get_value(strong: String, delimiter: &str) -> String {
         // return ;
-        let v: Vec<&str> = strong.split(delimiter).collect();
+        //going fishing
+        let v= strong.split(delimiter).collect::<Vec<&str>>();
         // return String::from(v[1]);
         let value = String::from(v[1]);
         return value;
