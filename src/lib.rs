@@ -10,14 +10,14 @@ pub mod command_parser;
 
 pub mod strgen;
 
-pub mod repl;
 pub mod fast_switch;
+pub mod repl;
 
 pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
 
-    pub use super::command_parser::command_parser as command_parser;
+    pub use super::command_parser::command_parser;
     pub use super::grammar::grammar::GermanNounList;
     pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::Languages;
@@ -27,8 +27,8 @@ pub mod stringer {
 
     use super::strgen::string_generator_module::*;
 
+    pub use super::fast_switch::fast_switch;
     pub use super::repl::repl::run_repl;
-    pub use super::fast_switch::fast_switch as fast_switch;
 
     #[derive(Clone)]
     pub enum ListType {
@@ -92,10 +92,11 @@ pub mod stringer {
         return Ok(());
     }
 
+    //returns default value as safe, when it can't parse string
     pub fn safe_u32(strong: String, default: u32) -> u32 {
         return match strong.parse() {
             Ok(value) => value,
-            Err(e) => default,
+            Err(_e) => default,
         };
     }
     #[derive(Clone)]
@@ -146,7 +147,7 @@ pub mod stringer {
 
             if args.len() > 2 {
                 println!("{}", &args[2]);
-                length = safe_u32(args[2].clone(),4);
+                length = safe_u32(args[2].clone(), 4);
             }
             if args.len() > 3 {
                 mode = Modes::from(args[3].as_ref());
