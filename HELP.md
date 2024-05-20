@@ -138,8 +138,8 @@ It will also set one parameter
 ./binary -fn8
 ./binary -fmrla mode RLA (2nd parameter for alphabet is required)
 ./binary S2 - 32 characters length
-./binary R2 mode RLA (2nd parameter for alphabet is required)
-./binary R3 mode RLAF (2nd parameter for filename is required)
+./binary R2 - RLA mode (2nd parameter for alphabet is required)
+./binary R3 - RLAF mode (2nd parameter for filename is required)
 
 
 ## 6 REPL (Interactive) mode
