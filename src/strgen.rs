@@ -19,6 +19,10 @@ pub mod string_generator_module {
     }
 
     impl LettterSequence {
+        pub fn pass_generator(length: usize)->LettterSequence{
+            let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
+            return LettterSequence::new(alphabet, length);
+        }
         pub fn new(s: &str, length: usize) -> LettterSequence {
             let held_string = String::new();
             let alphabet: Vec<char> = s.chars().collect();

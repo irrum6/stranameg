@@ -45,6 +45,7 @@ pub mod stringer {
 
     pub fn stringer(conf: Config) -> Box<dyn StringGenerator> {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
+            Modes::Password => Box::new(LettterSequence::pass_generator( 16)),
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
             Modes::RandomWord => Box::new(RandomWord::new(
                 ListType::Nouns,

@@ -22,6 +22,7 @@ pass parameters (command line arguments) to generate strings, all but first are 
 ## 2 Modes
 
 ### 2.1 All modes listed
+- Password (72 symbols)
 - RandomLetters
 - RandomLettersFromCustomAlphabet
 - RandomLettersFromAlphabetFile
@@ -36,24 +37,24 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - **rla**  RandomLettersFromCustomAlphabet, a string must be supplied as 4th argument
 - **rlaf**  RandomLettersFromAlphabetFile, filename must be supplied as 4th argument
 #### 2.2.1 usage of 4th paramter
-- RandomLetters - sets language (Ka- for georgian, En (english) or De (German) for latin alphabet)
+- RandomLetters - sets language (Ka- for georgian, En (english) or De (German) for german alphabet)
 - RandomLettersFromCustomAlphabet - strings are generated from the letters from this string
 - RandomLettersFromAlphabetFile - is used as filename, whose contents serve as basis for our generator
 
 #### 2.2.2 examples
-application 8 24  - 8 strings with 12 characters length
+application 8 24  - 8 strings with 24 characters length
 application 8  - 8 strings with 12 characters length
+application 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet"
 
 ### 2.3 Random Words
 - **raw**  RandomWord,
 - **rawl**  RandomWordFromListFile,
 #### 2.3.1 usage of 4th paramter
-- RandomLetters - sets language (Ka- for georgian, En (english) or De (German) for latin alphabet)
-- RandomLettersFromCustomAlphabet - strings are generated from the letters from this string
-- RandomLettersFromAlphabetFile - is used as filename, whose contents serve as basis for our generator
+- RandomWord - sets language (Ka- for georgian, En (english) or De (German) for latin alphabet)
+- RandomWordFromListFile 
 
 #### 2.3.2 examples
-application 8 24  - 8 strings with 12 characters length
+application 8 24  - 8 strings with 24 characters length
 application 8  - 8 strings with 12 characters length
 
 ### 2.4 Coupled Words
