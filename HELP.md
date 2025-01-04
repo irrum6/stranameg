@@ -9,13 +9,13 @@
 + 6 REPL (Interactive) mode
 ## 1 Basic usage
 Stranameg is a command line application.
-You can launch binary (compiled for linux) or compile it yoiurself with one or more parameters.
+You can launch binary (compiled for linux) or compile it yourself.
+It takes one or more parameters.
 
-
-pass parameters (command line arguments) to generate strings, all but first are optional (you can ommit all but first)
-- First paramete is the **number** of strings
-- Second paramters sets **length** of the generated string, defaults to 12 , this parameter is ignored in modes other than Random Letter String ones (rls,rla,rlaf)
-- Third parameter is **mode**, defaults to random letter String (rls)
+pass parameters (command line arguments) to generate strings, all but first are optional.
+- First parameter is the **number** of strings
+- Second paramters is the **length** of the generated string, defaults to 12 , this parameter is ignored in modes other than Random Letter String ones (rls,rla,rlaf)
+- Third parameter is **mode**, defaults to random letter string (rls)
 - Fourth parameter is just another argument whose usage depends on mode
 - Fifth argument is to whether or not write to file (**strings.textout**) 1 is true , 0 or ommited is false
 
@@ -33,29 +33,30 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - CoupledWordsListFiles
 
 ### 2.2 Random Letter Strings
-- **rls**  RandomLetters,
-- **rla**  RandomLettersFromCustomAlphabet, a string must be supplied as 4th argument
+- **rls**  RandomLetters
+- **rla**  RandomLettersFromCustomAlphabet a string must be supplied as 4th argument
 - **rlaf**  RandomLettersFromAlphabetFile, filename must be supplied as 4th argument
 #### 2.2.1 usage of 4th paramter
 - RandomLetters - sets language (Ka- for georgian, En (english) or De (German) for german alphabet)
 - RandomLettersFromCustomAlphabet - strings are generated from the letters from this string
-- RandomLettersFromAlphabetFile - is used as filename, whose contents serve as basis for our generator
+- RandomLettersFromAlphabetFile - is used as filename, whose contents serve as the basis for our generator
 
 #### 2.2.2 examples
-application 8 24  - 8 strings with 24 characters length
-application 8  - 8 strings with 12 characters length
-application 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet"
+./binary_linux 8 24  - 8 strings with 24 characters length
+./binary_linux 16  - 16 strings with 12 characters length
+./binary_linux 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet"
+./binary_linux 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text
 
 ### 2.3 Random Words
 - **raw**  RandomWord,
 - **rawl**  RandomWordFromListFile,
 #### 2.3.1 usage of 4th paramter
 - RandomWord - sets language (Ka- for georgian, En (english) or De (German) for latin alphabet)
-- RandomWordFromListFile 
+- RandomWordFromListFile - takes words from that file
 
 #### 2.3.2 examples
-application 8 24  - 8 strings with 24 characters length
-application 8  - 8 strings with 12 characters length
+./binary_linux 16 12 raw de
+./binary_linux 16 12 rawl sample.list
 
 ### 2.4 Coupled Words
 Coupled Words modes generate two words together
@@ -66,14 +67,13 @@ Coupled Words modes generate two words together
 app will look for list in lists directory for following file name patters: **\[listtype\]**.**\[language\]**.list
 where list types are : nouns,adjectives,names
 #### 2.4.1 usage of 4th paramter
-- CoupledWordsNouns,CoupledWordsNames - sets language
-- CoupledWordsListFiles - filenames separated by :
+- CoupledWordsNouns,CoupledWordsNames - sets language (words ar sourced from adjectives.[language].list and nouns.[language].list)
+- CoupledWordsListFiles - filenames separated by : serve as source for adjectives and nouns
 
 #### 2.4.2 Example
-If You run app with following parameters : 16 12 cow En ,
-it will look for adjectives.en.list and nouns.en.list and then use their contents to generate strings
+./binary_linux 16 12 cow en
+./binary_linux 16 12 cwf sample.list:sample2.list
 
-./binary 16 12 cwf sample.list:sample2.list
 ### 2.5 Simple sentences
 Generates not so meaningful sentences. Currently only english.
 
