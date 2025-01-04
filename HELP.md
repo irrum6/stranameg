@@ -20,8 +20,8 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - Fifth argument is to whether or not write to file (**strings.textout**) 1 is true , 0 or ommited is false
 
 ### 1.1 basic examples
-./binary_linux 16 16 generarates 16 strings , each 16 characters long \
-./binary_linux 24 generarates 24 strings , each 12 characters long \
+./binary_linux 16 16  - will generarate 16 strings , each 16 characters long \
+./binary_linux 24  - will generarate 24 strings , each 12 characters long \
 
 ## 2 Modes
 
@@ -145,6 +145,7 @@ Or use aliases for certain options
 - **S8** 128 characters long
 - **S9** 144 characters long
 - **SX** 160 characters long
+- **PWD** Password mode
 It will also set one parameter
 ### 5.3 Examples
 ./binary_linux -fn8 \
@@ -153,6 +154,8 @@ It will also set one parameter
 ./binary_linux S2 - 32 characters length \
 ./binary_linux R2 - RLA mode (2nd parameter for alphabet is required) \
 ./binary_linux R3 - RLAF mode (2nd parameter for filename is required) \
+./binary_linux C1 en
+./binary_linux PWD
 
 
 ## 6 REPL (Interactive) mode

@@ -117,6 +117,9 @@ pub mod fast_switch {
             "SX" => {
                 conf.set_length(160);
             }
+            "PWD" =>{
+                conf.set_mode(Modes::Password);
+            }
             _ => {}
         }
         return conf;
@@ -125,7 +128,7 @@ pub mod fast_switch {
     pub fn is_alias(strong: &str) -> bool {
         return match strong {
             "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "W1" | "W2" | "N1" | "S1" | "S2" | "S3"
-            | "S4" | "S5" | "S6" | "S7" | "S8" | "S9" | "SX" => true,
+            | "S4" | "S5" | "S6" | "S7" | "S8" | "S9" | "SX" | "PWD" => true,
             _ => false,
         };
     }
