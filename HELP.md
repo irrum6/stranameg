@@ -42,10 +42,10 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - RandomLettersFromAlphabetFile - is used as filename, whose contents serve as the basis for our generator
 
 #### 2.2.2 examples
-./binary_linux 8 24  - 8 strings with 24 characters length
-./binary_linux 16  - 16 strings with 12 characters length
-./binary_linux 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet"
-./binary_linux 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text
+./binary_linux 8 24  - 8 strings with 24 characters length \
+./binary_linux 16  - 16 strings with 12 characters length \
+./binary_linux 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet" \
+./binary_linux 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text \
 
 ### 2.3 Random Words
 - **raw**  RandomWord,
@@ -55,8 +55,8 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - RandomWordFromListFile - takes words from that file
 
 #### 2.3.2 examples
-./binary_linux 16 12 raw de
-./binary_linux 16 12 rawl sample.list
+./binary_linux 16 12 raw de \
+./binary_linux 16 12 rawl sample.list \
 
 ### 2.4 Coupled Words
 Coupled Words modes generate two words together
@@ -71,8 +71,8 @@ where list types are : nouns,adjectives,names
 - CoupledWordsListFiles - filenames separated by : serve as source for adjectives and nouns
 
 #### 2.4.2 Example
-./binary_linux 16 12 cow en
-./binary_linux 16 12 cwf sample.list:sample2.list
+./binary_linux 16 12 cow en \
+./binary_linux 16 12 cwf sample.list:sample2.list \
 
 ### 2.5 Simple sentences
 Generates not so meaningful sentences. Currently only english.
@@ -93,18 +93,19 @@ mode=
 next= 
 wtf=
 dwi= 
->wtf is write to file
->dwi dont_write_indices whether write or not 
+>wtf is write to file \
+>dwi dont_write_indices whether \
 
 ### 3.1 example
-program alt mode=rla next=abc 
+./binary_linux alt mode=rla next=abc \
 
 ## 4 Passing arguments from file
 you can pass arguments as file using **pf** or **paramsfile** switcher
 arguments are the same as in alt mode
 
-example
-program pf params.file
+### 4.1 example
+./binary_linux pf params.file \
+
 ## 5 Fast switch and aliases
 ### 5.1 Fast swtich
 Use **-f** switch  and then immediatelly one of the following set one parameter (others will default)
@@ -136,12 +137,12 @@ Or use aliases for certain options
 - **SX** 160 characters long
 It will also set one parameter
 ### 5.3 Examples
-./binary_linux -fn8
-./binary_linux -fmrla mode RLA (2nd parameter for alphabet is required)
-./binary_linux -fmcow
-./binary_linux S2 - 32 characters length
-./binary_linux R2 - RLA mode (2nd parameter for alphabet is required)
-./binary_linux R3 - RLAF mode (2nd parameter for filename is required)
+./binary_linux -fn8 \
+./binary_linux -fmrla mode RLA (2nd parameter for alphabet is required) \
+./binary_linux -fmcow \
+./binary_linux S2 - 32 characters length \
+./binary_linux R2 - RLA mode (2nd parameter for alphabet is required) \
+./binary_linux R3 - RLAF mode (2nd parameter for filename is required) \
 
 
 ## 6 REPL (Interactive) mode
