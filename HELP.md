@@ -19,6 +19,10 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - Fourth parameter is just another argument whose usage depends on mode
 - Fifth argument is to whether or not write to file (**strings.textout**) 1 is true , 0 or ommited is false
 
+### 1.1 basic examples
+./binary_linux 16 16 generarates 16 strings , each 16 characters long \
+./binary_linux 24 generarates 24 strings , each 12 characters long \
+
 ## 2 Modes
 
 ### 2.1 All modes listed
