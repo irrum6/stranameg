@@ -136,11 +136,12 @@ Or use aliases for certain options
 - **SX** 160 characters long
 It will also set one parameter
 ### 5.3 Examples
-./binary -fn8
-./binary -fmrla mode RLA (2nd parameter for alphabet is required)
-./binary S2 - 32 characters length
-./binary R2 - RLA mode (2nd parameter for alphabet is required)
-./binary R3 - RLAF mode (2nd parameter for filename is required)
+./binary_linux -fn8
+./binary_linux -fmrla mode RLA (2nd parameter for alphabet is required)
+./binary_linux -fmcow
+./binary_linux S2 - 32 characters length
+./binary_linux R2 - RLA mode (2nd parameter for alphabet is required)
+./binary_linux R3 - RLAF mode (2nd parameter for filename is required)
 
 
 ## 6 REPL (Interactive) mode
