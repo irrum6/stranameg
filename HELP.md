@@ -26,7 +26,6 @@ pass parameters (command line arguments) to generate strings, all but first are 
 ## 2 Modes
 
 ### 2.1 All modes listed
-- Password (72 symbols)
 - RandomLetters
 - RandomLettersFromCustomAlphabet
 - RandomLettersFromAlphabetFile
@@ -35,6 +34,7 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - CoupledWordsNouns
 - CoupledWordsNames
 - CoupledWordsListFiles
+- Password (72 symbols)
 
 ### 2.2 Random Letter Strings
 - **rls**  RandomLetters
@@ -87,6 +87,12 @@ Generates not so meaningful sentences. Currently only english.
 Currently ignore
 #### 2.5.2 Example
 ./binary 16 12 sen
+
+### 2.6 password
+- **pass** Password (72 symbols)
+
+#### 2.6.1 examples
+./binary_liux 16 12 pass
 
 ## 3 Alternative order of arguments
 you can pass parameter in different order using "alt" or "-a" switcher as first argument
