@@ -20,9 +20,17 @@ pub mod string_generator_module {
 
     impl LettterSequence {
         pub fn pass_generator(length: usize)->LettterSequence{
+            //72 unique symbol set
             let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
             return LettterSequence::new(alphabet, length);
         }
+
+        pub fn pass_generator84(length: usize)->LettterSequence{
+            //84 unique symbol set
+            let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()[]{};:,.<>?|";
+            return LettterSequence::new(alphabet, length);
+        }
+
         pub fn new(s: &str, length: usize) -> LettterSequence {
             let held_string = String::new();
             let alphabet: Vec<char> = s.chars().collect();

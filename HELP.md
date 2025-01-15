@@ -35,6 +35,7 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - CoupledWordsNames
 - CoupledWordsListFiles
 - Password (72 symbols)
+- Password (84 symbols)
 
 ### 2.2 Random Letter Strings
 - **rls**  RandomLetters
@@ -93,6 +94,7 @@ Currently ignore
 
 #### 2.6.1 examples
 ./binary_liux 16 12 pass
+./binary_liux 16 12 pass2
 
 ## 3 Alternative order of arguments
 you can pass parameter in different order using "alt" or "-a" switcher as first argument
@@ -156,6 +158,7 @@ It will also set one parameter
 ./binary_linux R3 - RLAF mode (2nd parameter for filename is required) \
 ./binary_linux C1 en
 ./binary_linux PWD
+./binary_linux PWD84
 
 
 ## 6 REPL (Interactive) mode

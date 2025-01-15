@@ -2,6 +2,7 @@ pub mod modes {
     #[derive(Clone)]
     pub enum Modes {
         Password,
+        Password84,
         RandomLetters,
         RandomLettersFromCustomAlphabet,
         RandomLettersFromAlphabetFile,
@@ -16,6 +17,7 @@ pub mod modes {
         pub fn from(s: &str) -> Modes {
             return match s {
                 "pass"=>Modes::Password,
+                "pass2"=>Modes::Password84,
                 "rls" => Modes::RandomLetters,
                 "rla" => Modes::RandomLettersFromCustomAlphabet,
                 "rlaf" => Modes::RandomLettersFromAlphabetFile,
