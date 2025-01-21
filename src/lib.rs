@@ -48,14 +48,7 @@ pub mod stringer {
             Modes::Password => Box::new(LettterSequence::pass_generator( 16)),
             Modes::Password84 => Box::new(LettterSequence::pass_generator84( 16)),
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
-            Modes::RandomWord => Box::new(RandomWord::new(
-                ListType::Nouns,
-                Languages::from(conf.next.as_ref()),
-            )),
-            Modes::RandomWordFromListFile => Box::new(RandomWord::new(
-                ListType::Nouns,
-                Languages::from(conf.next.as_ref()),
-            )),
+            
             Modes::CoupledWordsNouns => Box::new(CoupledWords::new(
                 ListType::Nouns,
                 Languages::from(conf.next.as_ref()),

@@ -41,7 +41,6 @@ pub mod repl {
                 let required_length = match mode {
                     Modes::RandomLettersFromCustomAlphabet => 3,
                     Modes::RandomLettersFromAlphabetFile => 3,
-                    Modes::RandomWordFromListFile => 3,
                     Modes::CoupledWordsListFiles => 3,
                     _ => 2,
                 };

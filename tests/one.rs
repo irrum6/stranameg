@@ -29,14 +29,14 @@ pub mod tests {
         //check if generated string is actually georgian alphabet
         let len = String::from("12");
         let ammount = String::from("16");
-        let mode = String::from("raw");
+        let mode = String::from("cow");
         let lang = String::from("ka");
         let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
         let conf = Config::new(&sarraya);
 
-        let lst = ListType::Nouns;
+        let lstype = ListType::Adjectives;
         let lan = Languages::Georgian;
-        let mut sg = RandomWord::new(lst, lan);
+        let mut sg = CoupledWords::new(lstype, lan);
 
         sg.setup(&conf).ok();
         // match sg.setup(&conf){
@@ -45,31 +45,21 @@ pub mod tests {
         // }
         let strong = sg.get();
 
+        println!("{}",strong);
+
         let kachars = "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ";
         for c in strong.chars() {
-            let check = kachars.contains(c) || c == ' ';
+            let check = kachars.contains(c) || c == ' ' || c =='_';
             assert_eq!(check, true);
         }
     }
-    #[test]
-    pub fn full_list() {
-        let ammount = String::from("16");
-        let sarraya: [String; 2] = [String::new(), ammount];
-        let conf = Config::new(&sarraya);
-        let english = Languages::English;
-        let nouns = ListType::Nouns;
-        let mut sg = RandomWord::new(nouns, english);
-        // stringer
-        sg.setup(&conf);
-        //get_list_len
-        assert_ne!(sg.get_list_len(), 0);
-    }
+    
     #[test]
     fn command_parser() {
         let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
         let confetti = command_parser::get_config(vargs);
         let mut sg = LettterSequence::new("abc", 12);
-        sg.setup(&confetti);
+        let _= sg.setup(&confetti);
         let strong = sg.get();
         let alphabet = "alphabet";
         println!("{}", &strong);

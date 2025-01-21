@@ -19,13 +19,14 @@ pub mod string_generator_module {
     }
 
     impl LettterSequence {
-        pub fn pass_generator(length: usize)->LettterSequence{
+        pub fn pass_generator(length: usize) -> LettterSequence {
             //72 unique symbol set
-            let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
+            let alphabet =
+                "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
             return LettterSequence::new(alphabet, length);
         }
 
-        pub fn pass_generator84(length: usize)->LettterSequence{
+        pub fn pass_generator84(length: usize) -> LettterSequence {
             //84 unique symbol set
             let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()[]{};:,.<>?|";
             return LettterSequence::new(alphabet, length);
@@ -97,19 +98,19 @@ pub mod string_generator_module {
         }
     }
 
-    pub struct RandomWord {
+    pub struct WordList {
         list: Vec<String>,
         list_type: ListType,
         language: Languages,
         rng: RNG,
     }
 
-    impl RandomWord {
-        pub fn new(list_type: ListType, language: Languages) -> RandomWord {
+    impl WordList {
+        pub fn new(list_type: ListType, language: Languages) -> WordList {
             let list: Vec<String> = Vec::new();
             let mut rng = RNG::new();
             rng.seed();
-            return RandomWord {
+            return WordList {
                 list,
                 list_type,
                 language,
@@ -159,32 +160,24 @@ pub mod string_generator_module {
             }
             return Ok(());
         }
-    }
-    impl StringGenerator for RandomWord {
+
         fn get(&mut self) -> String {
             let diclen = self.list.len();
             let index = self.rng.get() as usize % diclen;
             return self.list[index].clone();
         }
-        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
-            match conf.get_mode() {
-                Modes::RandomWord => self.fill(""),
-                Modes::RandomWordFromListFile => self.fill(conf.get_next().as_ref()),
-                _ => self.fill(""),
-            }
-        }
     }
 
     pub struct CoupledWords {
-        adjectives: RandomWord,
+        adjectives: WordList,
         second_type: ListType,
         language: Languages,
-        type_list: RandomWord,
+        type_list: WordList,
     }
     impl CoupledWords {
         pub fn new(second_type: ListType, language: Languages) -> CoupledWords {
-            let adjectives = RandomWord::new(ListType::Adjectives, language.clone());
-            let type_list = RandomWord::new(second_type.clone(), language.clone());
+            let adjectives = WordList::new(ListType::Adjectives, language.clone());
+            let type_list = WordList::new(second_type.clone(), language.clone());
             return CoupledWords {
                 adjectives,
                 second_type,
@@ -230,23 +223,48 @@ pub mod string_generator_module {
     }
 
     pub struct SimpleSentences {
-        adjectives: RandomWord,
-        nouns: RandomWord,
-        verbs: RandomWord,
+        adjectives: WordList,
+        nouns: WordList,
+        verbs: WordList,
         language: Languages,
+        verb_prepositions: Vec<String>,
     }
 
     impl SimpleSentences {
         pub fn new(language: Languages) -> SimpleSentences {
-            let adjectives = RandomWord::new(ListType::Adjectives, language.clone());
-            let nouns = RandomWord::new(ListType::Nouns, language.clone());
-            let verbs = RandomWord::new(ListType::Verbs, language.clone());
+            let adjectives = WordList::new(ListType::Adjectives, language.clone());
+            let nouns = WordList::new(ListType::Nouns, language.clone());
+            let verbs = WordList::new(ListType::Verbs, language.clone());
             return SimpleSentences {
                 adjectives,
                 nouns,
                 verbs,
                 language,
+                verb_prepositions: Vec::new(),
             };
+        }
+
+        pub fn fill_preps(&mut self, word: &str) {
+            let filename = "./lists/verbs.to.en.dic";
+            if let Ok(lines) = read_lines(filename) {
+                for line in lines {
+                    if let Ok(ip) = line {
+                        let verbs = ip.split(";");
+                        for verb in verbs {
+                            if verb == "" {
+                                continue;
+                            }
+                            let split: Vec<&str> = verb.trim().split("=>").collect();
+                            if split[0] == word {
+                                let preps: Vec<&str> = split[1].trim().split(",").collect();
+                                for prep in preps {
+                                    self.verb_prepositions.push(String::from(prep));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -259,7 +277,20 @@ pub mod string_generator_module {
             let noun2 = self.nouns.get();
             let verb = self.verbs.get();
 
-            let strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2, noun2);
+            //read and fill verb
+            //let verbsto  =
+
+            self.fill_preps(&verb);
+
+            let mut strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2, noun2);
+
+            if self.verb_prepositions.len()>0{
+                let prep:&str = self.verb_prepositions[0].as_ref();
+                strong = format!("{} {} {} {} {} {}", adj1, noun1, verb, prep, adj2, noun2);
+            }
+
+            //empty prep list
+            self.verb_prepositions.clear();
 
             return strong;
         }

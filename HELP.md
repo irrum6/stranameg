@@ -53,15 +53,7 @@ pass parameters (command line arguments) to generate strings, all but first are 
 ./binary_linux 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text \
 
 ### 2.3 Random Words
-- **raw**  RandomWord,
-- **rawl**  RandomWordFromListFile,
-#### 2.3.1 usage of 4th paramter
-- RandomWord - sets language (Ka- for georgian, En (english) or De (German) for latin alphabet)
-- RandomWordFromListFile - takes words from that file
-
-#### 2.3.2 examples
-./binary_linux 16 12 raw de \
-./binary_linux 16 12 rawl sample.list \
+removed
 
 ### 2.4 Coupled Words
 Coupled Words modes generate two words together

@@ -6,7 +6,7 @@ use stranameg::stringer::{
 
 fn main() {
     use std::fs::read_to_string;
-    let version = "0.11.3";
+    const VERSION:&str = "0.12.1";
 
     let args: Vec<String> = env::args().collect();
 
@@ -23,7 +23,7 @@ fn main() {
         return;
     }
     if "--version" == flag || "-V" == flag {
-        println!("{}", version);
+        println!("{}", VERSION);
         return;
     }
 

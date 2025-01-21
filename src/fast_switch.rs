@@ -74,14 +74,7 @@ pub mod fast_switch {
                 conf.set_mode(Modes::CoupledWordsListFiles);
                 conf.set_next(next);
             }
-            "W1" => {
-                conf.set_mode(Modes::RandomWord);
-                conf.set_next(next);
-            }
-            "W2" => {
-                conf.set_mode(Modes::RandomWordFromListFile);
-                conf.set_next(next);
-            }
+            
             "N1" => {
                 conf.set_mode(Modes::SimpleSentences);
                 conf.set_next(next);
@@ -130,7 +123,7 @@ pub mod fast_switch {
 
     pub fn is_alias(strong: &str) -> bool {
         return match strong {
-            "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "W1" | "W2" | "N1" | "S1" | "S2" | "S3"
+            "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "N1" | "S1" | "S2" | "S3"
             | "S4" | "S5" | "S6" | "S7" | "S8" | "S9" | "SX" | "PWD" | "PWD84" => true,
             _ => false,
         };

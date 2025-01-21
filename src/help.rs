@@ -1,6 +1,6 @@
 pub mod help {
     pub fn print_help() {
-        println!("help");
+        print!("help");
     }
     pub fn print_help2() {
         use std::fs::read_to_string;

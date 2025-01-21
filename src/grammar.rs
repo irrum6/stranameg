@@ -74,7 +74,7 @@ pub mod grammar {
             return String::new();
         }
         pub fn fill(&mut self) {
-            let filename = "./lists/genders.de.dic";
+            let filename = "./lists/nouns.de.dic";
             if let Ok(lines) = read_lines(filename) {
                 for line in lines {
                     if let Ok(ip) = line {
