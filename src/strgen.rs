@@ -54,11 +54,23 @@ pub mod string_generator_module {
         fn setup_rlaf(&mut self, conf: &Config) -> Result<(), Error> {
             // let contents = read_to_string(conf.get_next())?;
             // we sorta need to handle error there
-            let contents: String = read_to_string(conf.get_next()).unwrap_or_else(|e| {
+            let read_text = read_to_string(conf.get_next());
+
+            if read_text.is_err() {
                 println!("Error reading, reverting to latin");
-                Languages::English.get_alphabet()
-            });
-            self.set_alphabet(contents.as_ref());
+                self.set_alphabet(Languages::English.get_alphabet().as_ref());
+                return Ok(());
+            }
+
+            //remove spaces and line returns
+            let alphabet = read_text.unwrap();
+            //trim_matches?
+            let mut alpha = String::from(alphabet.trim());
+
+            alpha.retain(char::is_alphabetic);
+
+            self.set_alphabet(alpha.as_ref());
+
             return Ok(());
         }
     }
@@ -284,8 +296,8 @@ pub mod string_generator_module {
 
             let mut strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2, noun2);
 
-            if self.verb_prepositions.len()>0{
-                let prep:&str = self.verb_prepositions[0].as_ref();
+            if self.verb_prepositions.len() > 0 {
+                let prep: &str = self.verb_prepositions[0].as_ref();
                 strong = format!("{} {} {} {} {} {}", adj1, noun1, verb, prep, adj2, noun2);
             }
 
