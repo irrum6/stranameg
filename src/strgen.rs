@@ -4,7 +4,7 @@ pub mod string_generator_module {
     use std::io::Error;
 
     use crate::stringer::read_lines;
-    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNGWheel, RNG};
+    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNG};
 
     pub trait StringGenerator {
         fn get(&mut self) -> String;

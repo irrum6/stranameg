@@ -21,7 +21,12 @@ pub mod tests {
         let conf = Config::new(&sarraya);
 
         let mut sg = LettterSequence::new("abc", length);
-        sg.setup(&conf);
+        let result = sg.setup(&conf);
+        if result.is_err(){
+
+        }else{
+
+        }
         assert_eq!(sg.get().len(), length);
     }
     #[test]
@@ -66,6 +71,7 @@ pub mod tests {
         for s in strong.chars() {
             assert_eq!(alphabet.contains(s), true);
         }
-        // assert_eq!(sg.get().len(), 12);
+        assert_eq!(sg.get().len(), 12);
     }
+
 }

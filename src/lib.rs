@@ -23,7 +23,7 @@ pub mod stringer {
     pub use super::languages::languages::Languages;
     pub use super::modes::modes::Modes;
     pub use super::reader::reader::read_lines;
-    pub use super::rng::rng::{RNGWheel, RNG};
+    pub use super::rng::rng::RNG;
 
     use super::strgen::string_generator_module::*;
 
@@ -45,10 +45,10 @@ pub mod stringer {
 
     pub fn stringer(conf: Config) -> Box<dyn StringGenerator> {
         let result_box: Box<dyn StringGenerator> = match conf.mode {
-            Modes::Password => Box::new(LettterSequence::pass_generator( 16)),
-            Modes::Password84 => Box::new(LettterSequence::pass_generator84( 16)),
+            Modes::Password => Box::new(LettterSequence::pass_generator(16)),
+            Modes::Password84 => Box::new(LettterSequence::pass_generator84(16)),
             Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
-            
+
             Modes::CoupledWordsNouns => Box::new(CoupledWords::new(
                 ListType::Nouns,
                 Languages::from(conf.next.as_ref()),
