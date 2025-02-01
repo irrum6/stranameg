@@ -63,11 +63,12 @@ pub mod string_generator_module {
             }
 
             //remove spaces and line returns
-            let alphabet = read_text.unwrap();
             //trim_matches?
-            let mut alpha = String::from(alphabet.trim());
 
-            alpha.retain(char::is_alphabetic);
+            let alphabet = read_text.unwrap();
+            
+            let mut alpha = String::from(alphabet.trim());
+            alpha.retain(char::is_alphanumeric);
 
             self.set_alphabet(alpha.as_ref());
 
