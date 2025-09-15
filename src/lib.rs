@@ -142,7 +142,7 @@ pub mod stringer {
 
             if args.len() > 2 {
                 println!("{}", &args[2]);
-                length = safe_u32(args[2].clone(), 4);
+                length = safe_u32(args[2].clone(), 12);
             }
             if args.len() > 3 {
                 mode = Modes::from(args[3].as_ref());
