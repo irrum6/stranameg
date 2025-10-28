@@ -8,8 +8,7 @@ pub mod modes {
         RandomLettersFromAlphabetFile,
         CoupledWordsNouns,
         CoupledWordsNames,
-        CoupledWordsListFiles,
-        SimpleSentences,
+        CoupledWordsListFiles
     }
     impl Modes {
         pub fn from(s: &str) -> Modes {
@@ -22,7 +21,6 @@ pub mod modes {
                 "cow" | "cwo" => Modes::CoupledWordsNouns,
                 "cowe" | "cwe" => Modes::CoupledWordsNames,
                 "cowf" | "cwf" => Modes::CoupledWordsListFiles,
-                "sen" => Modes::SimpleSentences,
                 _ => Modes::RandomLetters,
             };
         }

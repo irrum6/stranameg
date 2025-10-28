@@ -61,8 +61,7 @@ pub mod stringer {
                 ListType::Names,
                 Languages::from(conf.next.as_ref()),
             )),
-            //for now english only
-            Modes::SimpleSentences => Box::new(SimpleSentences::new(Languages::English)),
+            //removed            
             _ => Box::new(LettterSequence::new("abc", 16)),
         };
         return result_box;

@@ -72,14 +72,7 @@ where list types are : nouns,adjectives,names
 ./binary_linux 16 12 cwf sample.list:sample2.list \
 
 ### 2.5 Simple sentences
-Generates not so meaningful sentences. Currently only english.
-
-- **sen** Simple sentences
-
-#### 2.5.1 usage of 4th paramter
-Currently ignore
-#### 2.5.2 Example
-./binary 16 12 sen
+removed
 
 ### 2.6 password
 - **pass** Password (72 symbols)

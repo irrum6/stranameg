@@ -66,7 +66,7 @@ pub mod string_generator_module {
             //trim_matches?
 
             let alphabet = read_text.unwrap();
-            
+
             let mut alpha = String::from(alphabet.trim());
             alpha.retain(char::is_alphanumeric);
 
@@ -232,87 +232,6 @@ pub mod string_generator_module {
                 }
                 _ => Ok(()),
             }
-        }
-    }
-
-    pub struct SimpleSentences {
-        adjectives: WordList,
-        nouns: WordList,
-        verbs: WordList,
-        language: Languages,
-        verb_prepositions: Vec<String>,
-    }
-
-    impl SimpleSentences {
-        pub fn new(language: Languages) -> SimpleSentences {
-            let adjectives = WordList::new(ListType::Adjectives, language.clone());
-            let nouns = WordList::new(ListType::Nouns, language.clone());
-            let verbs = WordList::new(ListType::Verbs, language.clone());
-            return SimpleSentences {
-                adjectives,
-                nouns,
-                verbs,
-                language,
-                verb_prepositions: Vec::new(),
-            };
-        }
-
-        pub fn fill_preps(&mut self, word: &str) {
-            let filename = "./lists/verbs.to.en.dic";
-            if let Ok(lines) = read_lines(filename) {
-                for line in lines {
-                    if let Ok(ip) = line {
-                        let verbs = ip.split(";");
-                        for verb in verbs {
-                            if verb == "" {
-                                continue;
-                            }
-                            let split: Vec<&str> = verb.trim().split("=>").collect();
-                            if split[0] == word {
-                                let preps: Vec<&str> = split[1].trim().split(",").collect();
-                                for prep in preps {
-                                    self.verb_prepositions.push(String::from(prep));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    impl StringGenerator for SimpleSentences {
-        fn get(&mut self) -> String {
-            let adj1 = self.adjectives.get();
-            let adj2 = self.adjectives.get();
-
-            let noun1 = self.nouns.get();
-            let noun2 = self.nouns.get();
-            let verb = self.verbs.get();
-
-            //read and fill verb
-            //let verbsto  =
-
-            self.fill_preps(&verb);
-
-            let mut strong = format!("{} {} {} {} {}", adj1, noun1, verb, adj2, noun2);
-
-            if self.verb_prepositions.len() > 0 {
-                let prep: &str = self.verb_prepositions[0].as_ref();
-                strong = format!("{} {} {} {} {} {}", adj1, noun1, verb, prep, adj2, noun2);
-            }
-
-            //empty prep list
-            self.verb_prepositions.clear();
-
-            return strong;
-        }
-        fn setup(&mut self, conf: &Config) -> Result<(), Error> {
-            //propagates error
-            self.adjectives.fill("")?;
-            self.nouns.fill("")?;
-            self.verbs.fill("")?;
-            Ok(())
         }
     }
 }
