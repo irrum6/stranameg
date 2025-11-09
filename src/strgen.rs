@@ -3,7 +3,7 @@ pub mod string_generator_module {
     use std::fs::read_to_string;
     use std::io::Error;
 
-    use crate::stringer::read_lines;
+    
     use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNG};
 
     pub trait StringGenerator {
@@ -160,17 +160,43 @@ pub mod string_generator_module {
             } else {
                 String::from(s)
             };
-            let lines = read_lines(filename)?;
-            for line in lines {
-                let ip = line?;
-                let chazar = ip.split(",");
-                for chaz in chazar {
-                    if chaz == "" {
-                        continue;
+
+            use std::fs::File;            
+            use std::io::{BufRead,BufReader};
+
+            let file_op2 = File::open(filename);
+
+            if file_op2.is_ok() {
+                let file = file_op2.unwrap();
+                let mut buff = BufReader::new(file);
+
+                //also there is buff.lines()
+                let mut linestr = String::new();
+
+                loop {
+                    let res = buff.read_line(&mut linestr);
+                    if res.is_ok() {
+                        //once line is read
+                        let charz = linestr.split(",");
+
+                        for chaz in charz {
+                            if chaz == "" {
+                                continue;
+                            }
+                            self.add_word(String::from(chaz.trim()))
+                            
+                        }
+
+                    } else {
+                        break;
                     }
-                    self.add_word(String::from(chaz.trim()))
+                    if linestr.len() == 0 {
+                        break;
+                    }
+                    linestr.truncate(0);
                 }
             }
+            
             return Ok(());
         }
 

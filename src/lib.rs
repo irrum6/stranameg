@@ -1,5 +1,4 @@
 pub mod help;
-pub mod reader;
 pub mod rng;
 
 pub mod grammar;
@@ -22,7 +21,7 @@ pub mod stringer {
     pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::Languages;
     pub use super::modes::modes::Modes;
-    pub use super::reader::reader::read_lines;
+    
     pub use super::rng::rng::RNG;
 
     use super::strgen::string_generator_module::*;

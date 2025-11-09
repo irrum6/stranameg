@@ -1,5 +1,4 @@
-pub mod grammar {
-    use crate::stringer::read_lines;
+pub mod grammar {    
 
     #[derive(Clone)]
     pub enum GermanGenders {
@@ -75,23 +74,47 @@ pub mod grammar {
         }
         pub fn fill(&mut self) {
             let filename = "./lists/nouns.de.dic";
-            if let Ok(lines) = read_lines(filename) {
-                for line in lines {
-                    if let Ok(ip) = line {
-                        let chazar = ip.split(",");
-                        for chaz in chazar {
-                            if chaz == "" {
+
+            use std::fs::File;            
+            use std::io::{BufRead,BufReader};
+
+            let file_op2 = File::open(filename);
+
+            if file_op2.is_ok() {
+                let file = file_op2.unwrap();
+                let mut buff = BufReader::new(file);
+
+                //also there is buff.lines()
+                let mut linestr = String::new();
+
+                loop {
+                    let res = buff.read_line(&mut linestr);
+                    if res.is_ok() {
+                        //once line is read
+                        let charz = linestr.split(",");
+
+                        for _char in charz {
+                            if _char == "" {
                                 continue;
                             }
-                            let spl: Vec<&str> = chaz.trim().split(" ").collect();
+                            let spl: Vec<&str> = _char.trim().split(" ").collect();
+                            //println!("{} {}", spl[0],spl[1]);
                             let gender = GermanGenders::from(spl[0]);
                             let noun = String::from(spl[1]);
                             let gnoun = GermanNoun::new(noun, gender);
                             self.add(gnoun);
                         }
+
+                    } else {
+                        break;
                     }
+                    if linestr.len() == 0 {
+                        break;
+                    }
+                    linestr.truncate(0);
                 }
             }
+            
         }
     }
 }
