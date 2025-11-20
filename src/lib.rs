@@ -135,7 +135,7 @@ pub mod stringer {
 
             if args.len() > 1 {
                 //println!("{}",&args[1]);
-                amount = args[1].parse().expect("Number must be");
+                amount = safe_u32(args[1].clone(), 16);
             }
 
             if args.len() > 2 {
