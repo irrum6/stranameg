@@ -1,6 +1,6 @@
-pub mod grammar {    
+pub mod grammar {
 
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub enum GermanGenders {
         Masculine,
         Feminine,
@@ -8,19 +8,19 @@ pub mod grammar {
     }
     impl GermanGenders {
         pub fn from(s: &str) -> GermanGenders {
-            let gg = match s {
-                "Die" => GermanGenders::Feminine,
+            //lower the case
+            let s1 = s.to_ascii_lowercase();
+
+            let gg = match s1.as_ref() {
                 "die" => GermanGenders::Feminine,
-                "Der" => GermanGenders::Masculine,
                 "der" => GermanGenders::Masculine,
-                "Das" => GermanGenders::Neuter,
                 "das" => GermanGenders::Neuter,
                 _ => GermanGenders::Neuter,
             };
             return gg;
         }
     }
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct GermanNoun {
         noun: String,
         gender: GermanGenders,
@@ -55,14 +55,23 @@ pub mod grammar {
             return GermanNounList { list };
         }
         pub fn add(&mut self, noun: GermanNoun) {
+            //
             self.list.push(noun);
         }
+
+        pub fn get(&mut self,num:usize) -> String {
+            let diclen = self.list.len();
+            let index = num as usize % diclen;
+            return self.list[index].noun.clone();
+        }
+
         pub fn get_adapted(&mut self, noun: String, adjective: String) -> String {
-            if 0 == self.list.len() {
+            if self.list.len() == 0 {
                 return String::from("empty");
             }
             //first find word in list
             for word in self.list.iter() {
+                //println!("{} {}", word.noun,noun);
                 if word.noun == noun {
                     let suffix = word.get_suffix();
                     let prefix = word.get_prefix();
@@ -73,48 +82,52 @@ pub mod grammar {
             return String::new();
         }
         pub fn fill(&mut self) {
-            let filename = "./lists/nouns.de.dic";
+            use std::fs::File;
+            use std::io::{BufRead, BufReader};
 
-            use std::fs::File;            
-            use std::io::{BufRead,BufReader};
+            let filename = "./lists/nouns.de.dic";
 
             let file_op2 = File::open(filename);
 
-            if file_op2.is_ok() {
-                let file = file_op2.unwrap();
-                let mut buff = BufReader::new(file);
-
-                //also there is buff.lines()
-                let mut linestr = String::new();
-
-                loop {
-                    let res = buff.read_line(&mut linestr);
-                    if res.is_ok() {
-                        //once line is read
-                        let charz = linestr.split(",");
-
-                        for _char in charz {
-                            if _char == "" {
-                                continue;
-                            }
-                            let spl: Vec<&str> = _char.trim().split(" ").collect();
-                            //println!("{} {}", spl[0],spl[1]);
-                            let gender = GermanGenders::from(spl[0]);
-                            let noun = String::from(spl[1]);
-                            let gnoun = GermanNoun::new(noun, gender);
-                            self.add(gnoun);
-                        }
-
-                    } else {
-                        break;
-                    }
-                    if linestr.len() == 0 {
-                        break;
-                    }
-                    linestr.truncate(0);
-                }
+            if file_op2.is_err() {
+                return ();
             }
-            
+
+            let file = file_op2.unwrap();
+            let mut buff = BufReader::new(file);
+            //also there is buff.lines()
+            let mut linestr = String::new();
+
+            loop {
+                let res = buff.read_line(&mut linestr);
+                //once line is read
+                if res.is_err() {
+                    break;
+                }
+
+                let charz = linestr.split(",");
+
+                for _char in charz {
+                    if _char == "" {
+                        continue;
+                    }
+                    let split: Vec<&str> = _char.trim().split(" ").collect();
+
+                    if split[0].trim() == "" || split[1].trim() == "" {
+                        continue;
+                    }
+
+                    let gender = GermanGenders::from(split[0]);
+                    let noun = String::from(split[1]);
+                    let gnoun = GermanNoun::new(noun, gender);
+                    self.add(gnoun);
+                }
+
+                if linestr.len() == 0 {
+                    break;
+                }
+                linestr.truncate(0);
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ pub mod string_generator_module {
     use std::fs::read_to_string;
     use std::io::Error;
 
-    
     use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNG};
 
     pub trait StringGenerator {
@@ -161,42 +160,43 @@ pub mod string_generator_module {
                 String::from(s)
             };
 
-            use std::fs::File;            
-            use std::io::{BufRead,BufReader};
+            use std::fs::File;
+            use std::io::{BufRead, BufReader};
 
             let file_op2 = File::open(filename);
 
-            if file_op2.is_ok() {
-                let file = file_op2.unwrap();
-                let mut buff = BufReader::new(file);
-
-                //also there is buff.lines()
-                let mut linestr = String::new();
-
-                loop {
-                    let res = buff.read_line(&mut linestr);
-                    if res.is_ok() {
-                        //once line is read
-                        let charz = linestr.split(",");
-
-                        for chaz in charz {
-                            if chaz == "" {
-                                continue;
-                            }
-                            self.add_word(String::from(chaz.trim()))
-                            
-                        }
-
-                    } else {
-                        break;
-                    }
-                    if linestr.len() == 0 {
-                        break;
-                    }
-                    linestr.truncate(0);
-                }
+            if file_op2.is_err() {
+                println!("fill:err, failing silently");
+                return Ok(());
             }
-            
+
+            let file = file_op2.unwrap();
+            let mut buff = BufReader::new(file);
+
+            //also there is buff.lines()
+            let mut linestr = String::new();
+
+            loop {
+                let res = buff.read_line(&mut linestr);
+                //once line is read
+                if res.is_err() {
+                    break;
+                }
+
+                let charz = linestr.split(",");
+
+                for chaz in charz {
+                    if chaz == "" {
+                        continue;
+                    }
+                    self.add_word(String::from(chaz.trim()))
+                }
+                if linestr.len() == 0 {
+                    break;
+                }
+                linestr.truncate(0);
+            }
+
             return Ok(());
         }
 
@@ -204,6 +204,10 @@ pub mod string_generator_module {
             let diclen = self.list.len();
             let index = self.rng.get() as usize % diclen;
             return self.list[index].clone();
+        }
+
+        fn get_rng(&mut self)->usize{
+            return self.rng.get() as usize;
         }
     }
 
@@ -227,18 +231,23 @@ pub mod string_generator_module {
     }
     impl StringGenerator for CoupledWords {
         fn get(&mut self) -> String {
-            let mut nounlist: GermanNounList = GermanNounList::new();
+            let mut nounsde: GermanNounList = GermanNounList::new();
             if self.language.is_german() {
-                nounlist.fill();
+                nounsde.fill();
             }
             let adj = self.adjectives.get();
-            let s2 = self.type_list.get();
+            let mut s2 = self.type_list.get();
+
+             if self.language.is_german() {
+                let num = self.type_list.get_rng();
+                s2 = nounsde.get(num);
+            }
 
             let mut strong = format!("{}_{}", adj, s2);
 
             if self.language.is_german() && self.second_type.is_noun() {
                 //noun adjective
-                strong = nounlist.get_adapted(s2, adj);
+                strong = nounsde.get_adapted(s2, adj);
             }
             return strong;
         }
