@@ -17,11 +17,10 @@ pub mod stringer {
     use std::io::{Error, Write};
 
     pub use super::command_parser::command_parser;
-    pub use super::grammar::grammar::GermanNounList;
     pub use super::help::help::print_help2 as print_help;
-    pub use super::languages::languages::Languages;
+    pub use super::languages::languages::{Genders, Grammar, Languages};
     pub use super::modes::modes::Modes;
-    
+
     pub use super::rng::rng::RNG;
 
     use super::strgen::string_generator_module::*;
@@ -60,7 +59,7 @@ pub mod stringer {
                 ListType::Names,
                 Languages::from(conf.next.as_ref()),
             )),
-            //removed            
+            //removed
             _ => Box::new(LettterSequence::new("abc", 16)),
         };
         return result_box;

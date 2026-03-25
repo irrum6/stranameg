@@ -20,8 +20,8 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - Fifth argument is to whether or not write to file (**strings.textout**) 1 is true , 0 or ommited is false
 
 ### 1.1 basic examples
-./binary_linux 16 16  - will generarate 16 strings , each 16 characters long \
-./binary_linux 24  - will generarate 24 strings , each 12 characters long \
+./binary 16 16  - will generarate 16 strings , each 16 characters long \
+./binary 24  - will generarate 24 strings , each 12 characters long \
 
 ## 2 Modes
 
@@ -47,10 +47,10 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - RandomLettersFromAlphabetFile - is used as filename, whose contents serve as the basis for our generator
 
 #### 2.2.2 examples
-./binary_linux 8 24  - 8 strings with 24 characters length \
-./binary_linux 16  - 16 strings with 12 characters length \
-./binary_linux 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet" \
-./binary_linux 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text \
+./binary 8 24  - 8 strings with 24 characters length \
+./binary 16  - 16 strings with 12 characters length \
+./binary 8 16 rla "alphabet" - 8 strings with 16 characters length from letter from string "alphabet" \
+./binary 8 16 rlaf abc.text - 8 strings with 16 characters length using letters from abc.text \
 
 ### 2.3 Random Words
 removed
@@ -68,8 +68,8 @@ where list types are : nouns,adjectives,names
 - CoupledWordsListFiles - filenames separated by : serve as source for adjectives and nouns
 
 #### 2.4.2 Example
-./binary_linux 16 12 cow en \
-./binary_linux 16 12 cwf sample.list:sample2.list \
+./binary 16 12 cow en \
+./binary 16 12 cwf sample.list:sample2.list \
 
 ### 2.5 Simple sentences
 removed
@@ -94,14 +94,14 @@ dwi=
 >dwi dont_write_indices whether \
 
 ### 3.1 example
-./binary_linux alt mode=rla next=abc \
+./binary alt mode=rla next=abc \
 
 ## 4 Passing arguments from file
 you can pass arguments as file using **pf** or **paramsfile** switcher
 arguments are the same as in alt mode
 
 ### 4.1 example
-./binary_linux pf params.file \
+./binary pf params.file \
 
 ## 5 Fast switch and aliases
 ### 5.1 Fast swtich
@@ -135,15 +135,15 @@ Or use aliases for certain options
 - **PWD** Password mode
 It will also set one parameter
 ### 5.3 Examples
-./binary_linux -fn8 \
-./binary_linux -fmrla mode RLA (2nd parameter for alphabet is required) \
-./binary_linux -fmcow \
-./binary_linux S2 - 32 characters length \
-./binary_linux R2 - RLA mode (2nd parameter for alphabet is required) \
-./binary_linux R3 - RLAF mode (2nd parameter for filename is required) \
-./binary_linux C1 en
-./binary_linux PWD
-./binary_linux PWD84
+./binary -fn8 \
+./binary -fmrla mode RLA (2nd parameter for alphabet is required) \
+./binary -fmcow \
+./binary S2 - 32 characters length \
+./binary R2 - RLA mode (2nd parameter for alphabet is required) \
+./binary R3 - RLAF mode (2nd parameter for filename is required) \
+./binary C1 en
+./binary PWD
+./binary PWD84
 
 
 ## 6 REPL (Interactive) mode

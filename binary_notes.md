@@ -1,1 +1,1 @@
-compiled on Linux 6.16.3
+compiled on Pop-OS!(Linux 6.16.3)

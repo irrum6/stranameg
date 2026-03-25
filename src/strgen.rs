@@ -3,7 +3,7 @@ pub mod string_generator_module {
     use std::fs::read_to_string;
     use std::io::Error;
 
-    use crate::stringer::{Config, GermanNounList, Languages, ListType, Modes, RNG};
+    use crate::stringer::{Config, Grammar, Languages, ListType, Modes, RNG};
 
     pub trait StringGenerator {
         fn get(&mut self) -> String;
@@ -129,8 +129,9 @@ pub mod string_generator_module {
                 rng,
             };
         }
-        pub fn add_word(&mut self, s: String) {
-            self.list.push(s);
+        pub fn add_word(&mut self, s: &str) {
+            let s1 = String::from(s.trim());
+            self.list.push(s1);
         }
         pub fn get_language(&self) -> Languages {
             return self.language.clone();
@@ -154,14 +155,14 @@ pub mod string_generator_module {
             return self.list.len();
         }
         pub fn fill(&mut self, s: &str) -> Result<(), Error> {
+            use std::fs::File;
+            use std::io::{BufRead, BufReader};
+
             let filename = if s == "" {
                 self.get_file_name()
             } else {
                 String::from(s)
             };
-
-            use std::fs::File;
-            use std::io::{BufRead, BufReader};
 
             let file_op2 = File::open(filename);
 
@@ -189,7 +190,7 @@ pub mod string_generator_module {
                     if chaz == "" {
                         continue;
                     }
-                    self.add_word(String::from(chaz.trim()))
+                    self.add_word(chaz)
                 }
                 if linestr.len() == 0 {
                     break;
@@ -206,9 +207,6 @@ pub mod string_generator_module {
             return self.list[index].clone();
         }
 
-        fn get_rng(&mut self)->usize{
-            return self.rng.get() as usize;
-        }
     }
 
     pub struct CoupledWords {
@@ -231,24 +229,12 @@ pub mod string_generator_module {
     }
     impl StringGenerator for CoupledWords {
         fn get(&mut self) -> String {
-            let mut nounsde: GermanNounList = GermanNounList::new();
-            if self.language.is_german() {
-                nounsde.fill();
-            }
+            
             let adj = self.adjectives.get();
-            let mut s2 = self.type_list.get();
+            let s2 = self.type_list.get();
 
-             if self.language.is_german() {
-                let num = self.type_list.get_rng();
-                s2 = nounsde.get(num);
-            }
-
-            let mut strong = format!("{}_{}", adj, s2);
-
-            if self.language.is_german() && self.second_type.is_noun() {
-                //noun adjective
-                strong = nounsde.get_adapted(s2, adj);
-            }
+            let strong = Grammar::get_adapted(self.language, s2, adj);
+            
             return strong;
         }
         fn setup(&mut self, conf: &Config) -> Result<(), Error> {
