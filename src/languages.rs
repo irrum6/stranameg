@@ -1,125 +1,407 @@
 pub mod languages {
+    use std::{io::Error};
 
-    //Grammar Genders
-    #[derive(Clone, Debug)]
-    pub enum Genders {
-        Masculine,
+    enum Gender {
         Feminine,
-        Neuter,
-        NoGender,
+        Masculine,
+        Neutral,
+    }
+    #[derive(Clone, Copy, Debug)]
+    enum WordType {
+        Noun,
+        Name,
+        Adjective,
+    }
+    #[derive(Clone, Debug)]
+    struct Word {
+        word: String,
+        wordtype: WordType,
     }
 
-    impl Genders {
-        pub fn from(s: &str, lang: Languages) -> Genders {
-            //lower the case
+    trait Grammar {
+        fn get_definite_article(w: &Word) -> String;
+        fn get_indefinite_article(w: &Word) -> String;
+        fn get_adapted(&self, rand1: usize, rand2: usize) -> String;
+        fn get_adapted2(&self, rand1: usize, rand2: usize) -> String;
+    }
 
-            return match lang {
-                Languages::Georgian => Genders::NoGender,
-                Languages::English => Genders::NoGender,
-                Languages::German => match s.to_ascii_lowercase().as_ref() {
-                    "die" => Genders::Feminine,
-                    "der" => Genders::Masculine,
-                    "das" => Genders::Neuter,
-                    _ => Genders::Neuter,
-                },
-            };
+    struct Dictionary {
+        wordlist: Vec<Word>,
+        index: usize,
+    }
+
+    impl Dictionary {
+        fn new() -> Dictionary {
+            let wordlist: Vec<Word> = Vec::new();
+            return Dictionary { wordlist, index: 0 };
+        }
+
+        fn add_word(&mut self, w: Word) {
+            self.wordlist.push(w);
+        }
+
+        fn get_random_word(&self, rand: usize) -> Word {
+            let diclen = self.wordlist.len();
+            let index = rand % diclen;
+            return self.wordlist[index].clone();
+        }
+
+        fn fill(&mut self, path: &str, wt: WordType) -> Result<(), Error> {
+            use std::fs::File;
+            use std::io::{BufRead, BufReader};
+
+            let filename = format!("./lists/{}",path);
+
+            let file_op2 = File::open(filename);
+
+            if file_op2.is_err() {
+                println!("fill:err, failing silently");
+                //println!("{}",&path);
+                return Ok(());
+            }
+
+            let file = file_op2.unwrap();
+            let mut buff = BufReader::new(file);
+
+            //also there is buff.lines()
+            let mut linestr = String::new();
+
+            loop {
+                let res = buff.read_line(&mut linestr);
+                //once line is read
+                if res.is_err() {
+                    break;
+                }
+
+                let charz = linestr.split(",");
+
+                for chaz in charz {
+                    if chaz == "" {
+                        continue;
+                    }
+                    self.add_word(Word {
+                        word: String::from(chaz),
+                        wordtype: wt,
+                    })
+                }
+                if linestr.len() == 0 {
+                    break;
+                }
+                linestr.truncate(0);
+            }
+
+            return Ok(());
         }
     }
 
-    #[derive(Clone, Copy)]
-    pub enum Languages {
-        English,
-        Georgian,
-        German,
-    }
+    impl Iterator for Dictionary {
+        type Item = Word;
 
-    impl Languages {
-        pub fn abbr(&self) -> String {
-            let result = match *self {
-                Languages::English => "en",
-                Languages::Georgian => "ka",
-                Languages::German => "de",
-            };
-            return String::from(result);
-        }
-        pub fn is_german(&self) -> bool {
-            return matches!(*self, Languages::German);
-        }
-        pub fn from(s: &str) -> Languages {
-            return match s {
-                "en" | "En" | "eN" | "EN" => Languages::English,
-                "ka" | "KA" | "Ka" | "kA" => Languages::Georgian,
-                "de" | "dE" | "De" | "DE" => Languages::German,
-                _ => Languages::English,
-            };
-        }
-        pub fn get_alphabet(&self) -> String {
-            let result = match *self {
-                Languages::Georgian => "აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ",
-                Languages::English => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
-                _ => "abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy",
-            };
-            return String::from(result);
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.index < self.wordlist.len() {
+                let word = self.wordlist[self.index].clone();
+                self.index += 1;
+                return Some(word);
+            }
+            //self.index = 0;
+            return None;
         }
     }
 
-    pub struct Grammar {
-        language: Languages,
+    struct Language {
+        alphabet: String,
+        nouns: Dictionary,
+        adjectives: Dictionary,
+        names: Dictionary,
     }
 
-    impl Grammar {
-        pub fn new(lang: Languages) -> Grammar {
-            return Grammar { language: lang };
-        }
+    impl Language {
+        fn new(abc: &str) -> Language {
+            let alphabet = String::from(abc);
+            let nouns = Dictionary::new();
+            let adjectives = Dictionary::new();
+            let names = Dictionary::new();
 
-        pub fn get_definite_article(&self, gender: Genders) -> String {
-            return match self.language {
-                Languages::Georgian => String::new(),
-                Languages::English => String::from("the"),
-                Languages::German => match gender {
-                    Genders::Feminine => String::from("Die"),
-                    Genders::Masculine => String::from("Der"),
-                    Genders::Neuter => String::from("Das"),
-                    Genders::NoGender => String::new(),
-                },
+            return Language {
+                alphabet,
+                nouns,
+                adjectives,
+                names,
             };
         }
 
-        pub fn get_indefinite_article(&self, gender: Genders) -> String {
-            return match self.language {
-                Languages::Georgian => String::new(),
-                Languages::English => String::from("a"),
-                Languages::German => match gender {
-                    Genders::Feminine => String::from("eine"),
-                    Genders::Masculine => String::from("ein"),
-                    Genders::Neuter => String::from("ein"),
-                    Genders::NoGender => String::new(),
-                },
-            };
+        fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
+            //let path = "gela";
+            return self.nouns.fill(path, WordType::Noun);
         }
 
-        pub fn get_prefix() -> String {
+        fn fill_names(&mut self, path: &str) -> Result<(), Error> {
+            return self.names.fill(path, WordType::Name);
+        }
+
+        fn fill_adjectives(&mut self, path: &str) -> Result<(), Error> {
+            return self.adjectives.fill(path, WordType::Adjective);
+        }
+
+        fn get_alphabet(&self) -> &String {
+            return &self.alphabet;
+        }
+    }
+
+    pub struct GeorgianLanguage {
+        language: Language,
+    }
+
+    impl GeorgianLanguage {
+        pub fn new() -> GeorgianLanguage {
+            let language = Language::new("აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰააააეეეიიიოოოუუ");
+            return GeorgianLanguage { language };
+        }
+    }
+
+    impl Grammar for GeorgianLanguage {
+        fn get_definite_article(w: &Word) -> String {
             return String::new();
         }
 
-        pub fn get_suffix() -> String {
+        fn get_indefinite_article(w: &Word) -> String {
+            return String::new();
+        }
+        fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let noun = self.language.nouns.get_random_word(rand2);
+
+            return format!("{}_{}", adj.word, noun.word);
+        }
+        fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let name = self.language.names.get_random_word(rand2);
+
+            return format!("{}_{}", adj.word, name.word);
+        }
+    }
+
+    struct EnglishLanguage {
+        language: Language,
+    }
+
+    impl EnglishLanguage {
+        fn new() -> EnglishLanguage {
+            let language = Language::new("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
+            return EnglishLanguage { language };
+        }
+    }
+
+    impl Grammar for EnglishLanguage {
+        fn get_definite_article(w: &Word) -> String {
+            return String::from("the");
+        }
+
+        fn get_indefinite_article(w: &Word) -> String {
+            //check if starts with consontant
+            return String::from("a");
+        }
+
+        fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let noun = self.language.nouns.get_random_word(rand2);
+
+            return format!("{}_{}", adj.word, noun.word);
+        }
+
+        fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let name = self.language.names.get_random_word(rand2);
+
+            return format!("{}_{}", adj.word, name.word);
+        }
+    }
+
+    struct GermanLanguage {
+        language: Language,
+    }
+
+    impl GermanLanguage {
+        fn new() -> GermanLanguage {
+            let language = Language::new("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
+            return GermanLanguage { language };
+        }
+        fn get_gender(w: &Word) -> Gender {
+            let s: Vec<&str> = w.word.split(" ").collect();
+            return match s[0].to_lowercase().as_ref() {
+                "die" => Gender::Feminine,
+                "der" => Gender::Masculine,
+                "das" => Gender::Neutral,
+                _ => Gender::Neutral,
+            };
+        }
+
+        fn abbr(&self) -> String {
+            return String::from("De");
+        }
+
+        fn get_suffix() -> String {
             //for Nominative
             return String::from("e");
         }
+    }
 
-        pub fn get_adapted(lang: Languages, word: String, adjective: String) -> String {
-            return match lang {
-                Languages::English => format!("{}_{}", adjective, word),
-                Languages::Georgian => format!("{}_{}", adjective, word),
-                Languages::German => {
-                    let split: Vec<&str> = word.split(" ").collect();
-                    let article = split[0];
-                    let noun = split[1];
-                    //let gender = Genders::from(split[0], lang);
-                    let suffix = Grammar::get_suffix();
-                    return format!("{} {}{} {}", article, adjective, suffix, noun);
+    impl Grammar for GermanLanguage {
+        fn get_definite_article(w: &Word) -> String {
+            //split and determine
+            let s: Vec<&str> = w.word.split(" ").collect();
+            return String::from(s[0]);
+        }
+
+        fn get_indefinite_article(w: &Word) -> String {
+            //split and determine gender
+            // split by space
+
+            let gender = GermanLanguage::get_gender(w);
+
+            return match gender {
+                Gender::Feminine => String::from("eine"),
+                Gender::Masculine => String::from("ein"),
+                Gender::Neutral => String::from("ein"),
+            };
+        }
+
+        fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let noun = self.language.nouns.get_random_word(rand2);
+
+            let split: Vec<&str> = noun.word.split(" ").collect();
+            let article = GermanLanguage::get_indefinite_article(&noun);
+            let noun = split[1];
+            //let gender = Genders::from(split[0], lang);
+            let suffix = GermanLanguage::get_suffix();
+            return format!("{} {}{} {}", article, adj.word, suffix, noun);
+        }
+
+        fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
+            let adj = self.language.adjectives.get_random_word(rand1);
+            let name = self.language.names.get_random_word(rand2);
+
+            let split: Vec<&str> = name.word.split(" ").collect();
+            let article = String::new();
+            let name = split[1];
+            //let gender = Genders::from(split[0], lang);
+            let suffix = GermanLanguage::get_suffix();
+            return format!("{} {}{} {}", article, adj.word, suffix, name);
+        }
+    }
+
+    pub enum SupportedLanguages {
+        German(GermanLanguage),
+        Georgian(GeorgianLanguage),
+        English(EnglishLanguage),
+    }
+
+    impl SupportedLanguages {
+        pub fn from(s: &str) -> SupportedLanguages {
+            return match s.to_lowercase().as_ref() {
+                "en" => {
+                    let mut en = EnglishLanguage::new();
+                    SupportedLanguages::English(en)
+                }
+
+                "ka" => SupportedLanguages::Georgian(GeorgianLanguage::new()),
+                "de" => SupportedLanguages::German(GermanLanguage::new()),
+                _ => SupportedLanguages::English(EnglishLanguage::new()),
+            };
+        }
+        pub fn get_alphabet(&self) -> &String {
+            return match &self {
+                SupportedLanguages::English(e) => e.language.get_alphabet(),
+                SupportedLanguages::Georgian(e) => e.language.get_alphabet(),
+                SupportedLanguages::German(e) => e.language.get_alphabet(),
+            };
+        }
+
+        pub fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
+            return match self {
+                SupportedLanguages::English(e) => e.language.fill_nouns(path),
+                SupportedLanguages::Georgian(e) => e.language.fill_nouns(path),
+                SupportedLanguages::German(e) => e.language.fill_nouns(path),
+            };
+        }
+
+        pub fn fill_names(&mut self, path: &str) -> Result<(), Error> {
+            return match self {
+                SupportedLanguages::English(e) => e.language.fill_names(path),
+                SupportedLanguages::Georgian(e) => e.language.fill_names(path),
+                SupportedLanguages::German(e) => e.language.fill_names(path),
+            };
+        }
+
+        pub fn fill_adjectives(&mut self, path: &str) -> Result<(), Error> {
+            return match self {
+                SupportedLanguages::English(e) => e.language.fill_adjectives(path),
+                SupportedLanguages::Georgian(e) => e.language.fill_adjectives(path),
+                SupportedLanguages::German(e) => e.language.fill_adjectives(path),
+            };
+        }
+        //default file names
+        pub fn get_default_noun_list_name(&self) -> &str {
+            match self {
+                SupportedLanguages::English(e) => "nouns.en.list",
+                SupportedLanguages::Georgian(e) => "nouns.ka.list",
+                SupportedLanguages::German(e) => "nouns.de.list",
+            }
+        }
+
+        pub fn get_default_adjective_list_name(&self) -> &str {
+            match self {
+                SupportedLanguages::English(e) => "adjectives.en.list",
+                SupportedLanguages::Georgian(e) => "adjectives.ka.list",
+                SupportedLanguages::German(e) => "adjectives.de.list",
+            }
+        }
+
+        pub fn get_default_name_list_name(&self) -> &str {
+            match self {
+                SupportedLanguages::English(e) => "names.en.list",
+                SupportedLanguages::Georgian(e) => "names.ka.list",
+                SupportedLanguages::German(e) => "names.de.list",
+            }
+        }
+
+        pub fn get_adapted(&self,r1:usize,r2:usize)->String{
+            return match self {
+                SupportedLanguages::English(e) =>{
+                    call_get_adapted(e, r1, r2)
+                }
+                SupportedLanguages::Georgian(e) => {
+                    call_get_adapted(e, r1, r2)
+                }
+                SupportedLanguages::German(e) =>{
+                    call_get_adapted(e, r1, r2)
                 }
             };
         }
+
+        pub fn get_adapted2(&self,r1:usize,r2:usize)->String{
+            return match self {
+                SupportedLanguages::English(e) =>{
+                    call_get_adapted2(e, r1, r2)
+                }
+                SupportedLanguages::Georgian(e) => {
+                    call_get_adapted2(e, r1, r2)
+                }
+                SupportedLanguages::German(e) =>{
+                    call_get_adapted2(e, r1, r2)
+                }
+            };
+        }
+
+        
+    }
+    //
+    fn call_get_adapted(lang:&impl Grammar, r1:usize,r2:usize)->String{
+        return lang.get_adapted(r1, r2);
+    }
+
+    fn call_get_adapted2(lang:&impl Grammar, r1:usize,r2:usize)->String{
+        return lang.get_adapted2(r1, r2);
     }
 }

@@ -48,7 +48,7 @@ pub mod repl {
             if exit {
                 break;
             }
-
+            //run generator
             if "run" == linet {
                 match run_generator(&conf) {
                     Ok(_result) => {}
@@ -118,8 +118,7 @@ pub mod repl {
                 line.truncate(0);
                 continue;
             }
-            line.truncate(0);
-            //run generator
+            line.truncate(0);            
         }
     }
 }

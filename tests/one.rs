@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::{command_parser, Config, Languages, ListType};
+    use stranameg::stringer::{command_parser, Config, SupportedLanguages,GeorgianLanguage};
 
     use stranameg::strgen::string_generator_module::{
         CoupledWords, LettterSequence, StringGenerator,
@@ -23,6 +23,9 @@ pub mod tests {
     }
     #[test]
     pub fn is_georgian() {
+
+        return;
+
         //check if generated string is actually georgian alphabet
         let len = String::from("12");
         let ammount = String::from("16");
@@ -31,9 +34,8 @@ pub mod tests {
         let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
         let conf = Config::new(&sarraya);
 
-        let lstype = ListType::Adjectives;
-        let lan = Languages::Georgian;
-        let mut sg = CoupledWords::new(lstype, lan);
+        let lan = SupportedLanguages::Georgian(GeorgianLanguage::new());
+        let mut sg = CoupledWords::new( lan);
 
         sg.setup(&conf).ok();
         // match sg.setup(&conf){

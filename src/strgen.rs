@@ -3,7 +3,7 @@ pub mod string_generator_module {
     use std::fs::read_to_string;
     use std::io::Error;
 
-    use crate::stringer::{Config, Grammar, Languages, ListType, Modes, RNG};
+    use crate::stringer::{Config, Modes, SupportedLanguages, RNG};
 
     pub trait StringGenerator {
         fn get(&mut self) -> String;
@@ -43,6 +43,11 @@ pub mod string_generator_module {
                 rng,
             };
         }
+
+        fn get_default_alphabet() -> String {
+            return String::from("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
+        }
+
         pub fn set_alphabet(&mut self, s: &str) {
             let abc: Vec<char> = s.trim().chars().collect();
             self.alphabet = abc;
@@ -56,8 +61,8 @@ pub mod string_generator_module {
             let read_text = read_to_string(conf.get_next());
 
             if read_text.is_err() {
-                println!("Error reading, reverting to latin");
-                self.set_alphabet(Languages::English.get_alphabet().as_ref());
+                println!("Error reading, reverting to default");
+                self.set_alphabet(LettterSequence::get_default_alphabet().as_ref());
                 return Ok(());
             }
 
@@ -99,7 +104,7 @@ pub mod string_generator_module {
                     self.setup_rlaf(conf)?;
                 }
                 Modes::RandomLetters => {
-                    let lang = Languages::from(conf.get_next().as_ref());
+                    let lang = SupportedLanguages::from(conf.get_next().as_ref());
                     let alphabet = lang.get_alphabet();
                     self.set_alphabet(alphabet.as_ref());
                 }
@@ -110,145 +115,62 @@ pub mod string_generator_module {
         }
     }
 
-    pub struct WordList {
-        list: Vec<String>,
-        list_type: ListType,
-        language: Languages,
+    pub struct CoupledWords {
+        lang: SupportedLanguages,
         rng: RNG,
+        mode: Modes,
     }
 
-    impl WordList {
-        pub fn new(list_type: ListType, language: Languages) -> WordList {
+    impl CoupledWords {
+        pub fn new(lang: SupportedLanguages) -> CoupledWords {
             let list: Vec<String> = Vec::new();
             let mut rng = RNG::new();
             rng.seed();
-            return WordList {
-                list,
-                list_type,
-                language,
-                rng,
-            };
-        }
-        pub fn add_word(&mut self, s: &str) {
-            let s1 = String::from(s.trim());
-            self.list.push(s1);
-        }
-        pub fn get_language(&self) -> Languages {
-            return self.language.clone();
-        }
-        pub fn get_list_type(&self) -> ListType {
-            return self.list_type.clone();
-        }
-        pub fn get_file_name(&self) -> String {
-            let list_type = &self.get_list_type();
-            let lang = &self.get_language();
-            let head = match list_type {
-                ListType::Nouns => "nouns",
-                ListType::Adjectives => "adjectives",
-                ListType::Verbs => "verbs",
-                ListType::Names => "names",
-            };
-            let lang = lang.abbr();
-            return format!("./lists/{}.{}.list", head, lang);
-        }
-        pub fn get_list_len(&self) -> usize {
-            return self.list.len();
-        }
-        pub fn fill(&mut self, s: &str) -> Result<(), Error> {
-            use std::fs::File;
-            use std::io::{BufRead, BufReader};
-
-            let filename = if s == "" {
-                self.get_file_name()
-            } else {
-                String::from(s)
-            };
-
-            let file_op2 = File::open(filename);
-
-            if file_op2.is_err() {
-                println!("fill:err, failing silently");
-                return Ok(());
-            }
-
-            let file = file_op2.unwrap();
-            let mut buff = BufReader::new(file);
-
-            //also there is buff.lines()
-            let mut linestr = String::new();
-
-            loop {
-                let res = buff.read_line(&mut linestr);
-                //once line is read
-                if res.is_err() {
-                    break;
-                }
-
-                let charz = linestr.split(",");
-
-                for chaz in charz {
-                    if chaz == "" {
-                        continue;
-                    }
-                    self.add_word(chaz)
-                }
-                if linestr.len() == 0 {
-                    break;
-                }
-                linestr.truncate(0);
-            }
-
-            return Ok(());
-        }
-
-        fn get(&mut self) -> String {
-            let diclen = self.list.len();
-            let index = self.rng.get() as usize % diclen;
-            return self.list[index].clone();
-        }
-
-    }
-
-    pub struct CoupledWords {
-        adjectives: WordList,
-        second_type: ListType,
-        language: Languages,
-        type_list: WordList,
-    }
-    impl CoupledWords {
-        pub fn new(second_type: ListType, language: Languages) -> CoupledWords {
-            let adjectives = WordList::new(ListType::Adjectives, language.clone());
-            let type_list = WordList::new(second_type.clone(), language.clone());
-            return CoupledWords {
-                adjectives,
-                second_type,
-                language,
-                type_list,
-            };
+            let mode = Modes::CoupledWordsNouns;
+            return CoupledWords { lang, rng, mode };
         }
     }
+
     impl StringGenerator for CoupledWords {
         fn get(&mut self) -> String {
-            
-            let adj = self.adjectives.get();
-            let s2 = self.type_list.get();
+            let rand1 = self.rng.get() as usize;
 
-            let strong = Grammar::get_adapted(self.language, s2, adj);
-            
-            return strong;
+            let rand2 = self.rng.get() as usize;
+
+            return match self.mode {
+                Modes::CoupledWordsNouns => self.lang.get_adapted(rand1, rand2),
+                Modes::CoupledWordsNames => self.lang.get_adapted(rand1, rand2),
+                Modes::CoupledWordsListFiles => self.lang.get_adapted(rand1, rand2),
+                _ => self.lang.get_adapted(rand1, rand2),
+            };
         }
+
         fn setup(&mut self, conf: &Config) -> Result<(), Error> {
+            //set mode
+            self.mode = conf.get_mode();
+
             match conf.get_mode() {
-                Modes::CoupledWordsNouns | Modes::CoupledWordsNames => {
-                    self.adjectives.fill("")?;
-                    self.type_list.fill("")?;
+                Modes::CoupledWordsNouns => {
+                    let path1 = String::from(self.lang.get_default_adjective_list_name());
+                    let path2 = String::from(self.lang.get_default_noun_list_name());
+
+                    self.lang.fill_adjectives(path1.as_ref());
+                    self.lang.fill_nouns(path2.as_ref());
+                    Ok(())
+                }
+                Modes::CoupledWordsNames => {
+                    let path1 = String::from(self.lang.get_default_adjective_list_name());
+                    let path2 = String::from(self.lang.get_default_name_list_name());
+                    self.lang.fill_adjectives(path1.as_ref());
+                    self.lang.fill_names(path2.as_ref());
                     Ok(())
                 }
                 Modes::CoupledWordsListFiles => {
                     let nxt = conf.get_next();
                     let names: Vec<&str> = nxt.split(":").collect();
-                    self.adjectives.fill(names[0])?;
-                    self.type_list.fill(names[1])?;
+
+                    self.lang.fill_adjectives(names[0]);
+                    self.lang.fill_names(names[1]);
                     Ok(())
                 }
                 _ => Ok(()),
