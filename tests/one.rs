@@ -3,8 +3,7 @@ pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
     use stranameg::stringer::{command_parser, Config, SupportedLanguages,GeorgianLanguage};
 
-    use stranameg::strgen::string_generator_module::{
-        CoupledWords, LettterSequence, StringGenerator,
+    use stranameg::strgen::string_generator_module::{StringGenerator,
     };
 
     #[test]
@@ -17,7 +16,7 @@ pub mod tests {
         let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
         let conf = Config::new(&sarraya);
 
-        let mut sg = LettterSequence::new("abc", length);
+        let mut sg = StringGenerator::default();
         let result = sg.setup(&conf);
         assert_eq!(sg.get().len(), length);
     }
@@ -35,7 +34,7 @@ pub mod tests {
         let conf = Config::new(&sarraya);
 
         let lan = SupportedLanguages::Georgian(GeorgianLanguage::new());
-        let mut sg = CoupledWords::new( lan);
+        let mut sg = StringGenerator::default();
 
         sg.setup(&conf).ok();
         // match sg.setup(&conf){
@@ -57,7 +56,7 @@ pub mod tests {
     fn command_parser() {
         let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
         let confetti = command_parser::get_config(vargs);
-        let mut sg = LettterSequence::new("abc", 12);
+        let mut sg = StringGenerator::default();
         let _ = sg.setup(&confetti);
         let strong = sg.get();
         let alphabet = "alphabet";

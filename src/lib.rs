@@ -17,7 +17,7 @@ pub mod stringer {
 
     pub use super::command_parser::command_parser;
     pub use super::help::help::print_help2 as print_help;
-    pub use super::languages::languages::{GeorgianLanguage, SupportedLanguages};
+    pub use super::languages::languages::{GeorgianLanguage,EnglishLanguage,GermanLanguage, SupportedLanguages};
     pub use super::modes::modes::Modes;
 
     pub use super::rng::rng::RNG;
@@ -27,29 +27,9 @@ pub mod stringer {
     pub use super::fast_switch::fast_switch;
     pub use super::repl::repl::run_repl;
 
-    pub fn stringer(conf: Config) -> Box<dyn StringGenerator> {
-        let result_box: Box<dyn StringGenerator> = match conf.mode {
-            Modes::Password => Box::new(LettterSequence::pass_generator(16)),
-            Modes::Password84 => Box::new(LettterSequence::pass_generator84(16)),
-            Modes::RandomLetters => Box::new(LettterSequence::new("abc", 16)),
-
-            Modes::CoupledWordsNouns => Box::new(CoupledWords::new(SupportedLanguages::from(
-                conf.next.as_ref(),
-            ))),
-            Modes::CoupledWordsNames => Box::new(CoupledWords::new(SupportedLanguages::from(
-                conf.next.as_ref(),
-            ))),
-            Modes::CoupledWordsListFiles => Box::new(CoupledWords::new(SupportedLanguages::from(
-                conf.next.as_ref(),
-            ))),
-            //removed
-            _ => Box::new(LettterSequence::new("abc", 16)),
-        };
-        return result_box;
-    }
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
         const OUTPUT_NAME: &str = "strings.textout";
-        let mut sg = stringer(conf.clone());
+        let mut sg = StringGenerator::default();
         sg.setup(&conf)?;
         let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..conf.amount {

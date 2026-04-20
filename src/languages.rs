@@ -1,5 +1,5 @@
 pub mod languages {
-    use std::{io::Error};
+    use std::io::Error;
 
     enum Gender {
         Feminine,
@@ -42,6 +42,16 @@ pub mod languages {
 
         fn get_random_word(&self, rand: usize) -> Word {
             let diclen = self.wordlist.len();
+
+            println!("{:?}", &self.wordlist);
+
+            if diclen == 0 {
+                return Word {
+                    word: String::new(),
+                    wordtype: WordType::Name,
+                };
+            }
+
             let index = rand % diclen;
             return self.wordlist[index].clone();
         }
@@ -50,7 +60,7 @@ pub mod languages {
             use std::fs::File;
             use std::io::{BufRead, BufReader};
 
-            let filename = format!("./lists/{}",path);
+            let filename = format!("./lists/{}", path);
 
             let file_op2 = File::open(filename);
 
@@ -66,10 +76,23 @@ pub mod languages {
             //also there is buff.lines()
             let mut linestr = String::new();
 
+            let mut counter = 0;
+
             loop {
                 let res = buff.read_line(&mut linestr);
                 //once line is read
                 if res.is_err() {
+                    println!("{:?}", res);
+                    break;
+                }
+
+                counter += 1;
+
+                //println!("{}", &linestr);
+                //println!("{}", &counter);
+
+                if linestr.len() == 0 {
+                    println!("empty line");
                     break;
                 }
 
@@ -77,6 +100,7 @@ pub mod languages {
 
                 for chaz in charz {
                     if chaz == "" {
+                        println!("{}", &chaz);
                         continue;
                     }
                     self.add_word(Word {
@@ -84,9 +108,7 @@ pub mod languages {
                         wordtype: wt,
                     })
                 }
-                if linestr.len() == 0 {
-                    break;
-                }
+
                 linestr.truncate(0);
             }
 
@@ -181,12 +203,12 @@ pub mod languages {
         }
     }
 
-    struct EnglishLanguage {
+    pub struct EnglishLanguage {
         language: Language,
     }
 
     impl EnglishLanguage {
-        fn new() -> EnglishLanguage {
+        pub fn new() -> EnglishLanguage {
             let language = Language::new("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
             return EnglishLanguage { language };
         }
@@ -217,7 +239,7 @@ pub mod languages {
         }
     }
 
-    struct GermanLanguage {
+    pub struct GermanLanguage {
         language: Language,
     }
 
@@ -366,42 +388,28 @@ pub mod languages {
             }
         }
 
-        pub fn get_adapted(&self,r1:usize,r2:usize)->String{
+        pub fn get_adapted(&self, r1: usize, r2: usize) -> String {
             return match self {
-                SupportedLanguages::English(e) =>{
-                    call_get_adapted(e, r1, r2)
-                }
-                SupportedLanguages::Georgian(e) => {
-                    call_get_adapted(e, r1, r2)
-                }
-                SupportedLanguages::German(e) =>{
-                    call_get_adapted(e, r1, r2)
-                }
+                SupportedLanguages::English(e) => call_get_adapted(e, r1, r2),
+                SupportedLanguages::Georgian(e) => call_get_adapted(e, r1, r2),
+                SupportedLanguages::German(e) => call_get_adapted(e, r1, r2),
             };
         }
 
-        pub fn get_adapted2(&self,r1:usize,r2:usize)->String{
+        pub fn get_adapted2(&self, r1: usize, r2: usize) -> String {
             return match self {
-                SupportedLanguages::English(e) =>{
-                    call_get_adapted2(e, r1, r2)
-                }
-                SupportedLanguages::Georgian(e) => {
-                    call_get_adapted2(e, r1, r2)
-                }
-                SupportedLanguages::German(e) =>{
-                    call_get_adapted2(e, r1, r2)
-                }
+                SupportedLanguages::English(e) => call_get_adapted2(e, r1, r2),
+                SupportedLanguages::Georgian(e) => call_get_adapted2(e, r1, r2),
+                SupportedLanguages::German(e) => call_get_adapted2(e, r1, r2),
             };
         }
-
-        
     }
     //
-    fn call_get_adapted(lang:&impl Grammar, r1:usize,r2:usize)->String{
+    fn call_get_adapted(lang: &impl Grammar, r1: usize, r2: usize) -> String {
         return lang.get_adapted(r1, r2);
     }
 
-    fn call_get_adapted2(lang:&impl Grammar, r1:usize,r2:usize)->String{
+    fn call_get_adapted2(lang: &impl Grammar, r1: usize, r2: usize) -> String {
         return lang.get_adapted2(r1, r2);
     }
 }
