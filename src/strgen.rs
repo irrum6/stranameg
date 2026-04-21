@@ -96,7 +96,7 @@ pub mod string_generator_module {
 
             return match self.mode {
                 Modes::CoupledWordsNouns => self.lang.get_adapted(rand1, rand2),
-                Modes::CoupledWordsNames => self.lang.get_adapted(rand1, rand2),
+                Modes::CoupledWordsNames => self.lang.get_adapted2(rand1, rand2),
                 Modes::CoupledWordsListFiles => self.lang.get_adapted(rand1, rand2),
                 _ => self.lang.get_adapted(rand1, rand2),
             };
@@ -200,14 +200,14 @@ pub mod string_generator_module {
                 Modes::CoupledWordsListFiles => {
                     
                     let nxt = conf.get_next();
-                    let names: Vec<&str> = nxt.split(":").collect();
+                    let fnames: Vec<&str> = nxt.split(":").collect();
 
-                    let r =self.lang.fill_adjectives(names[0]);
+                    let r =self.lang.fill_adjectives(fnames[0]);
                     if r.is_err(){
                         println!("{:?}",r);
                         return Ok(());
                     }
-                    let r = self.lang.fill_nouns(names[1]);
+                    let r = self.lang.fill_nouns(fnames[1]);
                     if r.is_err(){
                         println!("{:?}",r);
                         return Ok(());

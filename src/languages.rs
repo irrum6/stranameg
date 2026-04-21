@@ -25,6 +25,7 @@ pub mod languages {
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String;
     }
 
+    #[derive(Debug)]
     struct Dictionary {
         wordlist: Vec<Word>,
         index: usize,
@@ -43,7 +44,7 @@ pub mod languages {
         fn get_random_word(&self, rand: usize) -> Word {
             let diclen = self.wordlist.len();
 
-            println!("{:?}", &self.wordlist);
+            //println!("{:?}", &self.wordlist);
 
             if diclen == 0 {
                 return Word {
@@ -86,8 +87,6 @@ pub mod languages {
                     break;
                 }
 
-                counter += 1;
-
                 //println!("{}", &linestr);
                 //println!("{}", &counter);
 
@@ -106,8 +105,12 @@ pub mod languages {
                     self.add_word(Word {
                         word: String::from(chaz),
                         wordtype: wt,
-                    })
+                    });
+                    print!("{} ", &chaz);
                 }
+                //println!("{:?}",self.wordlist);
+                //after successfull addition increase counter
+                counter += 1;
 
                 linestr.truncate(0);
             }
@@ -301,15 +304,13 @@ pub mod languages {
         }
 
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
+
             let adj = self.language.adjectives.get_random_word(rand1);
             let name = self.language.names.get_random_word(rand2);
+            //println!("{:?}",&name);
 
-            let split: Vec<&str> = name.word.split(" ").collect();
-            let article = String::new();
-            let name = split[1];
-            //let gender = Genders::from(split[0], lang);
-            let suffix = GermanLanguage::get_suffix();
-            return format!("{} {}{} {}", article, adj.word, suffix, name);
+            let suffix = String::from("e");
+            return format!("{}{} {}", adj.word, suffix, name.word);
         }
     }
 
