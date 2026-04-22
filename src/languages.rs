@@ -7,13 +7,6 @@ pub mod languages {
         Neutral,
     }
 
-    #[derive(Clone, Copy, Debug)]
-    enum WordType {
-        Noun,
-        Name,
-        Adjective,
-    }
-
     trait Grammar {
         fn get_indefinite_article(w: &str) -> String;
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String;
@@ -48,7 +41,7 @@ pub mod languages {
             return self.wordlist[index].clone();
         }
 
-        fn fill(&mut self, path: &str, wt: WordType) -> Result<(), Error> {
+        fn fill(&mut self, path: &str) -> Result<(), Error> {
             use std::fs::File;
             use std::io::{BufRead, BufReader};
 
@@ -88,7 +81,7 @@ pub mod languages {
                         println!("{}", &chaz);
                         continue;
                     }
-                    self.add_word(String::from(chaz));
+                    self.add_word(String::from(chaz.trim()));
                 }
 
                 linestr.truncate(0);
@@ -136,15 +129,11 @@ pub mod languages {
 
         fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
             //let path = "gela";
-            return self.nouns.fill(path, WordType::Noun);
+            return self.nouns.fill(path);
         }
 
         fn fill_names(&mut self, path: &str) -> Result<(), Error> {
-            return self.names.fill(path, WordType::Name);
-        }
-
-        fn fill_adjectives(&mut self, path: &str) -> Result<(), Error> {
-            return self.adjectives.fill(path, WordType::Adjective);
+            return self.names.fill(path);
         }
 
         fn get_alphabet(&self) -> &String {
@@ -304,25 +293,25 @@ pub mod languages {
 
         pub fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
             return match self {
-                SupportedLanguages::English(e) => e.language.fill_nouns(path),
-                SupportedLanguages::Georgian(e) => e.language.fill_nouns(path),
-                SupportedLanguages::German(e) => e.language.fill_nouns(path),
+                SupportedLanguages::English(e) => e.language.nouns.fill(path),
+                SupportedLanguages::Georgian(e) => e.language.nouns.fill(path),
+                SupportedLanguages::German(e) => e.language.nouns.fill(path),
             };
         }
 
         pub fn fill_names(&mut self, path: &str) -> Result<(), Error> {
             return match self {
-                SupportedLanguages::English(e) => e.language.fill_names(path),
-                SupportedLanguages::Georgian(e) => e.language.fill_names(path),
-                SupportedLanguages::German(e) => e.language.fill_names(path),
+                SupportedLanguages::English(e) => e.language.names.fill(path),
+                SupportedLanguages::Georgian(e) => e.language.names.fill(path),
+                SupportedLanguages::German(e) => e.language.names.fill(path),
             };
         }
 
         pub fn fill_adjectives(&mut self, path: &str) -> Result<(), Error> {
             return match self {
-                SupportedLanguages::English(e) => e.language.fill_adjectives(path),
-                SupportedLanguages::Georgian(e) => e.language.fill_adjectives(path),
-                SupportedLanguages::German(e) => e.language.fill_adjectives(path),
+                SupportedLanguages::English(e) => e.language.adjectives.fill(path),
+                SupportedLanguages::Georgian(e) => e.language.adjectives.fill(path),
+                SupportedLanguages::German(e) => e.language.adjectives.fill(path),
             };
         }
         //default file names
