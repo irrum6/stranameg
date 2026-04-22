@@ -6,51 +6,42 @@ pub mod languages {
         Masculine,
         Neutral,
     }
+
     #[derive(Clone, Copy, Debug)]
     enum WordType {
         Noun,
         Name,
         Adjective,
     }
-    #[derive(Clone, Debug)]
-    struct Word {
-        word: String,
-        wordtype: WordType,
-    }
 
     trait Grammar {
-        fn get_definite_article(w: &Word) -> String;
-        fn get_indefinite_article(w: &Word) -> String;
+        fn get_indefinite_article(w: &str) -> String;
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String;
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String;
     }
 
     #[derive(Debug)]
     struct Dictionary {
-        wordlist: Vec<Word>,
+        wordlist: Vec<String>,
         index: usize,
     }
 
     impl Dictionary {
         fn new() -> Dictionary {
-            let wordlist: Vec<Word> = Vec::new();
+            let wordlist: Vec<String> = Vec::new();
             return Dictionary { wordlist, index: 0 };
         }
 
-        fn add_word(&mut self, w: Word) {
+        fn add_word(&mut self, w: String) {
             self.wordlist.push(w);
         }
 
-        fn get_random_word(&self, rand: usize) -> Word {
+        fn get_random_word(&self, rand: usize) -> String {
             let diclen = self.wordlist.len();
 
             //println!("{:?}", &self.wordlist);
-
             if diclen == 0 {
-                return Word {
-                    word: String::new(),
-                    wordtype: WordType::Name,
-                };
+                return String::new();
             }
 
             let index = rand % diclen;
@@ -77,8 +68,6 @@ pub mod languages {
             //also there is buff.lines()
             let mut linestr = String::new();
 
-            let mut counter = 0;
-
             loop {
                 let res = buff.read_line(&mut linestr);
                 //once line is read
@@ -86,9 +75,6 @@ pub mod languages {
                     println!("{:?}", res);
                     break;
                 }
-
-                //println!("{}", &linestr);
-                //println!("{}", &counter);
 
                 if linestr.len() == 0 {
                     println!("empty line");
@@ -102,15 +88,8 @@ pub mod languages {
                         println!("{}", &chaz);
                         continue;
                     }
-                    self.add_word(Word {
-                        word: String::from(chaz),
-                        wordtype: wt,
-                    });
-                    print!("{} ", &chaz);
+                    self.add_word(String::from(chaz));
                 }
-                //println!("{:?}",self.wordlist);
-                //after successfull addition increase counter
-                counter += 1;
 
                 linestr.truncate(0);
             }
@@ -120,7 +99,7 @@ pub mod languages {
     }
 
     impl Iterator for Dictionary {
-        type Item = Word;
+        type Item = String;
 
         fn next(&mut self) -> Option<Self::Item> {
             if self.index < self.wordlist.len() {
@@ -185,24 +164,20 @@ pub mod languages {
     }
 
     impl Grammar for GeorgianLanguage {
-        fn get_definite_article(w: &Word) -> String {
-            return String::new();
-        }
-
-        fn get_indefinite_article(w: &Word) -> String {
+        fn get_indefinite_article(w: &str) -> String {
             return String::new();
         }
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
             let adj = self.language.adjectives.get_random_word(rand1);
             let noun = self.language.nouns.get_random_word(rand2);
 
-            return format!("{}_{}", adj.word, noun.word);
+            return format!("{}_{}", adj, noun);
         }
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
             let adj = self.language.adjectives.get_random_word(rand1);
             let name = self.language.names.get_random_word(rand2);
 
-            return format!("{}_{}", adj.word, name.word);
+            return format!("{}_{}", adj, name);
         }
     }
 
@@ -218,11 +193,7 @@ pub mod languages {
     }
 
     impl Grammar for EnglishLanguage {
-        fn get_definite_article(w: &Word) -> String {
-            return String::from("the");
-        }
-
-        fn get_indefinite_article(w: &Word) -> String {
+        fn get_indefinite_article(w: &str) -> String {
             //check if starts with consontant
             return String::from("a");
         }
@@ -231,14 +202,14 @@ pub mod languages {
             let adj = self.language.adjectives.get_random_word(rand1);
             let noun = self.language.nouns.get_random_word(rand2);
 
-            return format!("{}_{}", adj.word, noun.word);
+            return format!("{}_{}", adj, noun);
         }
 
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
             let adj = self.language.adjectives.get_random_word(rand1);
             let name = self.language.names.get_random_word(rand2);
 
-            return format!("{}_{}", adj.word, name.word);
+            return format!("{}_{}", adj, name);
         }
     }
 
@@ -251,9 +222,9 @@ pub mod languages {
             let language = Language::new("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
             return GermanLanguage { language };
         }
-        fn get_gender(w: &Word) -> Gender {
-            let s: Vec<&str> = w.word.split(" ").collect();
-            return match s[0].to_lowercase().as_ref() {
+        #[inline]
+        fn get_gender(w: &str) -> Gender {
+            return match w.to_lowercase().as_ref() {
                 "die" => Gender::Feminine,
                 "der" => Gender::Masculine,
                 "das" => Gender::Neutral,
@@ -261,30 +232,23 @@ pub mod languages {
             };
         }
 
-        fn abbr(&self) -> String {
-            return String::from("De");
-        }
+        fn get_suffix(w: &str) -> &str {
+            //split and determine gender
+            // split by space
 
-        fn get_suffix() -> String {
-            //for Nominative
-            return String::from("e");
+            return match GermanLanguage::get_gender(&w) {
+                Gender::Feminine => "e",
+                Gender::Masculine => "er",
+                Gender::Neutral => "es",
+            };
         }
     }
 
     impl Grammar for GermanLanguage {
-        fn get_definite_article(w: &Word) -> String {
-            //split and determine
-            let s: Vec<&str> = w.word.split(" ").collect();
-            return String::from(s[0]);
-        }
-
-        fn get_indefinite_article(w: &Word) -> String {
+        fn get_indefinite_article(w: &str) -> String {
             //split and determine gender
             // split by space
-
-            let gender = GermanLanguage::get_gender(w);
-
-            return match gender {
+            return match GermanLanguage::get_gender(&w) {
                 Gender::Feminine => String::from("eine"),
                 Gender::Masculine => String::from("ein"),
                 Gender::Neutral => String::from("ein"),
@@ -295,22 +259,23 @@ pub mod languages {
             let adj = self.language.adjectives.get_random_word(rand1);
             let noun = self.language.nouns.get_random_word(rand2);
 
-            let split: Vec<&str> = noun.word.split(" ").collect();
-            let article = GermanLanguage::get_indefinite_article(&noun);
+            let split: Vec<&str> = noun.split(" ").collect();
+
+            let def_article = split[0];
             let noun = split[1];
-            //let gender = Genders::from(split[0], lang);
-            let suffix = GermanLanguage::get_suffix();
-            return format!("{} {}{} {}", article, adj.word, suffix, noun);
+
+            let article = GermanLanguage::get_indefinite_article(def_article);
+            let suffix = GermanLanguage::get_suffix(def_article);
+
+            return format!("{} {}{} {}", article, adj, suffix, noun);
         }
 
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
-
             let adj = self.language.adjectives.get_random_word(rand1);
             let name = self.language.names.get_random_word(rand2);
-            //println!("{:?}",&name);
 
-            let suffix = String::from("e");
-            return format!("{}{} {}", adj.word, suffix, name.word);
+            let suffix = "e";
+            return format!("{}{} {}", adj, suffix, name);
         }
     }
 
@@ -323,11 +288,7 @@ pub mod languages {
     impl SupportedLanguages {
         pub fn from(s: &str) -> SupportedLanguages {
             return match s.to_lowercase().as_ref() {
-                "en" => {
-                    let mut en = EnglishLanguage::new();
-                    SupportedLanguages::English(en)
-                }
-
+                "en" => SupportedLanguages::English(EnglishLanguage::new()),
                 "ka" => SupportedLanguages::Georgian(GeorgianLanguage::new()),
                 "de" => SupportedLanguages::German(GermanLanguage::new()),
                 _ => SupportedLanguages::English(EnglishLanguage::new()),
