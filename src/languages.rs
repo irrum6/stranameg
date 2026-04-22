@@ -127,15 +127,6 @@ pub mod languages {
             };
         }
 
-        fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
-            //let path = "gela";
-            return self.nouns.fill(path);
-        }
-
-        fn fill_names(&mut self, path: &str) -> Result<(), Error> {
-            return self.names.fill(path);
-        }
-
         fn get_alphabet(&self) -> &String {
             return &self.alphabet;
         }
