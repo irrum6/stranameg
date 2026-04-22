@@ -163,7 +163,7 @@ pub mod string_generator_module {
                     self.set_language(lang);
 
                     let path1 = String::from(self.lang.get_default_adjective_list_name());
-                    let path2 = String::from(self.lang.get_default_noun_list_name());
+                    let path2 = String::from(self.lang.get_list_name("noun"));
 
                     let r = self.lang.fill_adjectives(path1.as_ref());
                     if r.is_err(){

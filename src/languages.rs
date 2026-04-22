@@ -305,14 +305,26 @@ pub mod languages {
                 SupportedLanguages::German(e) => e.language.adjectives.fill(path),
             };
         }
-        //default file names
-        pub fn get_default_noun_list_name(&self) -> &str {
-            match self {
-                SupportedLanguages::English(e) => "nouns.en.list",
-                SupportedLanguages::Georgian(e) => "nouns.ka.list",
-                SupportedLanguages::German(e) => "nouns.de.list",
-            }
+
+        pub fn get_list_name(&self, lstype: &str) -> String {
+            let pfx = match lstype.to_lowercase().as_ref() {
+                "noun" => "nouns",
+                "adj" => "adjectives",
+                "name" => "names",
+                _ => "",
+            };
+            let sfx = "list";
+            let middle = match self {
+                SupportedLanguages::English(e) => "en",
+                SupportedLanguages::Georgian(e) => "ka",
+                SupportedLanguages::German(e) => "de",
+            };
+
+            return format!("{}.{}.{}", pfx, middle, sfx);
         }
+
+        //default file names
+        
 
         pub fn get_default_adjective_list_name(&self) -> &str {
             match self {
