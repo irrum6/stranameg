@@ -144,7 +144,7 @@ pub mod languages {
     }
 
     impl Grammar for GeorgianLanguage {
-        fn get_indefinite_article(w: &str) -> String {
+        fn get_indefinite_article(_w: &str) -> String {
             return String::new();
         }
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
@@ -175,14 +175,24 @@ pub mod languages {
     impl Grammar for EnglishLanguage {
         fn get_indefinite_article(w: &str) -> String {
             //check if starts with consontant
-            return String::from("a");
+            // h needs further adjustment
+            let chars:Vec<char> = w.to_lowercase().chars().collect();
+            let fch = chars[0];
+            
+            return match fch {
+                'a'|'e'|'i'|'o'|'u'=>String::from("an"),
+                _=>String::from("a"),
+            }
+            
         }
 
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
             let adj = self.language.adjectives.get_random_word(rand1);
             let noun = self.language.nouns.get_random_word(rand2);
 
-            return format!("{}_{}", adj, noun);
+            let article = EnglishLanguage::get_indefinite_article(&adj);
+
+            return format!("{}_{}_{}",article, adj, noun);
         }
 
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
@@ -316,9 +326,9 @@ pub mod languages {
             };
             let sfx = "list";
             let middle = match self {
-                SupportedLanguages::English(e) => "en",
-                SupportedLanguages::Georgian(e) => "ka",
-                SupportedLanguages::German(e) => "de",
+                SupportedLanguages::English(_e) => "en",
+                SupportedLanguages::Georgian(_e) => "ka",
+                SupportedLanguages::German(_e) => "de",
             };
 
             return format!("{}.{}.{}", pfx, middle, sfx);
