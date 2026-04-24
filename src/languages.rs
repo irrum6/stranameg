@@ -306,6 +306,7 @@ pub mod languages {
             };
         }
 
+        //default file names
         pub fn get_list_name(&self, lstype: &str) -> String {
             let pfx = match lstype.to_lowercase().as_ref() {
                 "noun" => "nouns",
@@ -321,25 +322,6 @@ pub mod languages {
             };
 
             return format!("{}.{}.{}", pfx, middle, sfx);
-        }
-
-        //default file names
-        
-
-        pub fn get_default_adjective_list_name(&self) -> &str {
-            match self {
-                SupportedLanguages::English(e) => "adjectives.en.list",
-                SupportedLanguages::Georgian(e) => "adjectives.ka.list",
-                SupportedLanguages::German(e) => "adjectives.de.list",
-            }
-        }
-
-        pub fn get_default_name_list_name(&self) -> &str {
-            match self {
-                SupportedLanguages::English(e) => "names.en.list",
-                SupportedLanguages::Georgian(e) => "names.ka.list",
-                SupportedLanguages::German(e) => "names.de.list",
-            }
         }
 
         pub fn get_adapted(&self, r1: usize, r2: usize) -> String {
