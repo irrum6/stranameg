@@ -1,5 +1,4 @@
 pub mod languages {
-    use std::io::Error;
 
     enum Gender {
         Feminine,
@@ -41,18 +40,18 @@ pub mod languages {
             return self.wordlist[index].clone();
         }
 
-        fn fill(&mut self, path: &str) -> Result<(), Error> {
+        fn fill(&mut self, path: &str) -> Result<(), String> {
             use std::fs::File;
             use std::io::{BufRead, BufReader};
 
-            let filename = format!("./lists/{}", path);
+            let filename = String::from(path);
 
             let file_op2 = File::open(filename);
 
             if file_op2.is_err() {
                 println!("fill:err, failing silently");
                 //println!("{}",&path);
-                return Ok(());
+                return Err(String::from("d.fill: error occured when reading file"));
             }
 
             let file = file_op2.unwrap();
@@ -292,7 +291,7 @@ pub mod languages {
             };
         }
 
-        pub fn fill_nouns(&mut self, path: &str) -> Result<(), Error> {
+        pub fn fill_nouns(&mut self, path: &str) -> Result<(), String> {
             return match self {
                 SupportedLanguages::English(e) => e.language.nouns.fill(path),
                 SupportedLanguages::Georgian(e) => e.language.nouns.fill(path),
@@ -300,7 +299,7 @@ pub mod languages {
             };
         }
 
-        pub fn fill_names(&mut self, path: &str) -> Result<(), Error> {
+        pub fn fill_names(&mut self, path: &str) -> Result<(), String> {
             return match self {
                 SupportedLanguages::English(e) => e.language.names.fill(path),
                 SupportedLanguages::Georgian(e) => e.language.names.fill(path),
@@ -308,7 +307,7 @@ pub mod languages {
             };
         }
 
-        pub fn fill_adjectives(&mut self, path: &str) -> Result<(), Error> {
+        pub fn fill_adjectives(&mut self, path: &str) -> Result<(), String> {
             return match self {
                 SupportedLanguages::English(e) => e.language.adjectives.fill(path),
                 SupportedLanguages::Georgian(e) => e.language.adjectives.fill(path),
@@ -331,7 +330,7 @@ pub mod languages {
                 SupportedLanguages::German(_e) => "de",
             };
 
-            return format!("{}.{}.{}", pfx, middle, sfx);
+            return format!("./lists/{}.{}.{}", pfx, middle, sfx);
         }
 
         pub fn get_adapted(&self, r1: usize, r2: usize) -> String {

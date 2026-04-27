@@ -1,10 +1,9 @@
 #[cfg(test)]
 pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::{command_parser, Config, SupportedLanguages,GeorgianLanguage};
+    use stranameg::stringer::{command_parser, Config, GeorgianLanguage, SupportedLanguages};
 
-    use stranameg::strgen::string_generator_module::{StringGenerator,
-    };
+    use stranameg::strgen::string_generator_module::StringGenerator;
 
     #[test]
     pub fn check_len() {
@@ -17,14 +16,11 @@ pub mod tests {
         let conf = Config::new(&sarraya);
 
         let mut sg = StringGenerator::default();
-        let result = sg.setup(&conf);
+        sg.setup(&conf);
         assert_eq!(sg.get().len(), length);
     }
     #[test]
     pub fn is_georgian() {
-
-        return;
-
         //check if generated string is actually georgian alphabet
         let len = String::from("12");
         let ammount = String::from("16");
@@ -36,11 +32,10 @@ pub mod tests {
         let lan = SupportedLanguages::Georgian(GeorgianLanguage::new());
         let mut sg = StringGenerator::default();
 
-        sg.setup(&conf).ok();
-        // match sg.setup(&conf){
-        //     Ok() =>{},
-        //     Err(e)=>
-        // }
+        sg.set_language(lan);
+
+        sg.setup(&conf);
+
         let strong = sg.get();
 
         println!("{}", strong);

@@ -30,7 +30,7 @@ pub mod stringer {
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
         const OUTPUT_NAME: &str = "strings.textout";
         let mut sg = StringGenerator::default();
-        sg.setup(&conf)?;
+        sg.setup(&conf);
         let mut output = File::create(OUTPUT_NAME)?;
         for _i in 0..conf.amount {
             let strang = sg.get();
