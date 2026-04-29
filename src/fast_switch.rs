@@ -4,7 +4,7 @@ pub mod fast_switch {
     pub fn get_fsconf(onkstr: String) -> Config {
         let mut conf = Config::default();
         let split: Vec<&str> = onkstr.split("-f").collect();
-        // println!("{}",split[0]);
+        
         let s: String = String::from(split[1]);
         let zero = s.chars().nth(0).unwrap();
         if 'n' == zero {

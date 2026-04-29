@@ -17,7 +17,9 @@ pub mod stringer {
 
     pub use super::command_parser::command_parser;
     pub use super::help::help::print_help2 as print_help;
-    pub use super::languages::languages::{GeorgianLanguage,EnglishLanguage,GermanLanguage, SupportedLanguages};
+    pub use super::languages::languages::{
+        EnglishLanguage, GeorgianLanguage, GermanLanguage, SupportedLanguages,
+    };
     pub use super::modes::modes::Modes;
 
     pub use super::rng::rng::RNG;
@@ -32,6 +34,7 @@ pub mod stringer {
         let mut sg = StringGenerator::default();
         sg.setup(&conf);
         let mut output = File::create(OUTPUT_NAME)?;
+
         for _i in 0..conf.amount {
             let strang = sg.get();
             if conf.write_to_file {
@@ -96,12 +99,11 @@ pub mod stringer {
             let mut length: u32 = 12;
 
             if args.len() > 1 {
-                //println!("{}",&args[1]);
                 amount = safe_u32(args[1].clone(), 16);
             }
 
             if args.len() > 2 {
-                println!("{}", &args[2]);
+                //println!("{}", &args[2]);
                 length = safe_u32(args[2].clone(), 12);
             }
             if args.len() > 3 {

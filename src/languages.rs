@@ -24,14 +24,9 @@ pub mod languages {
             return Dictionary { wordlist, index: 0 };
         }
 
-        fn add_word(&mut self, w: String) {
-            self.wordlist.push(w);
-        }
-
         fn get_random_word(&self, rand: usize) -> String {
             let diclen = self.wordlist.len();
 
-            //println!("{:?}", &self.wordlist);
             if diclen == 0 {
                 return String::new();
             }
@@ -49,8 +44,6 @@ pub mod languages {
             let file_op2 = File::open(filename);
 
             if file_op2.is_err() {
-                println!("fill:err, failing silently");
-                //println!("{}",&path);
                 return Err(String::from("d.fill: error occured when reading file"));
             }
 
@@ -59,6 +52,8 @@ pub mod languages {
 
             //also there is buff.lines()
             let mut linestr = String::new();
+
+            let mut counter = 0;
 
             loop {
                 let res = buff.read_line(&mut linestr);
@@ -69,7 +64,9 @@ pub mod languages {
                 }
 
                 if linestr.len() == 0 {
-                    println!("empty line");
+                    if counter == 0 {
+                        println!("empty");
+                    }
                     break;
                 }
 
@@ -77,12 +74,11 @@ pub mod languages {
 
                 for chaz in charz {
                     if chaz == "" {
-                        println!("{}", &chaz);
                         continue;
                     }
-                    self.add_word(String::from(chaz.trim()));
+                    self.wordlist.push(String::from(chaz.trim()));
                 }
-
+                counter += 1;
                 linestr.truncate(0);
             }
 
@@ -175,14 +171,13 @@ pub mod languages {
         fn get_indefinite_article(w: &str) -> String {
             //check if starts with consontant
             // h needs further adjustment
-            let chars:Vec<char> = w.to_lowercase().chars().collect();
+            let chars: Vec<char> = w.to_lowercase().chars().collect();
             let fch = chars[0];
-            
+
             return match fch {
-                'a'|'e'|'i'|'o'|'u'=>String::from("an"),
-                _=>String::from("a"),
-            }
-            
+                'a' | 'e' | 'i' | 'o' | 'u' => String::from("an"),
+                _ => String::from("a"),
+            };
         }
 
         fn get_adapted(&self, rand1: usize, rand2: usize) -> String {
@@ -191,7 +186,7 @@ pub mod languages {
 
             let article = EnglishLanguage::get_indefinite_article(&adj);
 
-            return format!("{}_{}_{}",article, adj, noun);
+            return format!("{}_{}_{}", article, adj, noun);
         }
 
         fn get_adapted2(&self, rand1: usize, rand2: usize) -> String {
