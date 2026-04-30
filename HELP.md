@@ -133,6 +133,7 @@ Or use aliases for certain options
 - **S9** 144 characters long
 - **SX** 160 characters long
 - **PWD** Password mode
+- **PWD84** Password mode (84 symbols)
 It will also set one parameter
 ### 5.3 Examples
 ./binary -fn8 \

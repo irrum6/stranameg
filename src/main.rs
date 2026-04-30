@@ -5,7 +5,7 @@ use stranameg::stringer::{
 fn main() {
     use std::env;
     use std::fs::read_to_string;
-    const VERSION: &str = "0.14.6";
+    const VERSION: &str = "0.14.7";
 
     let args: Vec<String> = env::args().collect();
 
