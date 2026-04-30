@@ -1,10 +1,9 @@
-use std::env;
-
 use stranameg::stringer::{
     command_parser, fast_switch, print_help, run_generator, run_repl, Config,
 };
 
 fn main() {
+    use std::env;
     use std::fs::read_to_string;
     const VERSION: &str = "0.14.6";
 
@@ -18,16 +17,16 @@ fn main() {
     // trimmed
     let flag = args[1].trim();
     // -h -H H Helpt help
-    if "-h" == flag || "printh" == flag || "help" == flag {
+    if flag == "-H" || flag == "--help" {
         print_help();
         return;
     }
-    if "--version" == flag || "-V" == flag {
+    if flag == "--version" || flag == "-V" {
         println!("{}", VERSION);
         return;
     }
 
-    if "repl" == flag || "-R" == flag {
+    if flag == "repl" || flag == "-R" {
         run_repl();
         return;
     }
