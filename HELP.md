@@ -17,11 +17,13 @@ pass parameters (command line arguments) to generate strings, all but first are 
 - Second paramters is the **length** of the generated string, defaults to 12 , this parameter is ignored in modes other than Random Letter String ones (rls,rla,rlaf)
 - Third parameter is **mode**, defaults to random letter string (rls)
 - Fourth parameter is just another argument whose usage depends on mode
-- Fifth argument is to whether or not write to file (**strings.textout**) 1 is true , 0 or ommited is false
+- Fifth argument is to whether or not write to file. 0 or ommited is false , 1 is true and will use default filename (**strings.textout**) ... other values would be used as filenames
+- Sixth argument is to whether or not write indices in output (nth number in sequence)
 
 ### 1.1 basic examples
 ./binary 16 16  - will generarate 16 strings , each 16 characters long \
 ./binary 24  - will generarate 24 strings , each 12 characters long \
+./binary 16 12 rls en out.txt 1 will generarate 16 strings , each 12 characters long and will write into **out.txt** file and will not include indices \
 
 ## 2 Modes
 

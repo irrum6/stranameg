@@ -1,8 +1,8 @@
 pub mod help;
 pub mod rng;
 
-pub mod languages;
 pub mod config;
+pub mod languages;
 
 pub mod strgen;
 
@@ -13,11 +13,11 @@ pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
 
+    pub use super::config::config::{CommandParser, Config, Modes};
     pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::{
         EnglishLanguage, GeorgianLanguage, GermanLanguage, SupportedLanguages,
     };
-    pub use super::config::config::{Config,Modes};
 
     pub use super::rng::rng::RNG;
 
@@ -27,21 +27,27 @@ pub mod stringer {
     pub use super::repl::repl::run_repl;
 
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
-        const OUTPUT_NAME: &str = "strings.textout";
+        let mut output_file_name: &str = "strings.textout";
+        let out2 = conf.get_output_filename();
+        if out2.len() > 0 {
+            output_file_name = out2;
+        }
         let mut sg = StringGenerator::default();
         sg.setup(&conf);
-        let mut output = File::create(OUTPUT_NAME)?;
+        let mut output = File::create(output_file_name)?;
 
         for _i in 0..conf.get_amount() {
             let strang = sg.get();
+            let mut strong = format!("{}:{}\n", strang, _i);
+            //it runs if dont_write_indices is true
+            if conf.get_write_indices() {
+                strong = format!("{}\n", strang);
+            }
+
             if conf.get_write_to_file() {
-                writeln!(output, "{}", strang)?;
+                writeln!(output, "{}", strong)?;
             } else {
-                let mut strong = format!("{}:{}\n", strang, _i);
-                if conf.get_write_indices() {
-                    strong = format!("{}\n", strang);
-                }
-                print!("{}\n", strong);
+                println!("{}\n", strong);
             }
         }
         return Ok(());
@@ -58,7 +64,7 @@ pub mod stringer {
     pub fn get_value(strong: String, delimiter: &str) -> String {
         // return ;
         //going fishing
-        let v= strong.split(delimiter).collect::<Vec<&str>>();
+        let v = strong.split(delimiter).collect::<Vec<&str>>();
         // return String::from(v[1]);
         let value = String::from(v[1]);
         return value;

@@ -1,5 +1,5 @@
 pub mod config {
-    use crate::stringer::{safe_u32,get_value};
+    use crate::stringer::{get_value, safe_u32};
 
     #[derive(Clone)]
     pub enum Modes {
@@ -34,21 +34,21 @@ pub mod config {
         length: u32,
         amount: u32,
         write_to_file: bool,
-        fileout:String,
+        fileout: String,
         dont_write_indices: bool,
         next: String,
     }
     impl Config {
         pub fn default() -> Config {
-            let amount = 8;
             let mode = Modes::RandomLetters;
+            let length: u32 = 12;
+            let amount = 8;
             let write_to_file = false;
             let fileout = String::new();
             let dont_write_indices = false;
 
             let next = String::new();
 
-            let length: u32 = 12;
             return Config {
                 mode,
                 length,
@@ -60,14 +60,14 @@ pub mod config {
             };
         }
         pub fn from(args: &[String]) -> Config {
-            let mut amount = 16;
             let mut mode = Modes::RandomLetters;
+            let mut length: u32 = 12;
+            let mut amount = 16;
             let mut write_to_file = false;
+            let mut fileout = String::new();
             let mut dont_write_indices = false;
 
             let mut next = String::new();
-
-            let mut length: u32 = 12;
 
             if args.len() > 1 {
                 amount = safe_u32(args[1].clone(), 16);
@@ -85,7 +85,18 @@ pub mod config {
             }
 
             if args.len() > 5 {
-                write_to_file = args[5] == "1";
+                match args[5].as_str() {
+                    "0" => {
+                        write_to_file = false;
+                    }
+                    "1" => {
+                        write_to_file = true;
+                    }
+                    _ => {
+                        write_to_file = true;
+                        fileout = args[5].clone();
+                    }
+                };
             }
 
             if args.len() > 6 {
@@ -96,7 +107,7 @@ pub mod config {
                 length,
                 amount,
                 write_to_file,
-                fileout:String::new(),
+                fileout,
                 next,
                 dont_write_indices,
             };
@@ -122,11 +133,27 @@ pub mod config {
             return self.amount;
         }
 
-        pub fn set_write_to_file(&mut self, wtf: bool) {
-            self.write_to_file = wtf;
+        pub fn set_write_to_file(&mut self, wtf: String) {
+            match wtf.as_str() {
+                "0" => {
+                    self.write_to_file = false;
+                }
+                "1" => {
+                    self.write_to_file = true;
+                }
+                _ => {
+                    self.write_to_file = true;
+                    self.fileout = wtf;
+                }
+            }
         }
+
         pub fn get_write_to_file(&self) -> bool {
             return self.write_to_file;
+        }
+
+        pub fn get_output_filename(&self) -> &String {
+            return &self.fileout;
         }
 
         pub fn set_write_indices(&mut self, dwi: bool) {
@@ -142,41 +169,47 @@ pub mod config {
         pub fn get_next(&self) -> String {
             return self.next.clone();
         }
+    }
+
+    pub struct CommandParser {}
+
+    impl CommandParser {
         //alt mode configuration parser
         pub fn parse_config(vargs: Vec<&str>) -> Config {
-        //confetti
-        let mut conf = Config::default();
+            //confetti
+            let mut conf = Config::default();
 
-        for str in vargs {
-            if str.contains("mode") {
-                let strong = str.to_string();
-                let mo = Modes::from(get_value(strong, "=").as_ref());
-                conf.set_mode(mo);
+            for str in vargs {
+                if str.contains("mode") {
+                    let strong = str.to_string();
+                    let mo = Modes::from(get_value(strong, "=").as_ref());
+                    conf.set_mode(mo);
+                }
+                if str.contains("num") {
+                    let strong = str.to_string();
+                    let ammount: u32 = get_value(strong, "=").parse().expect("number");
+                    conf.set_amount(ammount);
+                }
+                if str.contains("len") {
+                    let strong = str.to_string();
+                    let length: u32 = safe_u32(get_value(strong, "="), 4);
+                    conf.set_length(length);
+                }
+                if str.contains("next") {
+                    let strong = str.to_string();
+                    conf.set_next(get_value(strong, "="));
+                }
+                if str.contains("wtf") {
+                    let strong = str.to_string();
+                    let wtf = get_value(strong, "=");
+                    conf.set_write_to_file(wtf);
+                }
+                if str.contains("dwi") {
+                    let strong = str.to_string();
+                    conf.set_write_indices(get_value(strong, "=") == "1");
+                }
             }
-            if str.contains("num") {
-                let strong = str.to_string();
-                let ammount: u32 = get_value(strong, "=").parse().expect("number");
-                conf.set_amount(ammount);
-            }
-            if str.contains("len") {
-                let strong = str.to_string();
-                let length: u32 = safe_u32(get_value(strong, "="), 4);
-                conf.set_length(length);
-            }
-            if str.contains("next") {
-                let strong = str.to_string();
-                conf.set_next(get_value(strong, "="));
-            }
-            if str.contains("wtf") {
-                let strong = str.to_string();
-                conf.set_write_to_file(get_value(strong, "=") == "1");
-            }
-            if str.contains("dwi") {
-                let strong = str.to_string();
-                conf.set_write_indices(get_value(strong, "=") == "1");
-            }
+            return conf;
         }
-        return conf;
-    }
     }
 }
