@@ -32,26 +32,17 @@ pub mod string_generator_module {
 
         pub fn set_pass_generator(&mut self, length: usize) {
             //72 unique symbol set
-            let alphabet =
+            let alpha =
                 "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
-            self.set_alphabet(alphabet);
-            self.set_length(length);
+            self.alphabet = alpha.chars().collect();
+            self.length = length;
         }
 
         pub fn set_pass_generator84(&mut self, length: usize) {
             //84 unique symbol set
-            let alphabet = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()[]{};:,.<>?|";
-            self.set_alphabet(alphabet);
-            self.set_length(length);
-        }
-
-        fn get_default_alphabet() -> String {
-            return String::from("abcdefghijklmnopqrstuvwxyzaaaaeeeiiiooouuy");
-        }
-
-        pub fn set_alphabet(&mut self, s: &str) {
-            let abc: Vec<char> = s.trim().chars().collect();
-            self.alphabet = abc;
+            let alpha = "abcdefghijklmnopqrstuvwxyz0123456789aaiioouuyABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()[]{};:,.<>?|";
+            self.alphabet = alpha.chars().collect();
+            self.length = length;
         }
 
         pub fn set_length(&mut self, n: usize) {
@@ -59,30 +50,24 @@ pub mod string_generator_module {
         }
 
         pub fn set_language(&mut self, language: SupportedLanguages) {
-            self.set_alphabet(language.get_alphabet());
+            self.alphabet = language.get_alphabet().chars().collect();
             self.lang = language;
         }
 
-        fn setup_rlaf(&mut self, conf: &Config){
-            // let contents = read_to_string(conf.get_next())?;
+        fn setup_rlaf(&mut self, conf: &Config) {
             // we sorta need to handle error there
             let read_text = read_to_string(conf.get_next());
 
-            if read_text.is_err() {
-                println!("Error reading, reverting to default");
-                self.set_alphabet(StringGenerator::get_default_alphabet().as_ref());
-                return ();
+            match read_text {
+                Ok(alphabet)=>{
+                    let alpha = alphabet.trim();
+                    self.alphabet = alpha.chars().collect();
+                }
+                Err(e)=>{
+                    println!("Error reading file");
+                }
             }
-
-            //remove spaces and line returns
-            //trim_matches?
-
-            let alphabet = read_text.unwrap();
-
-            let mut alpha = String::from(alphabet.trim());
-            alpha.retain(char::is_alphanumeric);
-
-            self.set_alphabet(alpha.as_ref());
+            //alpha.retain(char::is_alphanumeric);
         }
 
         //get couped words string
@@ -110,16 +95,16 @@ pub mod string_generator_module {
             return held_string.clone();
         }
 
-        pub fn get(&mut self)->String{
+        pub fn get(&mut self) -> String {
             return match self.mode {
                 Modes::CoupledWordsNouns => self.get_cws(),
                 Modes::CoupledWordsNames => self.get_cws(),
                 Modes::CoupledWordsListFiles => self.get_cws(),
-                _ => self.get_rls()
-            }
+                _ => self.get_rls(),
+            };
         }
 
-        pub fn setup(&mut self, conf: &Config){
+        pub fn setup(&mut self, conf: &Config) {
             //first assign mode
             self.mode = conf.get_mode();
 
@@ -139,10 +124,9 @@ pub mod string_generator_module {
                 }
                 Modes::RandomLettersFromCustomAlphabet => {
                     if conf.get_next().is_empty() {
-                        println!("Alphabet paremeter empty, defaulting to latin");
-                        self.set_alphabet("abcdefghijklmnopqrstuvwxyz");
+                        println!("Alphabet paremeter empty, using default");
                     } else {
-                        self.set_alphabet(conf.get_next().as_ref());
+                        self.alphabet = conf.get_next().chars().collect();
                     }
                     self.set_length(conf.get_length() as usize);
                 }
@@ -158,45 +142,43 @@ pub mod string_generator_module {
                     let path2 = String::from(self.lang.get_list_name("noun"));
 
                     let r = self.lang.fill_adjectives(path1.as_ref());
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
                     let r = self.lang.fill_nouns(path2.as_ref());
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
                 }
                 Modes::CoupledWordsNames => {
                     let lang = SupportedLanguages::from(&conf.get_next());
                     self.set_language(lang);
 
-
                     let path1 = String::from(self.lang.get_list_name("adj"));
                     let path2 = String::from(self.lang.get_list_name("name"));
 
-                    let r =self.lang.fill_adjectives(path1.as_ref());
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    let r = self.lang.fill_adjectives(path1.as_ref());
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
-                    let r =self.lang.fill_names(path2.as_ref());
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    let r = self.lang.fill_names(path2.as_ref());
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
                 }
                 Modes::CoupledWordsListFiles => {
-                    
                     let nxt = conf.get_next();
                     let fnames: Vec<&str> = nxt.split(":").collect();
 
-                    println!("{:?}",&fnames);
+                    println!("{:?}", &fnames);
 
-                    let r =self.lang.fill_adjectives(fnames[0]);
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    let r = self.lang.fill_adjectives(fnames[0]);
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
                     let r = self.lang.fill_nouns(fnames[1]);
-                    if r.is_err(){
-                        println!("{:?}",r);
+                    if r.is_err() {
+                        println!("{:?}", r);
                     }
                 }
             };
