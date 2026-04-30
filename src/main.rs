@@ -1,11 +1,11 @@
 use stranameg::stringer::{
-    fast_switch, print_help, run_generator, run_repl, Config,get_config
+    fast_switch, print_help, run_generator, run_repl, Config
 };
 
 fn main() {
     use std::env;
     use std::fs::read_to_string;
-    const VERSION: &str = "0.14.9";
+    const VERSION: &str = "0.14.10";
 
     let args: Vec<String> = env::args().collect();
 
@@ -37,7 +37,7 @@ fn main() {
             for x in 2..args.len() {
                 v.push(args[x].as_ref());
             }
-            get_config(v)
+            Config::parse_config(v)
         }
         "pf" | "paramsfile" => {
             let mut v = Vec::new();
@@ -51,7 +51,7 @@ fn main() {
             for line in fileargs.lines() {
                 v.push(line.trim());
             }
-            get_config(v)
+            Config::parse_config(v)
         }
         _ => {
             if flag.contains("-f") {

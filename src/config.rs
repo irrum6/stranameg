@@ -1,5 +1,5 @@
 pub mod config {
-    use crate::stringer::safe_u32;
+    use crate::stringer::{safe_u32,get_value};
 
     #[derive(Clone)]
     pub enum Modes {
@@ -34,6 +34,7 @@ pub mod config {
         length: u32,
         amount: u32,
         write_to_file: bool,
+        fileout:String,
         dont_write_indices: bool,
         next: String,
     }
@@ -42,6 +43,7 @@ pub mod config {
             let amount = 8;
             let mode = Modes::RandomLetters;
             let write_to_file = false;
+            let fileout = String::new();
             let dont_write_indices = false;
 
             let next = String::new();
@@ -52,6 +54,7 @@ pub mod config {
                 length,
                 amount,
                 write_to_file,
+                fileout,
                 next,
                 dont_write_indices,
             };
@@ -93,6 +96,7 @@ pub mod config {
                 length,
                 amount,
                 write_to_file,
+                fileout:String::new(),
                 next,
                 dont_write_indices,
             };
@@ -138,5 +142,41 @@ pub mod config {
         pub fn get_next(&self) -> String {
             return self.next.clone();
         }
+        //alt mode configuration parser
+        pub fn parse_config(vargs: Vec<&str>) -> Config {
+        //confetti
+        let mut conf = Config::default();
+
+        for str in vargs {
+            if str.contains("mode") {
+                let strong = str.to_string();
+                let mo = Modes::from(get_value(strong, "=").as_ref());
+                conf.set_mode(mo);
+            }
+            if str.contains("num") {
+                let strong = str.to_string();
+                let ammount: u32 = get_value(strong, "=").parse().expect("number");
+                conf.set_amount(ammount);
+            }
+            if str.contains("len") {
+                let strong = str.to_string();
+                let length: u32 = safe_u32(get_value(strong, "="), 4);
+                conf.set_length(length);
+            }
+            if str.contains("next") {
+                let strong = str.to_string();
+                conf.set_next(get_value(strong, "="));
+            }
+            if str.contains("wtf") {
+                let strong = str.to_string();
+                conf.set_write_to_file(get_value(strong, "=") == "1");
+            }
+            if str.contains("dwi") {
+                let strong = str.to_string();
+                conf.set_write_indices(get_value(strong, "=") == "1");
+            }
+        }
+        return conf;
+    }
     }
 }

@@ -1,10 +1,10 @@
 pub mod fast_switch {
-    use crate::stringer::Config;
-    use crate::stringer::Modes;
+    use crate::stringer::{Config, Modes};
+
     pub fn get_fsconf(onkstr: String) -> Config {
         let mut conf = Config::default();
         let split: Vec<&str> = onkstr.split("-f").collect();
-        
+
         let s: String = String::from(split[1]);
         let zero = s.chars().nth(0).unwrap();
         if 'n' == zero {
@@ -73,7 +73,7 @@ pub mod fast_switch {
             "C3" => {
                 conf.set_mode(Modes::CoupledWordsListFiles);
                 conf.set_next(next);
-            }            
+            }
             // length shortcuts
             "S1" => {
                 conf.set_length(16);
@@ -105,10 +105,10 @@ pub mod fast_switch {
             "SX" => {
                 conf.set_length(160);
             }
-            "PWD" =>{
+            "PWD" => {
                 conf.set_mode(Modes::Password);
             }
-            "PWD84" =>{
+            "PWD84" => {
                 conf.set_mode(Modes::Password84);
             }
             _ => {}
@@ -118,8 +118,8 @@ pub mod fast_switch {
 
     pub fn is_alias(strong: &str) -> bool {
         return match strong {
-            "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "S1" | "S2" | "S3"
-            | "S4" | "S5" | "S6" | "S7" | "S8" | "S9" | "SX" | "PWD" | "PWD84" => true,
+            "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "S1" | "S2" | "S3" | "S4" | "S5" | "S6"
+            | "S7" | "S8" | "S9" | "SX" | "PWD" | "PWD84" => true,
             _ => false,
         };
     }
