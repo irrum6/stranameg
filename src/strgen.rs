@@ -63,7 +63,7 @@ pub mod string_generator_module {
                     let alpha = alphabet.trim();
                     self.alphabet = alpha.chars().collect();
                 }
-                Err(e)=>{
+                Err(_e)=>{
                     println!("Error reading file");
                 }
             }

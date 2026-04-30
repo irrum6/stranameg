@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod tests {
     // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::{command_parser, Config, GeorgianLanguage, SupportedLanguages};
+    use stranameg::stringer::{Config, GeorgianLanguage, SupportedLanguages, get_config};
 
     use stranameg::strgen::string_generator_module::StringGenerator;
 
@@ -13,7 +13,7 @@ pub mod tests {
         let mode = String::from("rls");
         let lang = String::from("en");
         let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
-        let conf = Config::new(&sarraya);
+        let conf = Config::from(&sarraya);
 
         let mut sg = StringGenerator::default();
         sg.setup(&conf);
@@ -27,7 +27,7 @@ pub mod tests {
         let mode = String::from("cow");
         let lang = String::from("ka");
         let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
-        let conf = Config::new(&sarraya);
+        let conf = Config::from(&sarraya);
 
         let lan = SupportedLanguages::Georgian(GeorgianLanguage::new());
         let mut sg = StringGenerator::default();
@@ -50,7 +50,7 @@ pub mod tests {
     #[test]
     fn command_parser() {
         let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
-        let confetti = command_parser::get_config(vargs);
+        let confetti = get_config(vargs);
         let mut sg = StringGenerator::default();
         let _ = sg.setup(&confetti);
         let strong = sg.get();

@@ -2,9 +2,7 @@ pub mod help;
 pub mod rng;
 
 pub mod languages;
-pub mod modes;
-
-pub mod command_parser;
+pub mod config;
 
 pub mod strgen;
 
@@ -15,12 +13,11 @@ pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
 
-    pub use super::command_parser::command_parser;
     pub use super::help::help::print_help2 as print_help;
     pub use super::languages::languages::{
         EnglishLanguage, GeorgianLanguage, GermanLanguage, SupportedLanguages,
     };
-    pub use super::modes::modes::Modes;
+    pub use super::config::config::{Config,Modes};
 
     pub use super::rng::rng::RNG;
 
@@ -35,13 +32,13 @@ pub mod stringer {
         sg.setup(&conf);
         let mut output = File::create(OUTPUT_NAME)?;
 
-        for _i in 0..conf.amount {
+        for _i in 0..conf.get_amount() {
             let strang = sg.get();
-            if conf.write_to_file {
+            if conf.get_write_to_file() {
                 writeln!(output, "{}", strang)?;
             } else {
                 let mut strong = format!("{}:{}\n", strang, _i);
-                if conf.dont_write_indices {
+                if conf.get_write_indices() {
                     strong = format!("{}\n", strang);
                 }
                 print!("{}\n", strong);
@@ -57,118 +54,48 @@ pub mod stringer {
             Err(_e) => default,
         };
     }
-    #[derive(Clone)]
-    pub struct Config {
-        mode: Modes,
-        length: u32,
-        amount: u32,
-        write_to_file: bool,
-        dont_write_indices: bool,
-        next: String,
+    //command parser functions
+    pub fn get_config(vargs: Vec<&str>) -> Config {
+        //confetti
+        let mut conf = Config::default();
+
+        for str in vargs {
+            if str.contains("mode") {
+                let strong = str.to_string();
+                let mo = Modes::from(get_value(strong, "=").as_ref());
+                conf.set_mode(mo);
+            }
+            if str.contains("num") {
+                let strong = str.to_string();
+                let ammount: u32 = get_value(strong, "=").parse().expect("number");
+                conf.set_amount(ammount);
+            }
+            if str.contains("len") {
+                let strong = str.to_string();
+                let length: u32 = safe_u32(get_value(strong, "="), 4);
+                conf.set_length(length);
+            }
+            if str.contains("next") {
+                let strong = str.to_string();
+                conf.set_next(get_value(strong, "="));
+            }
+            if str.contains("wtf") {
+                let strong = str.to_string();
+                conf.set_write_to_file(get_value(strong, "=") == "1");
+            }
+            if str.contains("dwi") {
+                let strong = str.to_string();
+                conf.set_write_indices(get_value(strong, "=") == "1");
+            }
+        }
+        return conf;
     }
-    impl Config {
-        pub fn new(args: &[String]) -> Config {
-            return Config::from(args);
-        }
-        pub fn default() -> Config {
-            let amount = 16;
-            let mode = Modes::RandomLetters;
-            let write_to_file = false;
-            let dont_write_indices = false;
-
-            let next = String::new();
-
-            let length: u32 = 12;
-            return Config {
-                mode,
-                length,
-                amount,
-                write_to_file,
-                next,
-                dont_write_indices,
-            };
-        }
-        pub fn from(args: &[String]) -> Config {
-            let mut amount = 16;
-            let mut mode = Modes::RandomLetters;
-            let mut write_to_file = false;
-            let mut dont_write_indices = false;
-
-            let mut next = String::new();
-
-            let mut length: u32 = 12;
-
-            if args.len() > 1 {
-                amount = safe_u32(args[1].clone(), 16);
-            }
-
-            if args.len() > 2 {
-                //println!("{}", &args[2]);
-                length = safe_u32(args[2].clone(), 12);
-            }
-            if args.len() > 3 {
-                mode = Modes::from(args[3].as_ref());
-            }
-            if args.len() > 4 {
-                next = args[4].clone();
-            }
-
-            if args.len() > 5 {
-                write_to_file = args[5] == "1";
-            }
-
-            if args.len() > 6 {
-                dont_write_indices = args[6] == "1";
-            }
-            return Config {
-                mode,
-                length,
-                amount,
-                write_to_file,
-                next,
-                dont_write_indices,
-            };
-        }
-        pub fn set_mode(&mut self, mode: Modes) {
-            self.mode = mode;
-        }
-        pub fn get_mode(&self) -> Modes {
-            return self.mode.clone();
-        }
-
-        pub fn set_length(&mut self, length: u32) {
-            self.length = length;
-        }
-        pub fn get_length(&self) -> u32 {
-            return self.length;
-        }
-
-        pub fn set_amount(&mut self, amount: u32) {
-            self.amount = amount;
-        }
-        pub fn get_amount(&self) -> u32 {
-            return self.amount;
-        }
-
-        pub fn set_write_to_file(&mut self, wtf: bool) {
-            self.write_to_file = wtf;
-        }
-        pub fn get_write_to_file(&self) -> bool {
-            return self.write_to_file;
-        }
-
-        pub fn set_write_indices(&mut self, dwi: bool) {
-            self.dont_write_indices = dwi;
-        }
-        pub fn get_write_indices(&self) -> bool {
-            return self.dont_write_indices;
-        }
-
-        pub fn set_next(&mut self, next: String) {
-            self.next = next;
-        }
-        pub fn get_next(&self) -> String {
-            return self.next.clone();
-        }
+    fn get_value(strong: String, delimiter: &str) -> String {
+        // return ;
+        //going fishing
+        let v= strong.split(delimiter).collect::<Vec<&str>>();
+        // return String::from(v[1]);
+        let value = String::from(v[1]);
+        return value;
     }
 }
