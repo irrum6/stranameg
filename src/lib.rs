@@ -6,25 +6,20 @@ pub mod languages;
 
 pub mod strgen;
 
-pub mod fast_switch;
-pub mod repl;
+mod fast_switch;
+mod repl;
 
 pub mod stringer {
     use std::fs::File;
     use std::io::{Error, Write};
 
-    pub use super::config::config::{CommandParser, Config, Modes};
     pub use super::help::help::print_help2 as print_help;
-    pub use super::languages::languages::{
-        EnglishLanguage, GeorgianLanguage, GermanLanguage, SupportedLanguages,
-    };
-
-    pub use super::rng::rng::RNG;
-
-    use super::strgen::string_generator_module::*;
 
     pub use super::fast_switch::fast_switch;
     pub use super::repl::repl::run_repl;
+
+    use super::config::config::Config;
+    use super::strgen::string_generator_module::StringGenerator;
 
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
         let mut output_file_name: &str = "strings.textout";
@@ -69,4 +64,11 @@ pub mod stringer {
         let value = String::from(v[1]);
         return value;
     }
+
+    pub enum ListType{
+        Adjectives,
+        Nouns,
+        Names
+    }
+
 }

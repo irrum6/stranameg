@@ -1,5 +1,6 @@
 pub mod fast_switch {
-    use crate::stringer::{Config, Modes};
+
+    use crate::config::config::{Config, Modes};
 
     pub fn get_fsconf(onkstr: String) -> Config {
         let mut conf = Config::default();
@@ -41,18 +42,19 @@ pub mod fast_switch {
         let mut conf = Config::default();
         let option = strung.trim();
         let required_length = match option {
-            "R2" | "R3" | "C1" | "C2" | "C3" | "W1" | "W2" => 1,
+            "R1" | "R2" | "R3" | "C1" | "C2" | "C3" | "W1" | "W2" => 1,
             _ => 0,
         };
 
         if next.len() < required_length {
-            println!("one paramter missing, returning defualt config");
+            println!("one paramter missing, returning default config");
             return conf;
         }
         match option {
             // mode shortcuts
             "R1" => {
                 conf.set_mode(Modes::RandomLetters);
+                conf.set_next(next);
             }
             "R2" => {
                 conf.set_mode(Modes::RandomLettersFromCustomAlphabet);

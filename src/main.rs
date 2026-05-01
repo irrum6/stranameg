@@ -1,11 +1,11 @@
-use stranameg::stringer::{
-    fast_switch, print_help, run_generator, run_repl, Config,CommandParser
-};
-
 fn main() {
     use std::env;
     use std::fs::read_to_string;
-    const VERSION: &str = "0.15.1";
+
+    use stranameg::config::config::{CommandParser, Config};
+    use stranameg::stringer::{fast_switch, print_help, run_generator, run_repl};
+
+    const VERSION: &str = "0.15.2";
 
     let args: Vec<String> = env::args().collect();
 
@@ -59,14 +59,14 @@ fn main() {
                 let stronk = String::from(flag);
                 fast_switch::get_fsconf(stronk)
             } else if fast_switch::is_alias(flag) {
-                let next = String::new();
-                let fast = if args.len() > 2 {
-                    fast_switch::alias_config(args[1].clone(), args[2].clone())
-                } else {
-                    fast_switch::alias_config(args[1].clone(), next)
-                };
+                let mut next = String::new();
+                if args.len() > 2 {
+                    next = args[2].clone();
+                }
+                let fast = fast_switch::alias_config(args[1].clone(), next);
                 fast
             } else {
+                //prob most common
                 Config::from(&args)
             }
         }

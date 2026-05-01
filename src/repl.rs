@@ -25,8 +25,7 @@ pub mod repl {
         use std::io::stdin;
         //crate modules
         use crate::stringer::run_generator;
-        use crate::stringer::Config;
-        use crate::stringer::Modes;
+        use crate::config::config::{Config,Modes};
         //repl mode
         println!("Welcome to REPL mode");
         let mut conf = Config::default();

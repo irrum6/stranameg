@@ -2,7 +2,11 @@ pub mod string_generator_module {
 
     use std::fs::read_to_string;
 
-    use crate::stringer::{Config, EnglishLanguage, Modes, SupportedLanguages, RNG};
+    use crate::config::config::{Config, Modes};
+    use crate::languages::languages::{EnglishLanguage, SupportedLanguages};
+    use crate::rng::rng::RNG;
+
+    use crate::stringer::ListType;
 
     pub struct StringGenerator {
         alphabet: Vec<char>,
@@ -59,11 +63,11 @@ pub mod string_generator_module {
             let read_text = read_to_string(conf.get_next());
 
             match read_text {
-                Ok(alphabet)=>{
+                Ok(alphabet) => {
                     let alpha = alphabet.trim();
                     self.alphabet = alpha.chars().collect();
                 }
-                Err(_e)=>{
+                Err(_e) => {
                     println!("Error reading file");
                 }
             }
@@ -138,8 +142,8 @@ pub mod string_generator_module {
                     let lang = SupportedLanguages::from(&conf.get_next());
                     self.set_language(lang);
 
-                    let path1 = String::from(self.lang.get_list_name("adj"));
-                    let path2 = String::from(self.lang.get_list_name("noun"));
+                    let path1 = String::from(self.lang.get_list_name(ListType::Adjectives));
+                    let path2 = String::from(self.lang.get_list_name(ListType::Nouns));
 
                     let r = self.lang.fill_adjectives(path1.as_ref());
                     if r.is_err() {
@@ -154,8 +158,8 @@ pub mod string_generator_module {
                     let lang = SupportedLanguages::from(&conf.get_next());
                     self.set_language(lang);
 
-                    let path1 = String::from(self.lang.get_list_name("adj"));
-                    let path2 = String::from(self.lang.get_list_name("name"));
+                    let path1 = String::from(self.lang.get_list_name(ListType::Adjectives));
+                    let path2 = String::from(self.lang.get_list_name(ListType::Names));
 
                     let r = self.lang.fill_adjectives(path1.as_ref());
                     if r.is_err() {

@@ -1,8 +1,8 @@
 #[cfg(test)]
 pub mod tests {
-    // use stranameg::stringer::languages::languages::Languages;
-    use stranameg::stringer::{CommandParser, Config, GeorgianLanguage, SupportedLanguages};
 
+    use stranameg::config::config::{CommandParser, Config};
+    use stranameg::languages::languages::{GeorgianLanguage, SupportedLanguages};
     use stranameg::strgen::string_generator_module::StringGenerator;
 
     #[test]

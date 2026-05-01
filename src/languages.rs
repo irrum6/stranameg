@@ -1,4 +1,5 @@
 pub mod languages {
+    use crate::stringer::ListType;
 
     enum Gender {
         Feminine,
@@ -311,12 +312,11 @@ pub mod languages {
         }
 
         //default file names
-        pub fn get_list_name(&self, lstype: &str) -> String {
-            let pfx = match lstype.to_lowercase().as_ref() {
-                "noun" => "nouns",
-                "adj" => "adjectives",
-                "name" => "names",
-                _ => "",
+        pub fn get_list_name(&self, lstype: ListType) -> String {
+            let pfx = match lstype {
+                ListType::Nouns => "nouns",
+                ListType::Adjectives => "adjectives",
+                ListType::Names => "names",
             };
             let sfx = "list";
             let middle = match self {
