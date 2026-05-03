@@ -4,9 +4,47 @@ pub mod string_generator_module {
 
     use crate::config::config::{Config, Modes};
     use crate::languages::languages::{EnglishLanguage, SupportedLanguages};
-    use crate::rng::rng::RNG;
-
     use crate::stringer::ListType;
+
+    fn nanos() -> u32 {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        return SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .subsec_nanos();
+    }
+    pub struct RNG {
+        w: u32,
+        x: u32,
+        y: u32,
+        z: u32,
+    }
+    impl RNG {
+        pub fn new() -> RNG {
+            RNG {
+                w: 0,
+                x: 0,
+                y: 0,
+                z: 0,
+            }
+        }
+
+        pub fn seed(&mut self) {
+            self.w = nanos();
+            self.x = nanos();
+            self.y = nanos();
+            self.z = nanos();
+        }
+
+        pub fn get(&mut self) -> u32 {
+            let tmp: u32 = self.x ^ (self.x << 15);
+            self.x = self.y;
+            self.y = self.z;
+            self.z = self.w;
+            self.w = (self.w ^ (self.w >> 21)) ^ (tmp ^ (tmp >> 4));
+            return self.w;
+        }
+    }
 
     pub struct StringGenerator {
         alphabet: Vec<char>,

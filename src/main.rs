@@ -5,7 +5,7 @@ fn main() {
     use stranameg::config::config::{CommandParser, Config};
     use stranameg::stringer::{fast_switch, print_help, run_generator, run_repl};
 
-    const VERSION: &str = "0.15.2";
+    const VERSION: &str = "1.0.0";
 
     let args: Vec<String> = env::args().collect();
 

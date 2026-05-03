@@ -1,9 +1,6 @@
 pub mod help;
-pub mod rng;
-
 pub mod config;
 pub mod languages;
-
 pub mod strgen;
 
 mod fast_switch;
