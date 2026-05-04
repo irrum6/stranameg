@@ -6,18 +6,22 @@ pub mod tests {
     use stranameg::strgen::string_generator_module::StringGenerator;
 
     #[test]
-    pub fn check_len() {
-        let length = 12;
-        let len = String::from("12");
-        let ammount = String::from("16");
+    pub fn check_config_parser() {
+        let len_int = 15;
+        let len = String::from("15");
+        let amm_int = 32;
+        let ammount = String::from("32");
+
         let mode = String::from("rls");
         let lang = String::from("en");
-        let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
-        let conf = Config::from(&sarraya);
+        let sarr: [String; 5] = [String::new(), ammount, len, mode, lang];
+        let conf = Config::from(&sarr);
 
         let mut sg = StringGenerator::default();
         sg.setup(&conf);
-        assert_eq!(sg.get().len(), length);
+
+        assert_eq!(conf.get_amount(), amm_int);
+        assert_eq!(sg.get().len(), len_int);
     }
     #[test]
     pub fn is_georgian() {
@@ -26,8 +30,8 @@ pub mod tests {
         let ammount = String::from("16");
         let mode = String::from("cow");
         let lang = String::from("ka");
-        let sarraya: [String; 5] = [String::new(), ammount, len, mode, lang];
-        let conf = Config::from(&sarraya);
+        let sarr: [String; 5] = [String::new(), ammount, len, mode, lang];
+        let conf = Config::from(&sarr);
 
         let lan = SupportedLanguages::Georgian(GeorgianLanguage::new());
         let mut sg = StringGenerator::default();
