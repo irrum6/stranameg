@@ -68,6 +68,7 @@ where list types are : nouns,adjectives,names
 #### 2.4.1 usage of 4th paramter
 - CoupledWordsNouns,CoupledWordsNames - sets language (words ar sourced from adjectives.[language].list and nouns.[language].list)
 - CoupledWordsListFiles - filenames separated by : serve as source for adjectives and nouns
+Note: program will look in subfolder named "lists" for these lists (except for CoupledWordsListFiles mode)
 
 #### 2.4.2 Example
 ./binary 16 12 cow en \

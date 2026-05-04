@@ -1,5 +1,5 @@
-pub mod help;
 pub mod config;
+pub mod help;
 pub mod languages;
 pub mod strgen;
 
@@ -19,28 +19,35 @@ pub mod stringer {
     use super::strgen::string_generator_module::StringGenerator;
 
     pub fn run_generator(conf: &Config) -> Result<(), Error> {
-        let mut output_file_name: &str = "strings.textout";
-        let out2 = conf.get_output_filename();
-        if out2.len() > 0 {
-            output_file_name = out2;
-        }
         let mut sg = StringGenerator::default();
         sg.setup(&conf);
-        let mut output = File::create(output_file_name)?;
+
+        if conf.get_write_to_file() {
+            let output_file_name = conf.get_output_filename();
+            let mut output = File::create(output_file_name)?;
+
+            for _i in 0..conf.get_amount() {
+                let strang = sg.get();
+                let mut strong = format!("{}:{}", strang, _i);
+                //it runs if dont_write_indices is true
+                if conf.get_write_indices() {
+                    strong = format!("{}", strang);
+                }
+
+                writeln!(output, "{}", strong)?;
+            }
+            return Ok(());
+        }
 
         for _i in 0..conf.get_amount() {
             let strang = sg.get();
-            let mut strong = format!("{}:{}\n", strang, _i);
+            let mut strong = format!("{}:{}", strang, _i);
             //it runs if dont_write_indices is true
             if conf.get_write_indices() {
-                strong = format!("{}\n", strang);
+                strong = format!("{}", strang);
             }
 
-            if conf.get_write_to_file() {
-                writeln!(output, "{}", strong)?;
-            } else {
-                println!("{}\n", strong);
-            }
+            println!("{}", strong);
         }
         return Ok(());
     }
@@ -62,10 +69,9 @@ pub mod stringer {
         return value;
     }
 
-    pub enum ListType{
+    pub enum ListType {
         Adjectives,
         Nouns,
-        Names
+        Names,
     }
-
 }

@@ -64,7 +64,7 @@ pub mod config {
             let mut length: u32 = 12;
             let mut amount = 16;
             let mut write_to_file = false;
-            let mut fileout = String::new();
+            let mut fileout = String::from("strings.textout");
             let mut dont_write_indices = false;
 
             let mut next = String::new();
