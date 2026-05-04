@@ -330,26 +330,18 @@ pub mod languages {
 
         pub fn get_adapted(&self, r1: usize, r2: usize) -> String {
             return match self {
-                SupportedLanguages::English(e) => call_get_adapted(e, r1, r2),
-                SupportedLanguages::Georgian(e) => call_get_adapted(e, r1, r2),
-                SupportedLanguages::German(e) => call_get_adapted(e, r1, r2),
+                SupportedLanguages::English(e) => e.get_adapted(r1, r2),
+                SupportedLanguages::Georgian(e) => e.get_adapted(r1, r2),
+                SupportedLanguages::German(e) => e.get_adapted(r1, r2),
             };
         }
 
         pub fn get_adapted2(&self, r1: usize, r2: usize) -> String {
             return match self {
-                SupportedLanguages::English(e) => call_get_adapted2(e, r1, r2),
-                SupportedLanguages::Georgian(e) => call_get_adapted2(e, r1, r2),
-                SupportedLanguages::German(e) => call_get_adapted2(e, r1, r2),
+                SupportedLanguages::English(e) => e.get_adapted2(r1, r2),
+                SupportedLanguages::Georgian(e) => e.get_adapted2(r1, r2),
+                SupportedLanguages::German(e) => e.get_adapted2(r1, r2),
             };
         }
-    }
-    //
-    fn call_get_adapted(lang: &impl Grammar, r1: usize, r2: usize) -> String {
-        return lang.get_adapted(r1, r2);
-    }
-
-    fn call_get_adapted2(lang: &impl Grammar, r1: usize, r2: usize) -> String {
-        return lang.get_adapted2(r1, r2);
     }
 }

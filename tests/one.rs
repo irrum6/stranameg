@@ -49,16 +49,31 @@ pub mod tests {
 
     #[test]
     fn command_parser() {
-        let vargs = vec!["mode=rla", "len=12", "num=16", "next=alphabet"];
+        let vargs = vec![
+            "mode=rla",
+            "len=12",
+            "num=16",
+            "next=alphabet",
+            "wtf=gela.txt",
+        ];
         let confetti = CommandParser::parse_config(vargs);
+
+        assert_eq!(confetti.get_write_to_file(), true);
+        assert_eq!(confetti.get_output_filename(), "gela.txt");
+        //don't write indices is false by default
+        assert_eq!(confetti.get_write_indices(), false);
+
         let mut sg = StringGenerator::default();
         let _ = sg.setup(&confetti);
         let strong = sg.get();
         let alphabet = "alphabet";
+
         println!("{}", &strong);
+
         for s in strong.chars() {
             assert_eq!(alphabet.contains(s), true);
         }
+
         assert_eq!(sg.get().len(), 12);
     }
 }
